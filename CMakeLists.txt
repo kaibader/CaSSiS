@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 
+SET(CMAKE_INSTALL_RPATH ".")
+
 # Prevent in-source builds. Always build in a separate folder.
 if(CMAKE_SOURCE_DIR STREQUAL "${CMAKE_BINARY_DIR}")
     message(FATAL_ERROR "In-source builds are not allowed.")
