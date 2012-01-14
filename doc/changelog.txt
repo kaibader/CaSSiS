@@ -1,0 +1,149 @@
+CaSSiS 0.3.3 (internally released 24.October 2011; maintenance release)
+-----------------------------------------------------------------------
+The following items were fixed and/or added:
+
+* Added the MiniPT search index (derived from the ARB PT-Server).
+* Removed obsolete code.
+* Removed some warnings (at compile time).
+* Do not handle warnings as errors by default (at compile time).
+* Added placeholders for the SeqAn and the PtPan search indices.
+* Updated/fixed the Newick tree importer. Also updated the internal tree
+  structure.
+* Various updates that should keep the PT-Server compatible with the ARB
+  version.
+* Removed some of the debug code.
+* Added a sparse table to the CaSSiS-LCA. This allows LCA-searches in O(1).
+* Removed unnecessary code.
+* Applied some fixes that should reduce the memory consumption.
+* Added log messages during runtime. Disabled by default.
+* Various modifications that are necessary to support "outgroup matches" in
+  CaSSiS-LCA.
+* Added a RMQ implementation to CaSSiS-LCA.
+* Removed obsolete code from the PT-Server.
+* Refactoring: species --> sequence.
+* Added 'make package' by adding CPack.
+* Various updates/fixes to the pthreads support. Untested and disabled by
+  default.
+* Disabled a PT-Server warning that resulted in gigabytes of output.
+* Fixed a double free when computing signatures of different lengths.
+* Added the MiniPT tool for PT-Index debugging.
+* Added basic Base4Set merge support. Untested.
+* Added VarInt support to the BGRT tools.
+* Removed redundant code.
+
+
+CaSSiS 0.3.2 (released 12.August 2011; stable release)
+------------------------------------------------------
+The following items were fixed and/or added:
+
+* Fixed parameter handling. Fixed help in CaSSiS.
+* Disabled various unimplemented functions.
+* Optimized the BGRT layout.
+* Added "Creme de CaSSiS" (CdCaSSiS), a user interface version of CaSSiS.
+* Removed the outdated unit tests. (Not visible to the end user.)
+* Removed the outdated statistics code.
+* Removed various warnings during compilation.
+* Various small improvements. (Too small to be mentioned in detail.)
+* Removed obsolete ARBHOME environment variable dependency.
+* Reduced the code complexity a bit.
+* Small update that might speed up the PT-Server a little bit.
+* Removed proprietary memory management from the PT-Server.
+* Fixed three memory leaks (in the PT-Server and the ARB-DB code).
+* Moved the more generic BGRT generation code parts from the ARBDB into
+  CaSSiS.
+* Added ARB files to the repository. Created a project-specific ARBDB
+  library.
+* Directly added the PT-Server (former ARB PT-Server) to CaSSiS. This code does
+  no longer match the original ARB PT-Server code.
+* Various changes due to strict gcc settings.
+* Added date/version numbers to the cmake files and the source code.
+* Updated the documentation.
+* Switched to templates for internal types.
+
+
+CaSSiS 0.3.1 (released 27.June 2011; maintenance release)
+---------------------------------------------------------
+The following items were fixed and/or added:
+
+* Fixed minor dependency problems in the shell scripts.
+
+
+CaSSiS 0.3.0 (internally released 9.June 2011; stable release)
+--------------------------------------------------------------
+The following items were fixed and/or added:
+
+* Added/updated the documentation.
+* Fixed various memory leaks / minor bugs.
+* Added I/O functionality for Base4Set and Base4_t. Added Base4 type
+  functionality.
+* Added the Base4 support throughout the BGRT library, resulting in less
+  memory consumption.
+* Various changes to reduce the memory consumption of a loaded BGRT.
+* Implemented a new (slightly faster) traversal approach.
+* Updated the CaSSiS PT-Server code due to ARB source code updates. Updated
+  the ARB PT-Server dependencies.
+* Clean-up does not remove computed BGRT-files any longer.
+* Adapted the batch job script according to the new parameters.
+* Split the CaSSiS functionalities into three different functions:
+  create / traverse / info
+* Updated the parameter parser function.
+* Set a dummy ARBHOME environment variable to satisfy the PT-Server.
+* Added branch lengths to the phylogenetic tree.
+* Moved thermodynamic functionalities into the BGRT library.
+* Added single group search to the BGRT library.
+* BGRT file checksum added.
+* Updated phylogenetic tree reduction.
+* Removed progress bar from phylogenetic tree reader.
+* Disabled dump stats by default.
+* Refactored the CSV result dump.
+* Updated the BGRT filename generation.
+* Renamed all referenced probe(s) to signature(s)
+* Updated the BGRT library (separate base types)
+* Updated the output. BGRT header information is now dumped when loading a
+  BGRT.
+* Code moved from C to C++.
+* Major changes in the handling of the BGRT file. BGRT structures can now be
+  stored/loaded.
+
+
+CaSSiS 0.2.0 (released 7.March 2011; stable release)
+----------------------------------------------------
+The following items were fixed and/or added:
+
+* Updated the error handling within CaSSiS.
+* Updated/fixed an error in the mismatch calculation.
+* Fixed the mismatch parameter parsing.
+* Support of weighted mismatches (ARB PT-Server functionality).
+* Various preparations for the usage of thermodynamics (G+C,
+  melting temp, ...) during the BGRT build process.
+* Updated the PT-Server+BGRT to count outgroup matches between m1 and m2.
+* Code clean-up. Updated to the newest ARB code base. Code split into three
+  libraries (libCORE.so, libARBDB.so and libptserver.so).
+* Removed obsolete output (status messages) in the release build.
+* Updated the batch job script: Removed the PT-Server name parameter because
+  it is obsolete.
+* Minor fix to correctly sync. the ids between CaSSiS and the PT-Server.
+* Fixed a bug when using mismatch distances > 1.
+* Added an ARB PT-Server wrapper. No need for a PT-Server binary any longer.
+* The BGRT functionality is combined in a dynamic library: libbgrt.so
+* Fixed ID handling for phylogenetic trees that only contain a subset of the
+  sequences within the BGRT.
+* Swapped the processing order of the BGRT and phylogenetic tree.
+* Memory leak fix.
+
+
+CaSSiS 0.1.1 (released 22.October 2010; maintenance release)
+------------------------------------------------------------
+The following items were fixed and/or added:
+
+* Added debugging information to the BGRT traversal.
+* Applied two hotfixes for the cut-off algorithm. (Fixed data loss.)
+* Minor improvement in the BGRT traversal.
+
+
+CaSSiS 0.1.0 (released 10.September 2010; stable release)
+---------------------------------------------------------
+
+* Warning: The 0.1.0 release of CaSSiS contains a flaw that leads to the loss
+  of promising signatures.
+* First official release.

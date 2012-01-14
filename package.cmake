@@ -1,0 +1,45 @@
+include(InstallRequiredSystemLibraries)
+
+# Add documentation.
+install(FILES "${PROJECT_SOURCE_DIR}/doc/readme.txt" DESTINATION share/doc/cassis)
+install(FILES "${PROJECT_SOURCE_DIR}/doc/changelog.txt" DESTINATION share/doc/cassis)
+install(FILES "${PROJECT_SOURCE_DIR}/doc/lgpl.txt" DESTINATION share/doc/cassis)
+
+# Generated packages...
+# set(CPACK_GENERATOR "STGZ;TGZ;TBZ2;DEB")
+set(CPACK_GENERATOR "STGZ;TGZ;DEB")
+
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Kai Christian Bader")
+set(CPACK_CMAKE_GENERATOR "Unix Makefiles")
+
+# Set package name.
+if(WIN32 AND NOT UNIX)
+    set(CPACK_SYSTEM_NAME "win")
+else(WIN32 AND NOT UNIX)
+    set(CPACK_SYSTEM_NAME "linux")
+endif(WIN32 AND NOT UNIX)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CPACK_SYSTEM_NAME "${CPACK_SYSTEM_NAME}-debug")
+endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(PTHREADS)
+    set(CPACK_SYSTEM_NAME "${CPACK_SYSTEM_NAME}-pthread")
+endif(PTHREADS)
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set(CPACK_SYSTEM_NAME "${CPACK_SYSTEM_NAME}-amd64")
+else(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set(CPACK_SYSTEM_NAME "${CPACK_SYSTEM_NAME}-i386")
+endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+
+#Various package definitions.
+set(CPACK_PACKAGE_NAME "CaSSiS")
+set(CPACK_PACKAGE_VENDOR "Kai Christian Bader")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Comprehensive and Sensitive Signature Search")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/doc/readme.txt")
+set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/doc/lgpl.txt")
+set(CPACK_PACKAGE_VERSION_MAJOR "${CASSIS_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${CASSIS_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${CASSIS_VERSION_PATCH}")
+set(CPACK_PACKAGE_VERSION
+    "${CASSIS_VERSION_MAJOR}.${CASSIS_VERSION_MINOR}.${CASSIS_VERSION_PATCH}${CASSIS_VERSION_SUFFIX}")
+
+include(CPack)

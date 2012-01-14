@@ -1,0 +1,11 @@
+.project
+.cproject
+.settings
+*~
+*.o
+*.so
+*.a
+/build
+/debug
+/release
+/data
