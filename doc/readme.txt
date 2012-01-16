@@ -3,14 +3,14 @@ CaSSiS README
 ----------------------------------------------------------------------------
 
 To report a bug or give feedback, send an email to: mail@kaibader.de
-(Last edited: 2011-12-22)
+(Last edited: 2012-01-16)
 
 
 ----------------------------------------------------------------------------
 LICENSES
+----------------------------------------------------------------------------
 
-CaSSiS
-------
+* CaSSiS
 
 CaSSiS is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as
@@ -25,131 +25,116 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with CaSSiS.  If not, see <http://www.gnu.org/licenses/>.
 
-MiniPT
-------
+* MiniPT and 3rd-party/arb
 
+The ARB software and documentation are not in the public domain. External
+programs distributed together with ARB are copyrighted by and are the property
+of their respective authors unless otherwise stated. All other copyrights are
+owned by Lehrstuhl fuer Mikrobiologie, TU Muenchen.
 
-3rd-party/arb
--------------
+See: 'arb_license.txt' file for the complete ARB license text!
 
+----------------------------------------------------------------------------
+BUILDING CASSIS FROM THE SOURCE CODE PACKAGE:
+----------------------------------------------------------------------------
+
+CaSSiS uses the cmake build system. Please make sure to have it installed.
+
+IN-SOURCE BUILDS ARE PREVENTED! The build will be halted.
+Please make sure to build the source code in an empty directory, i.e. create
+a new directory and then run cmake.
+
+Sample session:
+$  tar xvfj CaSSiS-0.4.0-src.tar.bz2
+                             (e.g. extracts to /path/to/cassis)
+$  mkdir /path/to/build
+$  cd /path/to/build
+$  cmake /path/to/cassis  (Optional build options can be added here.)
+$  make
 
 
 ----------------------------------------------------------------------------
-THE FILES SHIPPED WITH CASSIS:
+THE FILES SHIPPED WITH CASSIS BINARY PACKAGES:
+----------------------------------------------------------------------------
 
 There are two versions of archives, one for 32 bit Linux architectures and one
-for 64 bit architectures. CaSSiS was tested with Ubuntu 10.04 LTS (Lucid Lynx)
-and Ubuntu 11.04 (Oneiric Ocelot). Other newer Linux distributions (2010 and
-younger) should also work.
+for 64 bit architectures. CaSSiS was built with Ubuntu 11.10 (Natty Narwhal).
 
-The CaSSiS tar archive contains the following files:
+The CaSSiS binary tar archive contains the following files:
 
-./0.3.2_64-BIT         Marker; 32/64 bit version of CaSSiS
-./batch_job.sh         This is a batch script to run multiple CaSSiS jobs
-./cassis               The CaSSiS program
-./cdcassis             A Qt4 user interface version of CaSSiS
-./ChangeLog_0.3.2.txt  Changes between the versions
-./README.txt           This README
-./test.batch           A sample batch job (run with 'batch_job.sh')
+cassis              The CaSSiS command line tool.
+cassis-gui          A graphical user interface for CaSSiS. (buggy)
+libCaSSiS.so        (symbolic link)
+libCaSSiS.so.0      (symbolic link)
+libCaSSiS.so.0.4.0  The CaSSiS Library v0.4.0
+libminipt.so
 
-./lib/arb_LICENSE.txt  The ARB DB + PT-Server software license
-./lib/libARBDB.so      The ARB database library
-./lib/libbgrt.so       The BGRT library
-./lib/libCORE.so       The ARB core functionalities library
-./lib/libptserver.so   The ARB PT-Server library
-
-./test_db/100.arb      Test databases (100-500 sequences + trees)
-./test_db/200.arb
-./test_db/500.arb
-
-CaSSiS depends on the ARB PT-Server for the extraction of signature candidates
-and on the ARBDB library for handling ARB database files. The CaSSiS archive
-contains appropriate versions of these two files. They are based on the
-development version of the ARB software project (subversion repository
-revision #6981). CaSSiS is linked against this library version and may not
-work when used in combination with other ARB software project revisions.
-
-
-----------------------------------------------------------------------------
-USING THE BATCH_JOB SCRIPT:
-
-batch_job <batch_file>
-<batch_file> = File, containing a list of batch jobs (i.e. parameter lists).
-
-NOTE: When running CaSSiS indirectly with the batch job script, there should
-be no need to configurate any environment variables.
-
-A batch job script has a simple layout, a list of parameters. Each line
-represents a single job. Comments are preceeded by a hash (#) symbol.
-
-BATCH FILE::
-</path/to/result_dir> <bgrt file> </path/to/arb_db> <arb_tree> \\
-<oligo_length> <outgroup_limit> <ingroup_mismatches> <mismatch_distance>
+arb_license.txt       The ARB license (for libARBDB.so and libminipt.so)
+gpl.txt               The GNU General Public License v3
+lgpl.txt              The GNU Lesser General Public License v3
+readme.txt            Help file.
 
 
 ----------------------------------------------------------------------------
 USING CASSIS:
+----------------------------------------------------------------------------
 
-There is no need to configure the ARB environment variable -- CaSSiS is
-shipped with its own libraries. Please make sure to point 'LD_LIBRARY_PATH'
-to the correct directory when using CaSSiS directly:
-$ export LD_LIBRARY_PATH="/path/to/cassis/lib"
+Comment: Please make sure to point 'LD_LIBRARY_PATH' to the correct directory,
+if necessary. (export LD_LIBRARY_PATH="/path/to/cassis/lib)
 
+CaSSiS usage: cassis {1pass|create|process|info} [options]
 
-CaSSiS usage: cassis {create|traverse|info} <bgrt-file> [options]
+cassis 1pass
+  Mandatory: -seq [... -seq] -tree
+  Optional:  -all -dist -gc -idx -len -mis -og -rc -temp -wm
 
-cassis create <bgrt-file> [options]
+cassis create
+  Mandatory: -bgrt -seq [... -seq]
+  Optional:  -all -dist -gc -idx -len -mis -rc -temp -wm
 
-Creates a BGRT based on sequence data and a search index, and stores it under
-the specified file name.
+cassis process
+  Mandatory: -bgrt -tree
+  Optional:  -og
 
-Options:
-  -index {pts}      Defines the used search index.
-                    pts="ARB Pt-Server"
-  -arb <ARB-file>   ARB database file with sequence data.
-  -length {<len>|<min>-<max>}  Either a fixed length or length range for the
-                    signature candidates in the BGRT. (Default: 18)
-  -mismatches <mm>  Number of allowed mismatches within the target group.
-                    (Default: 1)
-  -distance <dist>  Minimal mismatch distance between a signature candidate
-                    and non-targets. (Default: 0)
-  -weighted         Enable the use of weighted mismatches. (Default: off)
-  -reverse-check    Drop signatures, if their reverse complement matches
+cassis info
+  Mandatory: -bgrt
+
+Options (alphabetical):
+  -all              Evaluate all 4^len possible signatures.
+                    (Not recommended, may take forever... Default: off)
+  -bgrt <filename>  BGRT file path and name.
+  -dist <number>    Minimal mismatch distance between a signature candidate
+                    and non-targets. (Default: 0.0 mismatches)
+  -gc <min>-<max>   Only allow signatures within a defined G+C content range.
+                    (Default: 0 -- 100 percent)
+  -idx <name>       Defines the used search index:
+                        minipt = "MiniPt Search Index" (Default)
+  -len {<len>|<min>-<max>}
+                    Length of the evaluated oligonucleotides. Either a
+                    fixed length or a range. (Default: 18 bases)
+  -mis <number>     Number of allowed mismatches within the target group.
+                    (Default: 1.0 mismatches)
+  -og <limit>       Number of outgroup hits up to which group signatures are
+                    computed. (Default: 0)
+  -rc               Drop signatures, if their reverse complement matches
                     sequences not matched by the signature itself.
                     (Default: off)
-  -gc <min>-<max>   A G+C content filter. Only signatures with a G+C content
-                    within the defined percentage.
+  -seq <filename>   MultiFasta file as sequence data source Multiple sequence
+                    sources can be defined.
   -temp <min>-<max> Only allow signatures with a melting temperature within
-                    the defined temperature range.
+                    the defined range. (Default: -273 -- 273 degree Celsius)
+  -tree <filename>  Signature candidates will be computed for every defined
+                    (i.e. named) node within a binary tree. Accepts a Newick
+                    tree file as source.
+  -v                Verbose output
+  -wm               Enable "weighted mismatch" values. (Default: off)
 
-cassis traverse <bgrt-file> [options]
-
-Based on the BGRT file, CaSSiS computes signature candidates for every node
-within a phylogenetic tree or a list of species.
-
-Options:
-  -arb-tree <ARB-file> <tree-name>  Load an ARB database file and select
-                    the defined tree for the traversal.
-  -tree <filename>  A Newick tree file is used for the traversal.
-  -list <filename>  A comma separated list of species identifiers is used for
-                    the traversal. It will be interpreted as a single group.
-  -outgroup <limit> Number of outgroup hits up to which group signatures are
-                    computed. (Default: 0)
-  -gc <min>-<max>   A G+C content filter. Only signatures with a G+C content
-                    within the defined percentage.
-  -temp <min>-<max> Only allow signatures with a melting temperature within
-                    the defined temperature range.
-
-Note: Combining the -gc and -temp filters can cause unwanted side effects
-because they influence each other.
-
-cassis info <bgrt-file>
-
-Show information about the BGRT file.
-
+Caution: Combining the "-gc" and "-temp" filters can cause unwanted side
+         effects because they influence each other.
 
 ----------------------------------------------------------------------------
 RESULT FILES:
+----------------------------------------------------------------------------
 
 CaSSiS was designed to compute comprehensive signature sets based on large
 sequence databases. To be able to further process/parse the result files of
@@ -178,9 +163,11 @@ subsequently.
 
 ----------------------------------------------------------------------------
 CITATION:
+----------------------------------------------------------------------------
 
 If you find CaSSiS useful for your research or applications, please cite:
 
 Bader, KC, Grothoff, C, Meier, H (2011). Comprehensive and relaxed search for
 oligonucleotide signatures in hierarchically clustered sequence datasets.
 Bioinformatics, 27, 11:1546-1554. doi: 10.1093/bioinformatics/btr161.
+
