@@ -1,3 +1,36 @@
+CaSSiS 0.4.0 (released 14.January 2012; stable release)
+------------------------------------------------------
+The following items were fixed and/or added:
+
+* CaSSiS is now under the LPGL v3 license.
+* Added "bgrt2graphviz" tool for testing purposes.
+* Updated/fixed the untested(!) pThreads support.
+* Fixed error handling.
+* Removed obsolete comments.
+* Code clean-up.
+* Various changes in the ARB Pt-Server interface.
+* Moved MiniPT into its own namespace. Avoids collisions due to global (legacy) variables.
+* Added new parameter: check all signatures (all 4^length)
+* Disabled CaSSiS tree load when creating a BGRT.
+* Reverted the (too high) memory estimation when building a MiniPT index.
+* Updated the output of statistical information.
+* Removed erroneous gene memory consumption calc. from the MiniPT index.
+* Added numbering to the snapshots (debug version only).
+* Fixed a bug in the CMakeslist.
+* Redesigned the memory & runtime dump.
+* Refactoring: Merged the BGRT create and 1pass process in CaSSiS.
+* Updated the ARB interface (compatibility).
+* Added a (unified) CaSSiSTree class and removed obsolete PhyloTree class.
+* Removed warnings when building the MiniPt Index.
+* Updated the parameter parser.
+* Various minor fixes. Fixed a dependency problem.
+* Renamed binary project to: CaSSiS-CLI (command line interface tool).
+* Added CaSSiS-tool as a unified binary for the BGRT and LCA approach.
+* Added IndexInterface base class as an interface for search indices.
+* Added ARB database support to CaSSiS-LCA. Untested.
+* Major refactoring of the CaSSiS library.
+
+
 CaSSiS 0.3.3 (internally released 24.October 2011; maintenance release)
 -----------------------------------------------------------------------
 The following items were fixed and/or added:
