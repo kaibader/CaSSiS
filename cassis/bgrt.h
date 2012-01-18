@@ -4,7 +4,7 @@
  * This file is part of the
  * Comprehensive and Sensitive Signature Search (CaSSiS) library.
  *
- * Copyright (C) 2009-2011
+ * Copyright (C) 2009-2012
  *     Kai Christian Bader <mail@kaibader.de>
  *     Christian Grothoff <christian@grothoff.org>
  *

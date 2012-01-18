@@ -4,7 +4,7 @@
  * This file is part of the
  * Comprehensive and Sensitive Signature Search (CaSSiS) GUI.
  *
- * Copyright (C) 2011
+ * Copyright (C) 2011,2012
  *     Kai Christian Bader <mail@kaibader.de>
  *
  * CaSSiS is free software: you can redistribute it and/or modify
