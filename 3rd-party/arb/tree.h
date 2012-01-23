@@ -1,7 +1,7 @@
 /*!
  * ARB phylogenetic tree loader for CaSSiS.
  *
- * Copyright (C) 2011
+ * Copyright (C) 2011,2012
  *     Kai Christian Bader <mail@kaibader.de>
  */
 
