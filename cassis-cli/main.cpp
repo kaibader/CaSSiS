@@ -491,7 +491,10 @@ int commandCreate1Pass(const Parameters &params) {
     if (params.command() == Command1Pass) {
         // Fetch the computed results and write the results
         // of our evaluation directly into CSV files.
-        dump2ClassicCSV(tree);
+        if (params.output() == OutputClassicCSV)
+            dump2ClassicCSV(tree);
+        else if (params.output() == OutputDetailedCSV)
+            dump2DetailedCSV(tree);
     } else {
         // Otherwise we are creating a BGRT file...
 
@@ -666,7 +669,10 @@ int commandProcess(const Parameters &params) {
 
     // Fetch the computed results and write the results
     // of our evaluation into two different CSV files.
-    dump2ClassicCSV(tree);
+    if (params.output() == OutputClassicCSV)
+        dump2ClassicCSV(tree);
+    else if (params.output() == OutputDetailedCSV)
+        dump2DetailedCSV(tree);
 
     // Do some clean-up...
     delete tree;

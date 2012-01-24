@@ -1,5 +1,5 @@
 /*!
- * Dump the results from a CaSSiSTree into 'classic' CSV tables.
+ * Dump the results from a CaSSiSTree into CSV tables.
  *
  * This file is part of the
  * Comprehensive and Sensitive Signature Search (CaSSiS) CLI.
@@ -23,22 +23,11 @@
 
 #include "classic_csv.h"
 
-//#include <cassis/bgrt.h>
+#include <cassis/thermodynamics.h>
+
 #include <sstream>
 #include <cstdio>
 #include <cstdlib>
-
-///*!
-// * INTERNAL!
-// * Dump the results from a CaSSiSTree into a CSV table.
-// *
-// * \param tree CaSSiSTree with the processed results.
-// * \return true, if successful. Otherwise false.
-// */
-//static bool dumpNode2ClassicCSV(FILE *fd, CaSSiSTreeNode */*node*/) {
-//
-//    return false; /* Default parameter. Will change later... */
-//}
 
 /*!
  * Dump the results from a CaSSiSTree into a CSV table.
@@ -166,6 +155,79 @@ bool dump2ClassicCSV(CaSSiSTree *tree) {
         //
         printf("Overall number of signatures (redundant!) "
                 "in result_%d.csv: %ld\n", outg, overall_num_signatures);
+        overall_num_signatures = 0;
+
+        // Increase the outgroup hits counter
+        ++outg;
+    }
+    return true;
+}
+
+/*!
+ * Dump the results from a CaSSiSTree into multiple CSV tables.
+ * This is the 'detailed' CaSSiS output.
+ *
+ * \param tree CaSSiSTree with the processed results.
+ * \return true, if successful. Otherwise false.
+ */
+bool dump2DetailedCSV(CaSSiSTree *tree) {
+    unsigned int outg = 0;
+    while (outg <= tree->allowed_outgroup_matches) {
+        // Overall number of signatures in the current CSV file...
+        unsigned long overall_num_signatures = 0;
+
+        // Create the filename, based on the number of outgroup hits
+        std::ostringstream filename;
+        filename << "signatures_" << outg << ".csv";
+
+        // Open dump csv file...
+        FILE *dumpfile = fopen(filename.str().c_str(), "a+");
+        if (!dumpfile)
+            return false;
+
+        // Dump column headers
+        fprintf(dumpfile, "\"ID\",\"Size\",\"Coverage\",\"G+C\","
+                "\"Tm_basic\",\"Tm_37\",\"Signature\"\n");
+
+        // Create a base for thermodynamic calculations.
+        Thermodynamics therm;
+
+        for (unsigned int i = 0; i < tree->num_nodes; ++i) {
+            CaSSiSTreeNode *node = tree->internal_node_array[i];
+            unsigned int num_result_entries = node->signatures[outg].size();
+
+            // Dump: ID, Size, Coverage.
+            std::string name;
+            if (node->isLeaf())
+                name = tree->leaf_mapping.name(node->this_id);
+            else
+                name = tree->group_mapping.name(node->this_id);
+
+            // Only dump nodes with an id and valid signatures.
+            // Dump one signature per line.
+            if ((name.length() > 0) && (num_result_entries > 0)) {
+                for (unsigned int k = 0; k < num_result_entries; ++k) {
+                    // Fetch signature and process it.
+                    const char *signature = node->signatures[outg].val(k);
+                    therm.process(signature);
+
+                    // Dump results in CSV format.
+                    fprintf(dumpfile, "\"%s\",%i,%i,%3.1f,%3.1f,%3.1f,\"%s\"\n",
+                            name.c_str(), node->group->size(),
+                            node->num_matches[outg], therm.get_gc_content(),
+                            therm.get_tm_basic(), therm.get_tm_base_stacking(),
+                            signature);
+
+                    overall_num_signatures += num_result_entries;
+                }
+            }
+        }
+        // Close the dump csv file.
+        fclose(dumpfile);
+
+        //
+        printf("Overall number of signatures (redundant!) "
+                "in signatures_%d.csv: %ld\n", outg, overall_num_signatures);
         overall_num_signatures = 0;
 
         // Increase the outgroup hits counter

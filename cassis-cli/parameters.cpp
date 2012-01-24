@@ -32,11 +32,12 @@
 
 Parameters::Parameters() :
 m_command(CommandUndef), m_bgrt_file(), m_verbose(false), m_index(
-        IndexMiniPt), m_seq_files(), m_check_r_c(false), m_allowed_mm(
-                0), m_mm_dist(1), m_min_len(18), m_max_len(18), m_use_gc(false), m_min_gc(
-                        0.0), m_max_gc(100.0), m_use_tm(false), m_min_tm(-273.0), m_max_tm(
-                                273.0), m_use_wm(false), m_num_threads(0), m_treefile(), m_treename(), m_og_limit(
-                                        0), m_all_signatures(false) {
+        IndexMiniPt), m_output(OutputClassicCSV), m_seq_files(), m_check_r_c(
+                false), m_allowed_mm(0), m_mm_dist(1), m_min_len(18), m_max_len(
+                        18), m_use_gc(false), m_min_gc(0.0), m_max_gc(100.0), m_use_tm(
+                                false), m_min_tm(-273.0), m_max_tm(273.0), m_use_wm(false), m_num_threads(
+                                        0), m_treefile(), m_treename(), m_og_limit(0), m_all_signatures(
+                                                false) {
 }
 
 Parameters::~Parameters() {
@@ -47,6 +48,7 @@ void Parameters::reset() {
     m_command = CommandUndef;
     m_verbose = false;
     m_index = IndexMiniPt;
+    m_output = OutputClassicCSV;
     m_seq_files.clear();
     m_bgrt_file.clear();
     m_check_r_c = false;
@@ -110,6 +112,22 @@ void Parameters::dump() const {
         break;
     case IndexPtServer:
         std::cout << "PtServer\n";
+        break;
+    default:
+        std::cout << "???\n";
+        break;
+    }
+
+    std::cout << "\t-Output        = ";
+    switch (m_output) {
+    case OutputUndef:
+        std::cout << "undefined\n";
+        break;
+    case OutputClassicCSV:
+        std::cout << "Classic CSV\n";
+        break;
+    case OutputDetailedCSV:
+        std::cout << "Detailed CSV\n";
         break;
     default:
         std::cout << "???\n";
@@ -227,6 +245,19 @@ bool Parameters::set(int argc, char **argv) {
                         return false;
                     }
                     ++i;
+
+                } else if (!strcmp("out", arg) && remainingParams(argc, i, 1)) {
+                    if (!strcmp("classic", argv[i + 1]))
+                        setOutput(OutputClassicCSV);
+                    else if (!strcmp("detailed", argv[i + 1]))
+                        setOutput(OutputDetailedCSV);
+                    else {
+                        setOutput(OutputUndef);
+                        std::cerr << "Parameter error: unknown output type.\n";
+                        return false;
+                    }
+                    ++i;
+
                 } else if (!strcmp("bgrt", arg)
                         && remainingParams(argc, i, 1)) {
                     if (!setBgrt_file(argv[i + 1])) {
@@ -389,7 +420,7 @@ void Parameters::usage() const {
     "\n"
     "cassis 1pass\n"
     "  Mandatory: -seq [... -seq] -tree\n"
-    "  Optional:  -all -dist -gc -idx -len -mis -og -rc -temp -wm\n"
+    "  Optional:  -all -dist -gc -idx -len -mis -og -out -rc -temp -wm\n"
     "\n"
     "cassis create\n"
     "  Mandatory: -bgrt -seq [... -seq]\n"
@@ -398,9 +429,9 @@ void Parameters::usage() const {
     "cassis process\n"
     "  Mandatory: -bgrt -tree\n"
 #ifdef PTHREADS
-    "  Optional:  -og -par\n"
+    "  Optional:  -og -out -par\n"
 #else
-    "  Optional:  -og\n"
+    "  Optional:  -og -out\n"
 #endif
     "\n"
     "cassis info\n"
@@ -429,6 +460,9 @@ void Parameters::usage() const {
     "                    (Default: 1.0 mismatches)\n"
     "  -og <limit>       Number of outgroup hits up to which group signatures are\n"
     "                    computed. (Default: 0)\n"
+    "  -out <format>     Defines the output format.\n"
+    "                        classic  = \"Classic CSV format\" (Default)\n"
+    "                        detailed = \"Detailed CSV format\"\n"
 #ifdef PTHREADS
     "  -par <number>     Number of worker threads (pThreads). Has no influence\n"
     "                    on CaSSiS if pThreads-support is disabled.\n"
@@ -476,6 +510,10 @@ bool Parameters::verbose() const {
 
 Index Parameters::index() const {
     return this->m_index;
+}
+
+Output Parameters::output() const {
+    return this->m_output;
 }
 
 const StringList Parameters::db_files() const {
@@ -570,6 +608,11 @@ bool Parameters::setVerbose(bool v) {
 
 bool Parameters::setIndex(Index i) {
     this->m_index = i;
+    return true;
+}
+
+bool Parameters::setOutput(Output o) {
+    this->m_output = o;
     return true;
 }
 

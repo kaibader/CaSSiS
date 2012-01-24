@@ -43,6 +43,10 @@ enum Index {
     IndexUndef = 0, IndexMiniPt, IndexPtServer, IndexPtPan
 };
 
+enum Output {
+    OutputUndef = 0, OutputClassicCSV, OutputDetailedCSV
+};
+
 class Parameters {
 public:
     /*!
@@ -84,6 +88,7 @@ public:
     Command command() const;
     bool verbose() const;
     Index index() const;
+    Output output() const;
     const StringList db_files() const;
     const std::string bgrt_file() const;
     bool check_r_c() const;
@@ -111,6 +116,7 @@ protected:
     bool setCommand(Command c);
     bool setVerbose(bool v);
     bool setIndex(Index i);
+    bool setOutput(Output o);
     bool addDB(const std::string &s);
     bool setBgrt_file(const std::string &s);
     bool setCheck_r_c(bool c);
@@ -140,6 +146,7 @@ private:
     std::string m_bgrt_file;
     bool m_verbose;
     Index m_index;
+    Output m_output;
     StringList m_seq_files;
     bool m_check_r_c;
     double m_allowed_mm;

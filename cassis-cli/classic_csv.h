@@ -1,5 +1,5 @@
 /*!
- * Dump the results from a CaSSiSTree into 'classic' CSV tables.
+ * Dump the results from a CaSSiSTree into CSV tables.
  *
  * This file is part of the
  * Comprehensive and Sensitive Signature Search (CaSSiS) CLI.
@@ -27,12 +27,21 @@
 #include <cassis/tree.h>
 
 /*!
- * Dump the results from a CaSSiSTree into multiple CSV table.
+ * Dump the results from a CaSSiSTree into multiple CSV tables.
  * This is the 'classic' CaSSiS output.
  *
  * \param tree CaSSiSTree with the processed results.
  * \return true, if successful. Otherwise false.
  */
 bool dump2ClassicCSV(CaSSiSTree *tree);
+
+/*!
+ * Dump the results from a CaSSiSTree into multiple CSV tables.
+ * This is the 'detailed' CaSSiS output.
+ *
+ * \param tree CaSSiSTree with the processed results.
+ * \return true, if successful. Otherwise false.
+ */
+bool dump2DetailedCSV(CaSSiSTree *tree);
 
 #endif /* CASSIS_RESULT_FILE_H_ */
