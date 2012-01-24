@@ -160,10 +160,10 @@ void Parameters::dump() const {
 }
 
 bool Parameters::checkIfHelp(const char *c) {
-    if (!strcmp("help", c))
-        return true;
     while (*c == '-' || *c == '/')
         ++c;
+    if (!strcmp("help", c))
+        return true;
     if (*c == '?' || *c == 'h')
         return true;
     return false;
@@ -190,7 +190,8 @@ bool Parameters::set(int argc, char **argv) {
             setCommand(CommandHelp);
             return true;
         }
-        std::cerr << "Parameter error: too few arguments\n";
+        std::cerr << "Parameter error: too few arguments. "
+                "Try one of these: -? /? -h /h --help\n";
         return false;
     }
 
