@@ -79,7 +79,7 @@ bool CaSSiSTreeNode::addMatching(char *signature, unsigned int ingroup_matches,
         // Add our signature to the list.
         signatures[outgroup_matches].add(signature);
 
-        // Store the best coverage 'score' that was archieved.
+        // Store the best coverage 'score' that was achieved.
         if (ingroup_matches > best_ingroup_coverage)
             best_ingroup_coverage = ingroup_matches;
 
