@@ -45,15 +45,15 @@ bool dump2stream(std::ostream &stream, CaSSiSTreeNode *node,
     if (node == NULL)
         return false;
 
-    // Write a column header
-    stream << "\"Size\",\"Coverage\",\"G+C\","
-            "\"Tm_basic\",\"Tm_37\",\"Signature\"\n";
+    //// Write a column header
+    //stream << "\"Size\",\"Coverage\",\"G+C\","
+    //        "\"Tm_basic\",\"Tm_37\",\"Signature\"\n";
+
+    // Create a base for thermodynamic calculations.
+    Thermodynamics therm;
 
     unsigned int outg = 0;
     while (outg <= og_matches) {
-        // Create a base for thermodynamic calculations.
-        Thermodynamics therm;
-
         unsigned int num_result_entries = node->signatures[outg].size();
 
         // Only dump nodes with an id and valid signatures.
@@ -64,10 +64,25 @@ bool dump2stream(std::ostream &stream, CaSSiSTreeNode *node,
                 const char *signature = node->signatures[outg].val(k);
                 therm.process(signature);
 
-                // Dump results in CSV format.
-                stream << node->group->size() << node->num_matches[outg]
-                        << therm.get_gc_content() << therm.get_tm_basic()
-                        << therm.get_tm_base_stacking() << signature << "\n";
+                // Additional return between signatures.
+                if (k > 0)
+                    stream << "\n";
+
+                // Output information about the signature.
+                stream << "Signature: " << signature << "\n" << "\t Length: "
+                        << strlen(signature) << "nt\n" << "\t Coverage: "
+                        << node->num_matches[outg] << " of "
+                        << node->group->size() << "\n"
+                        << "\t Outgroup matches: " << outg << "\n"
+                        << "\t G+C Content: " << therm.get_gc_content() << "%\n"
+                        << "\t T_m (basic): " << therm.get_tm_basic() << "°C\n"
+                        << "\t T_m (base stacking): "
+                        << therm.get_tm_base_stacking() << "°C\n"
+                        << "\t Entropy (Delta_s): " << therm.get_delta_s()
+                        << " cal/(mol*K)\n" << "\t Enthalpy (Delta_h): "
+                        << therm.get_delta_h() << " kcal/mol\n"
+                        << "\t Gibbs free energy (Delta_g) 37°C: "
+                        << therm.get_delta_g37() << "\n";
             }
         }
         // Increase the outgroup hits counter
