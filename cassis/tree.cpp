@@ -50,6 +50,7 @@ left(NULL), right(NULL), parent(NULL), this_id(ID_TYPE_UNDEF), leftmost_id(
 
 #ifdef PTHREADS
     mutex = new pthread_mutex_t;
+    pthread_mutex_init((pthread_mutex_t*) mutex, (pthread_mutexattr_t*) 0);
 #endif
 }
 
@@ -64,6 +65,7 @@ CaSSiSTreeNode::~CaSSiSTreeNode() {
     delete[] signatures;
     delete group;
 #ifdef PTHREADS
+    pthread_mutex_destroy((pthread_mutex_t*) mutex);
     delete (pthread_mutex_t*) mutex;
 #endif
 }
