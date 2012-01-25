@@ -39,6 +39,7 @@
 #include "complement.h"
 #include "fasta.h"
 #include "newick.h"
+#include "txtfiles.h"
 #include "parameters.h"
 #include "gen-signatures.h"
 
@@ -495,6 +496,8 @@ int commandCreate1Pass(const Parameters &params) {
             dump2ClassicCSV(tree);
         else if (params.output() == OutputDetailedCSV)
             dump2DetailedCSV(tree);
+        else if (params.output() == OutputTextfiles)
+            dump2Textfiles(tree, NULL);
     } else {
         // Otherwise we are creating a BGRT file...
 
@@ -673,6 +676,8 @@ int commandProcess(const Parameters &params) {
         dump2ClassicCSV(tree);
     else if (params.output() == OutputDetailedCSV)
         dump2DetailedCSV(tree);
+    else if (params.output() == OutputTextfiles)
+        dump2Textfiles(tree, NULL);
 
     // Do some clean-up...
     delete tree;

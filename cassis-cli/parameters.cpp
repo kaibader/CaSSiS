@@ -129,6 +129,9 @@ void Parameters::dump() const {
     case OutputDetailedCSV:
         std::cout << "Detailed CSV\n";
         break;
+    case OutputTextfiles:
+        std::cout << "Textfiles (*.sig)\n";
+        break;
     default:
         std::cout << "???\n";
         break;
@@ -252,6 +255,8 @@ bool Parameters::set(int argc, char **argv) {
                         setOutput(OutputClassicCSV);
                     else if (!strcmp("detailed", argv[i + 1]))
                         setOutput(OutputDetailedCSV);
+                    else if (!strcmp("text", argv[i + 1]))
+                        setOutput(OutputTextfiles);
                     else {
                         setOutput(OutputUndef);
                         std::cerr << "Parameter error: unknown output type.\n";
@@ -422,6 +427,7 @@ void Parameters::usage() const {
     "cassis 1pass\n"
     "  Mandatory: -seq [... -seq] -tree\n"
     "  Optional:  -all -dist -gc -idx -len -mis -og -out -rc -temp -wm\n"
+    "  Comment:   '1pass' uses the faster CaSSiS-LCA algorithm.\n"
     "\n"
     "cassis create\n"
     "  Mandatory: -bgrt -seq [... -seq]\n"
@@ -464,6 +470,7 @@ void Parameters::usage() const {
     "  -out <format>     Defines the output format.\n"
     "                        classic  = \"Classic CSV format\" (Default)\n"
     "                        detailed = \"Detailed CSV format\"\n"
+    "                        text     = \"Text file (*.sig) for each group/leaf\"\n"
 #ifdef PTHREADS
     "  -par <number>     Number of worker threads (pThreads). Has no influence\n"
     "                    on CaSSiS if pThreads-support is disabled.\n"

@@ -44,7 +44,7 @@ enum Index {
 };
 
 enum Output {
-    OutputUndef = 0, OutputClassicCSV, OutputDetailedCSV
+    OutputUndef = 0, OutputClassicCSV, OutputDetailedCSV, OutputTextfiles
 };
 
 class Parameters {
