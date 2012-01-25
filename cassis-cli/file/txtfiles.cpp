@@ -169,7 +169,9 @@ bool dump2Textfiles(CaSSiSTree *tree, IndexInterface *iface) {
             if (node->isLeaf())
                 file << "Organism:             " << name << "\n\n";
             else
-                file << "Group:                " << name << "\n\n";
+                file << "Group name:           " << name << "\n"
+                << "#Organisms:           " << node->group->size()
+                << "\n" << "\n\n";
 
             dump2stream(file, node, iface, tree->allowed_outgroup_matches);
             file.close();
