@@ -7,7 +7,7 @@ install(FILES "${PROJECT_SOURCE_DIR}/doc/lgpl.txt" DESTINATION share/doc/cassis)
 
 # Generated packages...
 # set(CPACK_GENERATOR "STGZ;TGZ;TBZ2;DEB")
-set(CPACK_GENERATOR "STGZ;TGZ;DEB")
+set(CPACK_GENERATOR "TGZ;TBZ2")
 
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Kai Christian Bader")
 set(CPACK_CMAKE_GENERATOR "Unix Makefiles")
