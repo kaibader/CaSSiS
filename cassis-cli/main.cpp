@@ -35,7 +35,7 @@
 
 #include <minipt/minipt.h>
 
-#include "classic_csv.h"
+#include "csv.h"
 #include "complement.h"
 #include "fasta.h"
 #include "newick.h"

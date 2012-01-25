@@ -21,7 +21,7 @@
  * along with CaSSiS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "classic_csv.h"
+#include "csv.h"
 
 #include <cassis/thermodynamics.h>
 

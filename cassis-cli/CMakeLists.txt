@@ -10,16 +10,17 @@ endif(DUMP_STATS)
 
 # List of source files for the CaSSiS tool.
 set(cassis_sources
-    classic_csv.cpp
-    fasta.cpp
-    main.cpp
-    newick.cpp
-    parameters.cpp
+    file/csv.cpp
+    file/fasta.cpp
+    file/newick.cpp
     gen-signatures.cpp
+    main.cpp
+    parameters.cpp
 )
 
 # Various includes.
 include_directories(
+    "${PROJECT_SOURCE_DIR}/file"
     "${PROJECT_SOURCE_DIR}"
     "${PROJECT_BINARY_DIR}"
     "${CMAKE_SOURCE_DIR}"

@@ -38,7 +38,7 @@ install(TARGETS bgrtmerge DESTINATION bin)
 ### Tool: Search Index Server ###
 
 set(index-server_sources
-    ../cassis-cli/fasta.cpp
+    ../cassis-cli/file/fasta.cpp
     index-server.cpp
 )
 add_executable(index-server ${index-server_sources})

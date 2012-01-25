@@ -16,7 +16,7 @@ set(cdcassis_sources
     resulttab.cpp
     tree.cpp
     treeview.cpp
-    ../cassis-cli/newick.cpp
+    ../cassis-cli/file/newick.cpp
 )
 
 set(resources

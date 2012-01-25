@@ -21,8 +21,8 @@
  * along with CaSSiS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CASSIS_RESULT_FILE_H_
-#define CASSIS_RESULT_FILE_H_
+#ifndef CASSIS_CSV_H_
+#define CASSIS_CSV_H_
 
 #include <cassis/tree.h>
 
@@ -44,4 +44,4 @@ bool dump2ClassicCSV(CaSSiSTree *tree);
  */
 bool dump2DetailedCSV(CaSSiSTree *tree);
 
-#endif /* CASSIS_RESULT_FILE_H_ */
+#endif /* CASSIS_CSV_H_ */

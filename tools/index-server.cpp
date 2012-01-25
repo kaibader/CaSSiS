@@ -30,7 +30,7 @@
 #include <3rd-party/arb/ptserver.h>
 #endif
 
-#include "../cassis-cli/fasta.h"
+#include "../cassis-cli/file/fasta.h"
 
 #include <cstring>
 #include <string>
