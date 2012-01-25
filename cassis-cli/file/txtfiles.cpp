@@ -29,6 +29,18 @@
 #include <sstream>
 #include <cstdio>
 #include <cstdlib>
+#include <iomanip>
+
+/*!
+ * Shortens a double value (the precision). Quick-n-dirty style...
+ *
+ * \param value Number that should be truncated.
+ * \param digits Precision.
+ */
+inline double precision(double value, unsigned int digits) {
+    unsigned int d = digits * 10;
+    return (double) ((long) (value * d)) / 10;
+}
 
 /*!
  * Dump the results from a CaSSiSTreeNode onto an output stream.
@@ -45,12 +57,11 @@ bool dump2stream(std::ostream &stream, CaSSiSTreeNode *node,
     if (node == NULL)
         return false;
 
-    //// Write a column header
-    //stream << "\"Size\",\"Coverage\",\"G+C\","
-    //        "\"Tm_basic\",\"Tm_37\",\"Signature\"\n";
-
     // Create a base for thermodynamic calculations.
     Thermodynamics therm;
+
+    // This is a helper that
+    unsigned int signaturecounter = 0;
 
     unsigned int outg = 0;
     while (outg <= og_matches) {
@@ -65,24 +76,41 @@ bool dump2stream(std::ostream &stream, CaSSiSTreeNode *node,
                 therm.process(signature);
 
                 // Additional return between signatures.
-                if (k > 0)
+                if (signaturecounter > 0)
                     stream << "\n";
+                ++signaturecounter;
 
-                // Output information about the signature.
-                stream << "Signature: " << signature << "\n" << "\t Length: "
-                        << strlen(signature) << "nt\n" << "\t Coverage: "
-                        << node->num_matches[outg] << " of "
-                        << node->group->size() << "\n"
-                        << "\t Outgroup matches: " << outg << "\n"
-                        << "\t G+C Content: " << therm.get_gc_content() << "%\n"
-                        << "\t T_m (basic): " << therm.get_tm_basic() << "°C\n"
-                        << "\t T_m (base stacking): "
-                        << therm.get_tm_base_stacking() << "°C\n"
-                        << "\t Entropy (Delta_s): " << therm.get_delta_s()
-                        << " cal/(mol*K)\n" << "\t Enthalpy (Delta_h): "
-                        << therm.get_delta_h() << " kcal/mol\n"
-                        << "\t Gibbs free energy (Delta_g) 37°C: "
-                        << therm.get_delta_g37() << "\n";
+                // Output information about the signature. #1
+                stream << "Signature:            " << signature << "\n"
+                        << "Length:               " << strlen(signature)
+                        << " nt\n";
+
+                // Output information about the signature, if it is a group. #2
+                if (!node->isLeaf())
+                    stream
+                    << "Coverage:             "
+                    << node->num_matches[outg]
+                                         << " of "
+                                         << node->group->size()
+                                         << " ("
+                                         << precision(
+                                                 (double) node->num_matches[outg] * 100
+                                                 / node->group->size(), 1) << "%)\n";
+
+                // Output information about the signature. #3
+                stream << "Outgroup matches:     " << outg << "\n"
+                        << "G+C Content:          "
+                        << precision(therm.get_gc_content(), 1) << "%\n"
+                        << "T_m (basic):          "
+                        << precision(therm.get_tm_basic(), 1) << "°C\n"
+                        << "T_m (base stacking):  "
+                        << precision(therm.get_tm_base_stacking(), 1) << "°C\n"
+                        << "Entropy (dS):         "
+                        << precision(therm.get_delta_s(), 1) << " cal/(mol*K)\n"
+                        << "Enthalpy (dH):        "
+                        << precision(therm.get_delta_h(), 1) << " kcal/mol\n"
+                        << "Gibbs f.e. (dG 37°C): "
+                        << precision(therm.get_delta_g37(), 1) << " kcal/mol\n";
             }
         }
         // Increase the outgroup hits counter
@@ -120,21 +148,29 @@ bool dump2Textfiles(CaSSiSTree *tree, IndexInterface *iface) {
             name = tree->group_mapping.name(node->this_id);
         if (name.length() > 0) {
             // Replace whitespace characters... dirty, I know...
+            std::string filename(name);
             size_t pos =
-                    name.find_first_not_of(
+                    filename.find_first_not_of(
                             "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_");
             while (pos != std::string::npos) {
-                name[pos] = '_';
+                filename[pos] = '_';
                 pos =
-                        name.find_first_not_of(
+                        filename.find_first_not_of(
                                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_",
                                 pos + 1);
             }
 
             // Create/open file, write the results, and close it.
-            name.append(".sig");
+            filename.append(".sig");
             std::ofstream file;
-            file.open(name.c_str());
+            file.open(filename.c_str());
+
+            // Write a header (info about the current leaf/group)
+            if (node->isLeaf())
+                file << "Organism:             " << name << "\n\n";
+            else
+                file << "Group:                " << name << "\n\n";
+
             dump2stream(file, node, iface, tree->allowed_outgroup_matches);
             file.close();
         }
