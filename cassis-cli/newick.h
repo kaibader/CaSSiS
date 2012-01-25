@@ -27,14 +27,6 @@
 #include <cassis/tree.h>
 #include <cassis/namemap.h>
 
-///*!
-// * Create/read a phylogenetic tree from a Newick tree file.
-// *
-// * \param filename String containing the name of the Newick file.
-// * \return PhyloTree structure, if successful. Otherwise NULL.
-// */
-//struct PhyloTree *ParseNewickFile(const char *filename, NameMap &map);
-
 /*!
  * Dump a phylogenetic tree in the Newick format to stdout.
  *
