@@ -22,7 +22,7 @@
  */
 
 #include "search.h"
-#include <config.h>
+#include "config.h"
 
 #ifdef PTHREADS
 #include "pool.h"
@@ -88,8 +88,7 @@ void traverse_BgrTree_recursion(unsigned int starting_solution,
         bgr_node->ingroup_array = (unsigned int *) calloc(cassistree_depth,
                 sizeof(unsigned int));
         assert(phy_node_depth == 0);
-    }
-    assert(phy_node_depth <= cassistree_depth);
+    }assert(phy_node_depth <= cassistree_depth);
 
     // Create a reference to the ingroup array (may speed up r/w).
     unsigned int *node_ingroup_array = bgr_node->ingroup_array;

@@ -99,6 +99,12 @@ public:
      * the outgroup range.
      */
     unsigned int best_ingroup_coverage;
+
+    /*!
+     * Placeholder for a mutex for every node.
+     * Relevant when running a parallelized version of the CaSSiS library.
+     */
+    void* mutex;
 };
 
 class CaSSiSTree {

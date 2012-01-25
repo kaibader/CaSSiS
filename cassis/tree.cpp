@@ -22,6 +22,12 @@
  */
 
 #include "tree.h"
+#include "config.h"
+
+#ifdef PTHREADS
+#include "pool.h"
+#include <pthread.h>
+#endif
 
 #include <cassert>
 #include <cstring>
@@ -33,7 +39,7 @@ CaSSiSTreeNode::CaSSiSTreeNode(unsigned int allowed_outgroup_matches) :
 left(NULL), right(NULL), parent(NULL), this_id(ID_TYPE_UNDEF), leftmost_id(
         ID_TYPE_UNDEF), rightmost_id(ID_TYPE_UNDEF), num_matches(NULL), signatures(
                 NULL), group(NULL), starting_solution((unsigned int) -1), best_ingroup_coverage(
-                        0) {
+                        0), mutex(NULL) {
     signatures = new StrRefSet[allowed_outgroup_matches + 1];
     num_matches = new unsigned int[allowed_outgroup_matches + 1];
 
@@ -41,6 +47,10 @@ left(NULL), right(NULL), parent(NULL), this_id(ID_TYPE_UNDEF), leftmost_id(
         num_matches[i] = 0;
 
     leftmost_id = rightmost_id = this_id = ID_TYPE_UNDEF;
+
+#ifdef PTHREADS
+    mutex = new pthread_mutex_t;
+#endif
 }
 
 /*!
@@ -52,8 +62,10 @@ CaSSiSTreeNode::~CaSSiSTreeNode() {
     delete right;
     delete[] num_matches;
     delete[] signatures;
-    //
     delete group;
+#ifdef PTHREADS
+    delete (pthread_mutex_t*) mutex;
+#endif
 }
 
 /*!
@@ -71,6 +83,11 @@ bool CaSSiSTreeNode::addMatching(char *signature, unsigned int ingroup_matches,
         unsigned int outgroup_matches) {
     if ((ingroup_matches > 0)
             && (ingroup_matches >= num_matches[outgroup_matches])) {
+
+#ifdef PTHREADS
+        pthread_mutex_lock((pthread_mutex_t*) mutex);
+#endif
+
         if (ingroup_matches > num_matches[outgroup_matches]) {
             // Create a new signature list, as we have a better solution.
             signatures[outgroup_matches].clear();
@@ -82,6 +99,10 @@ bool CaSSiSTreeNode::addMatching(char *signature, unsigned int ingroup_matches,
         // Store the best coverage 'score' that was achieved.
         if (ingroup_matches > best_ingroup_coverage)
             best_ingroup_coverage = ingroup_matches;
+
+#ifdef PTHREADS
+        pthread_mutex_unlock((pthread_mutex_t*) mutex);
+#endif
 
         // Success...
         return true;

@@ -22,6 +22,9 @@
  * along with CaSSiS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef CASSIS_POOL_H_
+#define CASSIS_POOL_H_
+
 /*!
  * Returns the number of (real) processors or, if defined, the number
  * from the 'PTHREADS_NUM_THREADS' environment variable.
@@ -53,3 +56,5 @@ void pool_init(int num_threads = 0);
  * Destroy pool.
  */
 void pool_shutdown();
+
+#endif /* CASSIS_POOL_H_ */

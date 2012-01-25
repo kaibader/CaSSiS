@@ -15,7 +15,7 @@ set(bgrt_sources
 
 # Some configuration stuff necessary for the pThreads version of the BGRT library.
 if(PTHREADS)
-    message("Parallel bgrt processing using pThreads enabled.")
+    message(STATUS "Parallel bgrt processing using pThreads enabled.")
     list(APPEND bgrt_sources pool.cpp)
     set(CMAKE_THREAD_PREFER_PTHREADS 1)
     find_package(Threads REQUIRED)
