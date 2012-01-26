@@ -81,7 +81,7 @@ bool dump2stream(std::ostream &stream, CaSSiSTreeNode *node,
                 ++signaturecounter;
 
                 // Output information about the signature. #1
-                stream << "Signature:            " << signature << "\n"
+                stream  << "Signature:            3'-" << signature << "-5'\n"
                         << "Length:               " << strlen(signature)
                         << " nt\n";
 
@@ -170,7 +170,7 @@ bool dump2Textfiles(CaSSiSTree *tree, IndexInterface *iface) {
                 file << "Organism:             " << name << "\n\n";
             else
                 file << "Group name:           " << name << "\n"
-                << "#Organisms:           " << node->group->size()
+                << "Group size:           " << node->group->size()
                 << "\n" << "\n\n";
 
             dump2stream(file, node, iface, tree->allowed_outgroup_matches);
