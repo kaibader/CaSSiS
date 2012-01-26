@@ -496,8 +496,19 @@ int commandCreate1Pass(const Parameters &params) {
             dump2ClassicCSV(tree);
         else if (params.output() == OutputDetailedCSV)
             dump2DetailedCSV(tree);
-        else if (params.output() == OutputTextfiles)
-            dump2Textfiles(tree, NULL);
+        else if (params.output() == OutputTextfiles) {
+            // Write parameter information into every file, if available.
+            std::stringstream comment;
+            comment << "\nPresets:\n" << "Length                "
+                    << params.min_len() << " -- " << params.max_len() << " nt\n"
+                    << "G+C                   " << params.min_gc() << "% -- "
+                    << params.max_gc() << "%\n" << "Tm (basic)            "
+                    << params.min_tm() << "°C -- " << params.max_tm() << "°C\n"
+                    << "Allowed mismatches    " << params.allowed_mm() << "\n"
+                    << "Mismatch-distance     " << params.mm_dist();
+
+            dump2Textfiles(tree, comment.str().c_str());
+        }
     } else {
         // Otherwise we are creating a BGRT file...
 
@@ -676,8 +687,14 @@ int commandProcess(const Parameters &params) {
         dump2ClassicCSV(tree);
     else if (params.output() == OutputDetailedCSV)
         dump2DetailedCSV(tree);
-    else if (params.output() == OutputTextfiles)
-        dump2Textfiles(tree, NULL);
+    else if (params.output() == OutputTextfiles) {
+        // Write parameter information into every file, if available.
+        std::stringstream comment;
+        comment << "\nBGRT file:          " << params.bgrt_file()
+                        << "\nBGRT comment:       " << bgr_tree->comment;
+
+        dump2Textfiles(tree, comment.str().c_str());
+    }
 
     // Do some clean-up...
     delete tree;
@@ -774,5 +791,4 @@ int main(int argc, char **argv) {
 #ifdef DUMP_STATS
     std::cout << "CaSSiS program ended.\n";
 #endif
-
 }

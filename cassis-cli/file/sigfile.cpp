@@ -47,13 +47,11 @@ inline double precision(double value, unsigned int digits) {
  *
  * \param ostream Output stream.
  * \param node CaSSiSTreeNode with the processed results.
- * \param iface Search index interface, for detailed match list.
  * \param og_matches Max. number of allowed outgroup matches.
  * \return true, if successful. Otherwise false.
  */
 bool dump2stream(std::ostream &stream, CaSSiSTreeNode *node,
-        IndexInterface *iface, unsigned int og_matches) {
-    // if (node == NULL || iface == NULL)
+        unsigned int og_matches) {
     if (node == NULL)
         return false;
 
@@ -101,9 +99,9 @@ bool dump2stream(std::ostream &stream, CaSSiSTreeNode *node,
                 stream << "Outgroup matches:     " << outg << "\n"
                         << "G+C Content:          "
                         << precision(therm.get_gc_content(), 1) << "%\n"
-                        << "T_m (basic):          "
+                        << "Tm (basic):           "
                         << precision(therm.get_tm_basic(), 1) << "°C\n"
-                        << "T_m (base stacking):  "
+                        << "Tm (base stacking):   "
                         << precision(therm.get_tm_base_stacking(), 1) << "°C\n"
                         << "Entropy (dS):         "
                         << precision(therm.get_delta_s(), 1) << " cal/(mol*K)\n"
@@ -116,19 +114,17 @@ bool dump2stream(std::ostream &stream, CaSSiSTreeNode *node,
         // Increase the outgroup hits counter
         ++outg;
     }
-
     return true;
 }
 
 /*!
- * Dump the results from a CaSSiSTree into multiple CSV tables.
+ * Dump the results from a CaSSiSTree into multiple signature files.
  *
  * \param tree CaSSiSTree with the processed results.
- * \param iface Search index interface, for detailed match list.
+ * \param comment A text string that is added as a comment to the file.
  * \return true, if successful. Otherwise false.
  */
-bool dump2Textfiles(CaSSiSTree *tree, IndexInterface *iface) {
-    // if (tree == NULL || iface == NULL)
+bool dump2Textfiles(CaSSiSTree *tree, const char *comment) {
     if (tree == NULL)
         return false;
 
@@ -173,7 +169,12 @@ bool dump2Textfiles(CaSSiSTree *tree, IndexInterface *iface) {
                 << "Group size:           " << node->group->size()
                 << "\n";
 
-            dump2stream(file, node, iface, tree->allowed_outgroup_matches);
+            // Write a comment to the file, if available.
+            if (comment)
+                file << comment << "\n";
+
+            // Write the signature results into the file.
+            dump2stream(file, node, tree->allowed_outgroup_matches);
             file.close();
         }
     }

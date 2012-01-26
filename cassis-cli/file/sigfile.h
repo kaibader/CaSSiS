@@ -25,16 +25,14 @@
 #define CASSIS_SIGFILE_H_
 
 #include <cassis/tree.h>
-#include <cassis/indexinterface.h>
 
 /*!
- * Dump the results from a CaSSiSTree into multiple CSV tables.
- * This is the 'classic' CaSSiS output.
+ * Dump the results from a CaSSiSTree into multiple signature files.
  *
  * \param tree CaSSiSTree with the processed results.
- * \param iface Search index interface, for detailed match list.
+ * \param comment A text string that is added as a comment to the file.
  * \return true, if successful. Otherwise false.
  */
-bool dump2Textfiles(CaSSiSTree *tree, IndexInterface *iface);
+bool dump2Textfiles(CaSSiSTree *tree, const char *comment = NULL);
 
 #endif /* CASSIS_SIGFILE_H_ */
