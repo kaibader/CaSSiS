@@ -39,7 +39,7 @@
 #include "complement.h"
 #include "fasta.h"
 #include "newick.h"
-#include "txtfiles.h"
+#include "sigfile.h"
 #include "parameters.h"
 #include "gen-signatures.h"
 

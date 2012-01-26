@@ -1,5 +1,5 @@
 /*!
- * Dump the results from a CaSSiSTree into CSV tables.
+ * Dump the results from a CaSSiSTree into separate signature files.
  *
  * This file is part of the
  * Comprehensive and Sensitive Signature Search (CaSSiS) CLI.
@@ -21,8 +21,8 @@
  * along with CaSSiS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CASSIS_TXTOUT_H_
-#define CASSIS_TXTOUT_H_
+#ifndef CASSIS_SIGFILE_H_
+#define CASSIS_SIGFILE_H_
 
 #include <cassis/tree.h>
 #include <cassis/indexinterface.h>
@@ -37,4 +37,4 @@
  */
 bool dump2Textfiles(CaSSiSTree *tree, IndexInterface *iface);
 
-#endif /* CASSIS_TXTOUT_H_ */
+#endif /* CASSIS_SIGFILE_H_ */

@@ -1,5 +1,5 @@
 /*!
- * Dump the results from a CaSSiSTree into CSV tables.
+ * Dump the results from a CaSSiSTree into separate signature files.
  *
  * This file is part of the
  * Comprehensive and Sensitive Signature Search (CaSSiS) CLI.
@@ -21,7 +21,7 @@
  * along with CaSSiS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "txtfiles.h"
+#include "sigfile.h"
 
 #include <cassis/thermodynamics.h>
 
@@ -60,9 +60,6 @@ bool dump2stream(std::ostream &stream, CaSSiSTreeNode *node,
     // Create a base for thermodynamic calculations.
     Thermodynamics therm;
 
-    // This is a helper that
-    unsigned int signaturecounter = 0;
-
     unsigned int outg = 0;
     while (outg <= og_matches) {
         unsigned int num_result_entries = node->signatures[outg].size();
@@ -70,18 +67,21 @@ bool dump2stream(std::ostream &stream, CaSSiSTreeNode *node,
         // Only dump nodes with an id and valid signatures.
         // Dump one signature per line.
         if (num_result_entries > 0) {
+            if (og_matches > 0) {
+                stream << "\n--------------------- Signatures with " << outg;
+                if (outg == 1)
+                    stream << " outgroup match\n";
+                else
+                    stream << " outgroup matches\n";
+            }
+
             for (unsigned int k = 0; k < num_result_entries; ++k) {
                 // Fetch signature and process it.
                 const char *signature = node->signatures[outg].val(k);
                 therm.process(signature);
 
-                // Additional return between signatures.
-                if (signaturecounter > 0)
-                    stream << "\n";
-                ++signaturecounter;
-
                 // Output information about the signature. #1
-                stream  << "Signature:            3'-" << signature << "-5'\n"
+                stream << "\nSignature:            3'-" << signature << "-5'\n"
                         << "Length:               " << strlen(signature)
                         << " nt\n";
 
@@ -167,11 +167,11 @@ bool dump2Textfiles(CaSSiSTree *tree, IndexInterface *iface) {
 
             // Write a header (info about the current leaf/group)
             if (node->isLeaf())
-                file << "Organism:             " << name << "\n\n";
+                file << "Organism:             " << name << "\n";
             else
                 file << "Group name:           " << name << "\n"
                 << "Group size:           " << node->group->size()
-                << "\n" << "\n\n";
+                << "\n";
 
             dump2stream(file, node, iface, tree->allowed_outgroup_matches);
             file.close();

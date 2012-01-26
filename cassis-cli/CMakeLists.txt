@@ -13,7 +13,7 @@ set(cassis_sources
     file/csv.cpp
     file/fasta.cpp
     file/newick.cpp
-    file/txtfiles.cpp
+    file/sigfile.cpp
     gen-signatures.cpp
     main.cpp
     parameters.cpp
