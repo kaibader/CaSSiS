@@ -29,8 +29,8 @@
 #include <cassis/tree.h>
 
 #ifdef ARB
-#include <3rd-party/arb/tree.h>
-#include <3rd-party/arb/ptserver.h>
+#include <arb/tree.h>
+#include <arb/ptserver.h>
 #endif
 
 #include <minipt/minipt.h>

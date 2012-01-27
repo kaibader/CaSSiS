@@ -41,7 +41,7 @@
 #include <cassis/namemap.h>
 //#include <cassis/thermodynamics.h>
 // TODO: Dirty include!
-#include "../cassis-cli/file/newick.h"
+#include "newick.h"
 
 BigView::BigView(QWidget *p) :
 QGraphicsView(p), m_mousePressed(false) {

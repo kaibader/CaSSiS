@@ -1,4 +1,4 @@
-project(arb)
+project(libARB)
 
 # We need a defined ARBHOME (path to the ARB source code).
 set(ARBHOME "" CACHE PATH "Path to the ARB source code")
@@ -88,10 +88,9 @@ include_directories(
     "${ARBHOME}/PROBE_COM/C"
     "${ARBHOME}/PROBE_COM/GENH"
     "${ARBHOME}/SL/HELIX"
+    "${CMAKE_SOURCE_DIR}/lib"
     "${PROJECT_SOURCE_DIR}"
     "${PROJECT_BINARY_DIR}"
-    "${CMAKE_SOURCE_DIR}"
-    "${CMAKE_BINARY_DIR}"
 )
 
 # Some ARB (legacy) dependencies.

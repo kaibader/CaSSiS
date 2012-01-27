@@ -27,10 +27,10 @@
 #include <minipt/minipt.h>
 
 #ifdef ARB
-#include <3rd-party/arb/ptserver.h>
+#include <arb/ptserver.h>
 #endif
 
-#include "../cassis-cli/file/fasta.h"
+#include <fasta.h>
 
 #include <cstring>
 #include <string>

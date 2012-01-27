@@ -1,4 +1,4 @@
-project(minipt)
+project(libminipt)
 
 # List of source files for the minipt library.
 set(minipt_sources
@@ -12,8 +12,9 @@ set(minipt_sources
 )
 
 include_directories(
+    "${CMAKE_SOURCE_DIR}/lib"
     "${PROJECT_SOURCE_DIR}"
-    "${CMAKE_SOURCE_DIR}"
+    "${PROJECT_BINARY_DIR}"
 )
 
 # Legacy!

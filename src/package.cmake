@@ -1,9 +1,9 @@
 include(InstallRequiredSystemLibraries)
 
 # Add documentation.
-install(FILES "${PROJECT_SOURCE_DIR}/doc/readme.txt" DESTINATION share/doc/cassis)
-install(FILES "${PROJECT_SOURCE_DIR}/doc/changelog.txt" DESTINATION share/doc/cassis)
-install(FILES "${PROJECT_SOURCE_DIR}/doc/lgpl.txt" DESTINATION share/doc/cassis)
+install(FILES "${PROJECT_SOURCE_DIR}/../doc/readme.txt" DESTINATION share/doc/cassis)
+install(FILES "${PROJECT_SOURCE_DIR}/../doc/changelog.txt" DESTINATION share/doc/cassis)
+install(FILES "${PROJECT_SOURCE_DIR}/../doc/lgpl.txt" DESTINATION share/doc/cassis)
 
 # Generated packages...
 # set(CPACK_GENERATOR "STGZ;TGZ;TBZ2;DEB")
@@ -34,8 +34,8 @@ endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 set(CPACK_PACKAGE_NAME "CaSSiS")
 set(CPACK_PACKAGE_VENDOR "Kai Christian Bader")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Comprehensive and Sensitive Signature Search")
-set(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/doc/readme.txt")
-set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/doc/lgpl.txt")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/../doc/readme.txt")
+set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/../doc/lgpl.txt")
 set(CPACK_PACKAGE_VERSION_MAJOR "${CASSIS_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${CASSIS_VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${CASSIS_VERSION_PATCH}")

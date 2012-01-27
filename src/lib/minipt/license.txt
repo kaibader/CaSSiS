@@ -1,0 +1,74 @@
+Copyrights for the ARB source code of 'MiniPT' and '3rd-party/arb'.
+
+ARB copyright and license information
+
+    COPYRIGHTS
+
+        The ARB software and documentation are not in the public
+        domain.
+
+        External programs distributed together with ARB are
+        copyrighted by and are the property of their respective
+        authors unless otherwise stated.
+
+        All other copyrights are owned by Lehrstuhl fuer
+        Mikrobiologie, TU Muenchen.
+
+    USAGE LICENSE
+
+        You have the right to use this version of ARB for free.
+        Please read as well the attached copyright notices below
+        whether you may or may not install this package.
+
+        Since many of the included programs is free software and
+        nobody is allowed to sell that software you may safely assume
+        ARB will never become a commercial product. 
+
+    REDISTRIBUTION LICENSE
+
+        This release of the ARB program and documentation may not be
+        sold or incorporated into a commercial product, in whole or in
+        part, without the expressed written consent of the Technical
+        University of Munich and of its supervisors Ralf Westram or
+        Wolfgang Ludwig.
+
+        All interested parties may redistribute and modify ARB as long
+        as all copies are accompanied by this license information and
+        all copyright notices remain intact.  Parties redistributing
+        ARB must do so on a non-profit basis, charging only for cost
+        of media or distribution.
+
+        If you modify parts of ARB and redistribute these changes the
+        'Lehrstuhl fuer Mikrobiologie' of the TU Muenchen gains the
+        right to incorporate these changes into ARB and to redistribute
+        them with future versions of ARB.
+
+    DEBIAN DISTRIBUTION
+
+        Hereby anybody is granted the right to build debian-pakets
+        of the ARB software package (http:://www.arb-home.de/) and
+        publish them on debian mirrors (or any other way of
+        debian-distribution). 
+
+        This includes any debian derivates like ubuntu. 
+
+        The ARB developers may (but most likely wont ever) revoke
+        this granting. If really done so, it'll only affect ARB
+        versions released after such a revocation.
+
+    DISCLAIMER
+
+        THE TU MUENCHEN AND THE VARIOUS AUTHORS OF ARB GIVE NO
+        WARRANTIES, EXPRESSED OR IMPLIED FOR THE SOFTWARE AND
+        DOCUMENTATION PROVIDED, INCLUDING, BUT NOT LIMITED TO WARRANTY
+        OF MERCHANTABILITY AND WARRANTY OF FITNESS FOR A PARTICULAR
+        PURPOSE.  User understands the software is a research tool for
+        which no warranties as to capabilities or accuracy are made,
+        and user accepts the software "as is." User assumes the entire
+        risk as to the results and performance of the software and
+        documentation. The above parties cannot be held liable for any
+        direct, indirect, consequential or incidental damages with
+        respect to any claim by user or any third party on account of,
+        or arising from the use of software and associated
+        materials. This disclaimer covers both the ARB core
+        applications and all external programs used by ARB.

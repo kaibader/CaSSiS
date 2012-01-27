@@ -1,4 +1,4 @@
-project(CaSSiS)
+project(libCaSSiS)
 
 # Enable this option to build a pThreads version of the BGRT library.
 option(PTHREADS "Enable parallel bgrt processing using pThreads" OFF)

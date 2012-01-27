@@ -4,7 +4,8 @@ SET(CMAKE_INSTALL_RPATH ".")
 
 # Prevent in-source builds. Always build in a separate folder.
 if(CMAKE_SOURCE_DIR STREQUAL "${CMAKE_BINARY_DIR}")
-    message(FATAL_ERROR "In-source builds are not allowed.")
+    message(FATAL_ERROR "Sorry, but in-source builds are disabled."
+        "Please use a separate build directory.")
 endif(CMAKE_SOURCE_DIR STREQUAL "${CMAKE_BINARY_DIR}")
 
 # The build type (debug, release, ...) has to be defined.
@@ -14,19 +15,19 @@ if(NOT CMAKE_BUILD_TYPE)
     FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
 
-# Define an ARB flag.
-# Disabled by default; Always disabled in Windows builds.
-# Caution: Should only be enabled if an ARBHOME is defined.
+# The ARB database and search index library.
+# Disabled by default. Always disabled in Windows builds.
+# Caution: Should only be enabled if an ARBHOME variable is defined as well.
 set(ARB "off" CACHE BOOL "Build with ARB support")
 if(WIN32)
 set(ARB "off")
 endif(WIN32)
 if(ARB)
-    add_subdirectory(3rd-party/arb)
+    add_subdirectory(lib/arb)
 endif(ARB)
 
-# The version number. Will be written to "bgrt/config.h".
-# All tools share a version number with the BGRT library.
+# The version number. Will be stored in "config.h".
+# All tools share a version number with the CaSSiS library.
 set(CASSIS_VERSION_MAJOR  0)
 set(CASSIS_VERSION_MINOR  4)
 set(CASSIS_VERSION_PATCH  1)
@@ -34,7 +35,7 @@ set(CASSIS_VERSION_SUFFIX "_alpha")
 message(STATUS "Setting CaSSiS version number to: "
     "${CASSIS_VERSION_MAJOR}.${CASSIS_VERSION_MINOR}.${CASSIS_VERSION_PATCH}${CASSIS_VERSION_SUFFIX}")
 
-# Build date macro (thanks @ Benoit RAT).
+# Build date macro (thanks @ Benoit_RAT).
 macro(TODAY RESULT)
     if(WIN32)
         execute_process(COMMAND cmd /c date /t OUTPUT_VARIABLE DATE)
@@ -48,11 +49,11 @@ macro(TODAY RESULT)
     endif(WIN32)
 endmacro(TODAY)
 
-# Set the date string. See: library/config.h
+# Sets the build date string in "config.h".
 TODAY(CASSIS_BUILD_DATE)
 message(STATUS "Setting CaSSiS build date to: ${CASSIS_BUILD_DATE}")
 
-# For debugging purposes only...
+# Compiler definitions (for debugging purposes only).
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-g -O0 -Wall -Wextra -Wshadow)
     #add_definitions(-g -O0 -Wall -Weffc++ -pedantic -pedantic-errors -Wextra
@@ -73,25 +74,25 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     message(STATUS "Enabled pedantic gcc warnings")
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
-# Disable various warnings in MSVC...
+# Disable various warnings in MSVC.
 if(WIN32)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE)
 endif(WIN32)
 
-# The MiniPT search index library
-add_subdirectory(minipt)
+# The MiniPT search index library.
+add_subdirectory(lib/minipt)
 
-# The CaSSiS library
-add_subdirectory(cassis)
+# The CaSSiS library.
+add_subdirectory(lib/cassis)
 
-# The CaSSiS command line interface tool
-add_subdirectory(cassis-cli)
+# The CaSSiS command line interface tool.
+add_subdirectory(main/cassis)
 
-# The graphical user interface version of CaSSiS
-add_subdirectory(cassis-gui)
+# The graphical user interface version of CaSSiS.
+add_subdirectory(main/cassis-gui)
 
-# Various tools (useful for debugging and testing)
-add_subdirectory(tools)
+# Various tools (useful for debugging and testing).
+add_subdirectory(main/tools)
 
-# Add 'create package' functionality
+# Add a 'create package' functionality.
 include(package.cmake)

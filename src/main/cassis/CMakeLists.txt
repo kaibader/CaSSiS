@@ -1,5 +1,5 @@
 # The CaSSiS command line interface tool project.
-project(cassis-cli)
+project(CaSSiS)
 
 # Define a 'dump statistical information' flag.
 # Disabled by default.
@@ -10,10 +10,10 @@ endif(DUMP_STATS)
 
 # List of source files for the CaSSiS tool.
 set(cassis_sources
-    file/csv.cpp
-    file/fasta.cpp
-    file/newick.cpp
-    file/sigfile.cpp
+    "${CMAKE_SOURCE_DIR}/shared/csv.cpp"
+    "${CMAKE_SOURCE_DIR}/shared/fasta.cpp"
+    "${CMAKE_SOURCE_DIR}/shared/newick.cpp"
+    "${CMAKE_SOURCE_DIR}/shared/sigfile.cpp"
     gen-signatures.cpp
     main.cpp
     parameters.cpp
@@ -21,11 +21,11 @@ set(cassis_sources
 
 # Various includes.
 include_directories(
-    "${PROJECT_SOURCE_DIR}/file"
+    "${CMAKE_SOURCE_DIR}/lib"
+    "${CMAKE_BINARY_DIR}/lib"
+    "${CMAKE_SOURCE_DIR}/shared"
     "${PROJECT_SOURCE_DIR}"
     "${PROJECT_BINARY_DIR}"
-    "${CMAKE_SOURCE_DIR}"
-    "${CMAKE_BINARY_DIR}"
 )
 
 # Build the CaSSiS binary.

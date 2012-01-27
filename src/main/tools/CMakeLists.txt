@@ -1,20 +1,12 @@
 project(bgrttools)
 
 include_directories(
+    "${CMAKE_SOURCE_DIR}/lib"
+    "${CMAKE_BINARY_DIR}/lib"
+    "${CMAKE_SOURCE_DIR}/shared"
     "${PROJECT_SOURCE_DIR}"
     "${PROJECT_BINARY_DIR}"
-    "${CMAKE_SOURCE_DIR}"
-    "${CMAKE_BINARY_DIR}"
 )
-
-### Tool: bgrtinfo ###
-
-set(bgrtinfo_sources
-    bgrtinfo.cpp
-)
-add_executable(bgrtinfo ${bgrtinfo_sources})
-target_link_libraries(bgrtinfo CaSSiS)
-install(TARGETS bgrtinfo DESTINATION bin)
 
 ### Tool: bgrt2graphviz ###
 
@@ -35,18 +27,18 @@ add_executable(bgrtmerge ${bgrtmerge_sources})
 target_link_libraries(bgrtmerge CaSSiS)
 install(TARGETS bgrtmerge DESTINATION bin)
 
-### Tool: Search Index Server ###
+### Tool: Search Index Daemon ###
 
-set(index-server_sources
-    ../cassis-cli/file/fasta.cpp
-    index-server.cpp
+set(index-daemon_sources
+    "${CMAKE_SOURCE_DIR}/shared/fasta.cpp"
+    index-daemon.cpp
 )
-add_executable(index-server ${index-server_sources})
+add_executable(index-daemon ${index-daemon_sources})
 if(ARB)
     # Build with ARB file support.
     add_definitions(-DARB)
-    target_link_libraries(index-server CaSSiS minipt ARB)
+    target_link_libraries(index-daemon CaSSiS minipt ARB)
 else(ARB)
-    target_link_libraries(index-server CaSSiS minipt)
+    target_link_libraries(index-daemon CaSSiS minipt)
 endif(ARB)
-install(TARGETS index-server DESTINATION bin)
+install(TARGETS index-daemon DESTINATION bin)
