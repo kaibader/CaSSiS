@@ -36,6 +36,7 @@
 
 #include <sstream>
 #include <iostream>
+#include <cstdio>
 #include <cstdlib>
 #include <string>
 
@@ -60,12 +61,86 @@ int main(int argc, char **/*argv*/) {
     // TODO: Currently the MiniPT index is hardcoded.
     IndexInterface *search_index = new MiniPT;
 
+    // Create I/O buffer.
+    char *buf_in = (char *) malloc(64 * 1024);
+    char *buf_out = (char *) malloc(64 * 1024);
+    if (!buf_in || !buf_out)
+        return EXIT_FAILURE;
+
+    // Hardcoded file descriptors (pipes)
+    const int fd_in = 3;
+    const int fd_out = 4;
+
+    unsigned int test = 0;
+
     // Main server loop.
     // Awaits incoming commands on pipe '3' and output goes to pipe '4'.
     while (1) {
+        ssize_t size = read(fd_in, buf_in, 64 * 1024);
 
-        //...
-        break;
+        //if (size < 0 && errno != EINTR)
+        //    break; // Stop the processing.
+
+        // Quit...
+        if (!strcmp(buf_in, "quit"))
+            break;
+
+        // TEST TEST TEST
+        if (!strcmp(buf_in, "hello")) {
+            sprintf(buf_out, "Message %d: Hi!\n", ++test);
+            write(fd_out, buf_out, strlen(buf_out));
+        }
+
+        //// Comment: a size of 0 is NOT considered as EOF,
+        //// as long a no stop character '.' was sent.
+        //
+        //for (int i = 0; i < size; ++i) {
+        //    char buf_i = buf[i];
+        //
+        //    if (buf_i == '.' || buf_2_pos == 64) {
+        //        return; // Break at the stop character
+        //    }
+        //
+        //    buf_2[buf_2_pos++] = buf_i;
+        //
+        //    // Comment: (buf_2_pos == 64) should not happen.
+        //    // If it does, it must be an error.
+        //    // assert(buf_2_pos == 64);
+        //
+        //    if (buf_i == '\n') {
+        //        // Fetch species identifier (first integer)
+        //        unsigned int id = atoi(buf_2);
+        //
+        //        // Fetch number of mismatches (second integer)
+        //        int pos = 0;
+        //        while (buf_2[pos] != ' ' && pos < 64)
+        //            ++pos;
+        //        unsigned int mismatches = atoi(buf_2 + pos + 1);
+        //
+        //        // Reset 2nd buffer
+        //        buf_2_pos = 0;
+        //
+        //        // Mark signatures with matches within the defined
+        //        // mismatch distance.
+        //        //
+        //        // TODO: This filter is not completely correct. Species with
+        //        // multiple matching sites with different mismatches might
+        //        // lead to the false reject of the signature.
+        //        if (mismatches > mm) {
+        //            if (species)
+        //                IntSet_destroy(species);
+        //            species = NULL;
+        //            match_within_mm_distance = true;
+        //        }
+        //
+        //        // Add the species ID as a match
+        //        if (!match_within_mm_distance) {
+        //            if (!species)
+        //                species = IntSet_create();
+        //            IntSet_add(species, id);
+        //        }
+        //    }
+        //}
     }
 
     //std::string buffer;
@@ -151,6 +226,8 @@ int main(int argc, char **/*argv*/) {
     //return 0;
 
     // Quit/exit the server.
+    free(buf_in);
+    free(buf_out);
     return EXIT_SUCCESS;
 }
 
