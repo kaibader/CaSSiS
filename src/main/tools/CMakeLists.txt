@@ -27,18 +27,18 @@ add_executable(bgrtmerge ${bgrtmerge_sources})
 target_link_libraries(bgrtmerge CaSSiS)
 install(TARGETS bgrtmerge DESTINATION bin)
 
-### Tool: Search Index Daemon ###
+### Tool: Search Index Server (Daemon) ###
 
-set(index-daemon_sources
+set(indexserver-daemon_sources
     "${CMAKE_SOURCE_DIR}/shared/fasta.cpp"
-    index-daemon.cpp
+    indexserver-daemon.cpp
 )
-add_executable(index-daemon ${index-daemon_sources})
+add_executable(indexserver-daemon ${indexserver-daemon_sources})
 if(ARB)
     # Build with ARB file support.
     add_definitions(-DARB)
-    target_link_libraries(index-daemon CaSSiS minipt ARB)
+    target_link_libraries(indexserver-daemon CaSSiS minipt ARB)
 else(ARB)
-    target_link_libraries(index-daemon CaSSiS minipt)
+    target_link_libraries(indexserver-daemon CaSSiS minipt)
 endif(ARB)
-install(TARGETS index-daemon DESTINATION bin)
+install(TARGETS indexserver-daemon DESTINATION bin)

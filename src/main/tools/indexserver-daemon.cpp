@@ -1,5 +1,5 @@
 /*!
- * Search Index Server
+ * Search Index Server -- Server daemon
  * Provides access to search indices via the IndexInterface class.
  *
  * This file is part of the
