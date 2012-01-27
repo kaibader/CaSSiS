@@ -60,12 +60,8 @@ int main(int argc, char **/*argv*/) {
     // TODO: Currently the MiniPT index is hardcoded.
     IndexInterface *search_index = new MiniPT;
 
-    // Open socket connection.
-    // Awaits incoming commands on pipe '3' and output goes to pipe '4'.
-    FILE *fd_in = fopen(..., "r");
-    FILE *fd_in = fopen(..., "r");
-
     // Main server loop.
+    // Awaits incoming commands on pipe '3' and output goes to pipe '4'.
     while (1) {
 
         //...
