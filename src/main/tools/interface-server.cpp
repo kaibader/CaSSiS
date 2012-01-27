@@ -60,26 +60,37 @@ int main(int argc, char **/*argv*/) {
     // TODO: Currently the MiniPT index is hardcoded.
     IndexInterface *search_index = new MiniPT;
 
+    // Open socket connection.
+    // Awaits incoming commands on pipe '3' and output goes to pipe '4'.
+    FILE *fd_in = fopen(..., "r");
+    FILE *fd_in = fopen(..., "r");
+
     // Main server loop.
-    std::string buffer;
-    std::getline(std::cin, buffer);
-    while (buffer != "quit") {
-        // Fetch single words from the input.
-        std::istringstream iss(buffer);
-        std::string substr;
-        iss >> substr;
-        while (iss) {
-            if(substr == "id") {
-                // We have a new id <-->
-            }
+    while (1) {
 
-            // Fetch next word.
-            iss >> substr;
-        }
-
-        // Fetch next line.
-        std::getline(std::cin, buffer);
+        //...
+        break;
     }
+
+    //std::string buffer;
+    //std::getline(std::cin, buffer);
+    //while (buffer != "quit") {
+    //// Fetch single words from the input.
+    //std::istringstream iss(buffer);
+    //std::string substr;
+    //iss >> substr;
+    //while (iss) {
+    //if(substr == "id") {
+    //// We have a new id <-->
+    //}
+    //
+    //// Fetch next word.
+    //iss >> substr;
+    //}
+    //
+    //// Fetch next line.
+    //std::getline(std::cin, buffer);
+    //}
 
     //if (argc > 1) {
     //    usage();
@@ -143,7 +154,7 @@ int main(int argc, char **/*argv*/) {
     //}
     //return 0;
 
-    // Quit/exit the daemon
+    // Quit/exit the server.
     return EXIT_SUCCESS;
 }
 
