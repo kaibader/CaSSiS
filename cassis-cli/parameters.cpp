@@ -130,7 +130,7 @@ void Parameters::dump() const {
         std::cout << "Detailed CSV\n";
         break;
     case OutputTextfiles:
-        std::cout << "Textfiles (*.sig)\n";
+        std::cout << "Signature files\n";
         break;
     default:
         std::cout << "???\n";
@@ -255,7 +255,7 @@ bool Parameters::set(int argc, char **argv) {
                         setOutput(OutputClassicCSV);
                     else if (!strcmp("detailed", argv[i + 1]))
                         setOutput(OutputDetailedCSV);
-                    else if (!strcmp("text", argv[i + 1]))
+                    else if (!strcmp("sigfile", argv[i + 1]))
                         setOutput(OutputTextfiles);
                     else {
                         setOutput(OutputUndef);
@@ -470,7 +470,7 @@ void Parameters::usage() const {
     "  -out <format>     Defines the output format.\n"
     "                        classic  = \"Classic CSV format\" (Default)\n"
     "                        detailed = \"Detailed CSV format\"\n"
-    "                        text     = \"Text file (*.sig) for each group/leaf\"\n"
+    "                        sigfile  = \"Signature file for each group/leaf\"\n"
 #ifdef PTHREADS
     "  -par <number>     Number of worker threads (pThreads). Has no influence\n"
     "                    on CaSSiS if pThreads-support is disabled.\n"

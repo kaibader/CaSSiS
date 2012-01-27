@@ -761,6 +761,7 @@ int main(int argc, char **argv) {
     std::cout << "Compiled with PtPan search index support.\n";
 #endif
 
+    std::cout << "\n";
     int returnvalue = EXIT_SUCCESS;
 
     // Function calls depending on the selected command...
