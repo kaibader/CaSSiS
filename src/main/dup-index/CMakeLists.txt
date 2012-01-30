@@ -1,4 +1,4 @@
-project(dup-index)
+project(dup-test)
 
 include_directories(
     "${CMAKE_SOURCE_DIR}/lib"
@@ -7,16 +7,21 @@ include_directories(
     "${PROJECT_SOURCE_DIR}"
     "${PROJECT_BINARY_DIR}"
 )
-set(dup-index_sources
+
+set(dup-test_sources
     "${CMAKE_SOURCE_DIR}/shared/fasta.cpp"
-    dup-index-server.cpp
+    dup-io.cpp
+    dup-test.cpp
 )
-add_executable(dup-index ${dup-index_sources})
+
+add_executable(dup-test ${dup-test_sources})
+
 if(ARB)
     # Build with ARB file support.
     add_definitions(-DARB)
-    target_link_libraries(dup-index CaSSiS minipt ARB)
+    target_link_libraries(dup-test CaSSiS minipt ARB)
 else(ARB)
-    target_link_libraries(dup-index CaSSiS minipt)
+    target_link_libraries(dup-test CaSSiS minipt)
 endif(ARB)
-install(TARGETS dup-index DESTINATION bin)
+
+install(TARGETS dup-test DESTINATION bin)
