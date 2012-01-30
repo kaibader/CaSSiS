@@ -1,11 +1,11 @@
 /*!
- * Search Index Server -- Accepts commands from stdin/stdout
- * Provides access to search indices via the IndexInterface class.
+ * DUP Search Index
+ * Provides remote access to search indices via the IndexInterface class.
  *
  * This file is part of the
- * Comprehensive and Sensitive Signature Search (CaSSiS) tools.
+ * Comprehensive and Sensitive Signature Search (CaSSiS).
  *
- * Copyright (C) 2011,2012
+ * Copyright (C) 2012
  *     Kai Christian Bader <mail@kaibader.de>
  *
  * CaSSiS is free software: you can redistribute it and/or modify
@@ -40,6 +40,36 @@
 #include <cstdlib>
 #include <string>
 
+//static int pipe_write(int fd, char *buf, int len) {
+//    int total = 0;
+//    int bytesleft = len;
+//    int n = 0;
+//    while (total < len) {
+//        n = write(fd, buf + total, bytesleft);
+//        if (n == -1) {
+//            break;
+//        }
+//        total += n;
+//        bytesleft -= n;
+//    }
+//    return (n == -1) ? -1 : total;
+//}
+
+//static int pipe_read(int fd, char *buf, int len) {
+//    int total = 0;
+//    int bytesleft = len;
+//    int n = 0;
+//    while (total < len) {
+//        n = read(fd, buf + total, bytesleft);
+//        if (n == -1) {
+//            break;
+//        }
+//        total += n;
+//        bytesleft -= n;
+//    }
+//    return (n == -1) ? -1 : total;
+//}
+
 /*!
  * Main function
  *
@@ -59,7 +89,7 @@ int main(int argc, char **/*argv*/) {
 
     // Our search_index interface.
     // TODO: Currently the MiniPT index is hardcoded.
-    IndexInterface *search_index = new MiniPT;
+    // IndexInterface *search_index = new MiniPT;
 
     // Create I/O buffer.
     char *buf_in = (char *) malloc(64 * 1024);
@@ -77,19 +107,19 @@ int main(int argc, char **/*argv*/) {
     // Awaits incoming commands on pipe '3' and output goes to pipe '4'.
     while (1) {
         ssize_t size = read(fd_in, buf_in, 64 * 1024);
+        if (size < 0)
+            break; // Stop the processing.
+
+        // TEST TEST TEST
+        sprintf(buf_out, "Message %d: \"%s\"\n", ++test, buf_in);
+        write(fd_out, buf_out, strlen(buf_out));
 
         //if (size < 0 && errno != EINTR)
         //    break; // Stop the processing.
 
         // Quit...
-        if (!strcmp(buf_in, "quit"))
+        if (!strstr(buf_in, "quit") != 0)
             break;
-
-        // TEST TEST TEST
-        if (!strcmp(buf_in, "hello")) {
-            sprintf(buf_out, "Message %d: Hi!\n", ++test);
-            write(fd_out, buf_out, strlen(buf_out));
-        }
 
         //// Comment: a size of 0 is NOT considered as EOF,
         //// as long a no stop character '.' was sent.

@@ -1,9 +1,9 @@
 /*!
- * Search Index Server -- Client interface
- * Provides access to search indices via the IndexInterface class.
+ * DUP Search Index
+ * Provides remote access to search indices via the IndexInterface class.
  *
  * This file is part of the
- * Comprehensive and Sensitive Signature Search (CaSSiS) tools.
+ * Comprehensive and Sensitive Signature Search (CaSSiS).
  *
  * Copyright (C) 2012
  *     Kai Christian Bader <mail@kaibader.de>
@@ -22,22 +22,27 @@
  * along with CaSSiS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INDEXSERVER_IFACE_H_
-#define INDEXSERVER_IFACE_H_
+#ifndef DUP_INDEX_H_
+#define DUP_INDEX_H_
 
 #include <cassis/indexinterface.h>
 
-class IndexserverInterface: public IndexInterface {
+static const unsigned int fd_server_send = 4;
+
+/*
+ * DUP Remote Search Index (Client Interface)
+ */
+class DUPIndexInterface: public IndexInterface {
 public:
     /*!
      * Constructor.
      */
-    IndexserverInterface();
+    DUPIndexInterface();
 
     /*!
      * Destructor.
      */
-    virtual ~IndexserverInterface();
+    virtual ~DUPIndexInterface();
 
     /*!
      * A temporary working directory can be defined. This is used to
@@ -109,8 +114,8 @@ private:
     /*!
      * Private copy constructor and assignment operator.
      */
-    IndexserverInterface(const IndexserverInterface&);
-    IndexserverInterface &operator=(const IndexserverInterface&);
+    DUPIndexInterface(const DUPIndexInterface&);
+    DUPIndexInterface &operator=(const DUPIndexInterface&);
 };
 
-#endif /* INDEXSERVER_IFACE_H_ */
+#endif /* DUP_INDEX_H_ */

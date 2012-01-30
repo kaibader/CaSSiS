@@ -1,9 +1,9 @@
 /*!
- * Search Index Server -- Client interface
- * Provides access to search indices via the IndexInterface class.
+ * DUP Search Index
+ * Provides remote access to search indices via the IndexInterface class.
  *
  * This file is part of the
- * Comprehensive and Sensitive Signature Search (CaSSiS) tools.
+ * Comprehensive and Sensitive Signature Search (CaSSiS).
  *
  * Copyright (C) 2012
  *     Kai Christian Bader <mail@kaibader.de>
@@ -22,18 +22,18 @@
  * along with CaSSiS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "indexserver-iface.h"
+#include "dup-index-client.h"
 
 /*!
  * Constructor.
  */
-IndexserverInterface::IndexserverInterface() {
+DUPIndexInterface::DUPIndexInterface() {
 }
 
 /*!
  * Destructor.
  */
-IndexserverInterface::~IndexserverInterface() {
+DUPIndexInterface::~DUPIndexInterface() {
 
 }
 
@@ -43,7 +43,7 @@ IndexserverInterface::~IndexserverInterface() {
  * \param directory Path, where (temporary) files can be stored.
  * \return True, if the path is valid, e.g. sufficient space etc...
  */
-bool IndexserverInterface::setTempDir(const char *directory) {
+bool DUPIndexInterface::setTempDir(const char *directory) {
     return false; // FIXME!
 }
 
@@ -52,7 +52,7 @@ bool IndexserverInterface::setTempDir(const char *directory) {
  * Adding should fail if an index was already computed.
  * \return True, if the sequence was successfully added.
  */
-bool IndexserverInterface::addSequence(const char *sequence, const id_type id) {
+bool DUPIndexInterface::addSequence(const char *sequence, const id_type id) {
     return false; // FIXME!
 }
 
@@ -61,7 +61,7 @@ bool IndexserverInterface::addSequence(const char *sequence, const id_type id) {
  * after all sequences were added.
  * \return True, if the index was successfully computed.
  */
-bool IndexserverInterface::computeIndex() {
+bool DUPIndexInterface::computeIndex() {
     return false; // FIXME!
 }
 
@@ -71,7 +71,7 @@ bool IndexserverInterface::computeIndex() {
  * \return True, if the index is in the 'computed' state
  * (--> i.e. if the index can process matches.)
  */
-bool IndexserverInterface::isIndexComputed() {
+bool DUPIndexInterface::isIndexComputed() {
     return false; // FIXME!
 }
 
@@ -87,7 +87,7 @@ bool IndexserverInterface::isIndexComputed() {
  *
  * \return False, if an error occurred.
  */
-bool IndexserverInterface::initFetchSignature(unsigned int length, bool RNA) {
+bool DUPIndexInterface::initFetchSignature(unsigned int length, bool RNA) {
     return false; // FIXME!
 }
 
@@ -97,7 +97,7 @@ bool IndexserverInterface::initFetchSignature(unsigned int length, bool RNA) {
  * match within the index.
  * \return NULL, if an error occurred or nor more signatures are available.
  */
-const char *IndexserverInterface::fetchNextSignature() {
+const char *DUPIndexInterface::fetchNextSignature() {
     return NULL; // FIXME!
 }
 
@@ -113,7 +113,7 @@ const char *IndexserverInterface::fetchNextSignature() {
  * \param use_wmis Use weighted mismatch values (for mm and mm_dist).
  * \return True, if the match was successfully processed.
  */
-bool IndexserverInterface::matchSignature(IntSet *&matched_ids,
+bool DUPIndexInterface::matchSignature(IntSet *&matched_ids,
         const char *signature, double mm, double mm_dist,
         unsigned int &og_matches, bool use_wmis) {
     return false; // FIXME!

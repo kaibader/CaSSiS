@@ -26,19 +26,3 @@ set(bgrtmerge_sources
 add_executable(bgrtmerge ${bgrtmerge_sources})
 target_link_libraries(bgrtmerge CaSSiS)
 install(TARGETS bgrtmerge DESTINATION bin)
-
-### Tool: Search Index Interface (Client/Server) ###
-
-set(interface-server_sources
-    "${CMAKE_SOURCE_DIR}/shared/fasta.cpp"
-    interface-server.cpp
-)
-add_executable(interface-server ${interface-server_sources})
-if(ARB)
-    # Build with ARB file support.
-    add_definitions(-DARB)
-    target_link_libraries(interface-server CaSSiS minipt ARB)
-else(ARB)
-    target_link_libraries(interface-server CaSSiS minipt)
-endif(ARB)
-install(TARGETS interface-server DESTINATION bin)

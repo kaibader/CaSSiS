@@ -91,6 +91,9 @@ add_subdirectory(main/cassis)
 # The graphical user interface version of CaSSiS.
 add_subdirectory(main/cassis-gui)
 
+# The DUP Remote Search Index Interface.
+add_subdirectory(main/dup-index)
+
 # Various tools (useful for debugging and testing).
 add_subdirectory(main/tools)
 
