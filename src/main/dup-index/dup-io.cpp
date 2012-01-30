@@ -30,6 +30,25 @@
 #include <cerrno>
 #include <unistd.h>
 
+/*
+ * DUP-IO package header
+ */
+struct DUP_IO_header {
+    DUP_IO_command command;
+    size_t id;
+    size_t size;
+};
+
+struct DUP_IO_quit {
+    DUP_IO_header header;
+    size_t magic;
+};
+
+struct DUP_IO_echo {
+    DUP_IO_header header;
+    size_t message_id;
+};
+
 ssize_t fd_read(int fd, char *buf, size_t buf_size) {
     ssize_t ret = read(fd, buf, buf_size);
     if (ret < 0) {
@@ -53,21 +72,7 @@ int fd_read_block(int fd, char *buffer, size_t buf_size, size_t *position) {
     return 0;
 }
 
-/*
- * DUP-IO package header
- */
-struct DUP_IO_header {
-    DUP_IO_command command;
-    size_t id;
-    size_t size;
-};
+DUP_IO_command wait_for_command() {
 
-struct DUP_IO_quit {
-    DUP_IO_header header;
-    size_t magic;
-};
-
-struct DUP_IO_echo {
-    DUP_IO_header header;
-    size_t message_id;
-};
+    return DUP_IO_QUIT;
+}
