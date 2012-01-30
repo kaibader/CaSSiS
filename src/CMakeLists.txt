@@ -20,7 +20,7 @@ endif(NOT CMAKE_BUILD_TYPE)
 # Caution: Should only be enabled if an ARBHOME variable is defined as well.
 set(ARB "off" CACHE BOOL "Build with ARB support")
 if(WIN32)
-set(ARB "off")
+    set(ARB "off")
 endif(WIN32)
 if(ARB)
     add_subdirectory(lib/arb)
@@ -91,11 +91,18 @@ add_subdirectory(main/cassis)
 # The graphical user interface version of CaSSiS.
 add_subdirectory(main/cassis-gui)
 
-# The DUP Remote Search Index Interface.
-add_subdirectory(main/dup-index)
-
 # Various tools (useful for debugging and testing).
 add_subdirectory(main/tools)
+
+# Build with DUP multi-pipeline support.
+# Disabled by default. Always disabled in Windows builds.
+set(DUP "off" CACHE BOOL "Build with DUP search index support")
+if(WIN32)
+    set(DUP "off")
+endif(WIN32)
+if(DUP)
+    add_subdirectory(main/dup-index)
+endif(DUP)
 
 # Add a 'create package' functionality.
 include(package.cmake)
