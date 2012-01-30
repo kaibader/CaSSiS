@@ -101,7 +101,7 @@ if(WIN32)
     set(DUP "off")
 endif(WIN32)
 if(DUP)
-    add_subdirectory(main/dup-index)
+    #add_subdirectory(main/dup-index)
 endif(DUP)
 
 # Add a 'create package' functionality.

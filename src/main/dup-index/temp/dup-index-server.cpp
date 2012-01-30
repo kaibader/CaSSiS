@@ -29,16 +29,18 @@
 //#ifdef ARB
 //#include <arb/ptserver.h>
 //#endif
-//
+
 //#include <fasta.h>
 //#include <cstring>
-// #include <string>
+//#include <string>
 
-#include <sstream>
+//#include <sstream>
 #include <iostream>
 #include <cstdio>
-#include <cstdlib>
-#include <string>
+//#include <cstdlib>
+//#include <string>
+
+#include "dup-index.h"
 
 //static int pipe_write(int fd, char *buf, int len) {
 //    int total = 0;
@@ -97,80 +99,41 @@ int main(int argc, char **/*argv*/) {
     if (!buf_in || !buf_out)
         return EXIT_FAILURE;
 
-    // Hardcoded file descriptors (pipes)
-    const int fd_in = 3;
-    const int fd_out = 4;
-
-    unsigned int test = 0;
-
     // Main server loop.
     // Awaits incoming commands on pipe '3' and output goes to pipe '4'.
     while (1) {
-        ssize_t size = read(fd_in, buf_in, 64 * 1024);
-        if (size < 0)
+        size_t buf_in_pos = 0;
+        int retval = DUPIndex_read_block(fd_server_in, buf_in, 64 * 1024,
+                &buf_in_pos);
+        if (retval < 0)
             break; // Stop the processing.
 
-        // TEST TEST TEST
-        sprintf(buf_out, "Message %d: \"%s\"\n", ++test, buf_in);
-        write(fd_out, buf_out, strlen(buf_out));
-
-        //if (size < 0 && errno != EINTR)
-        //    break; // Stop the processing.
-
-        // Quit...
-        if (!strstr(buf_in, "quit") != 0)
+        if (retval > 0) {
+            std::cerr << "Package was too large for the buffer. Quitting.\n";
             break;
+        }
 
-        //// Comment: a size of 0 is NOT considered as EOF,
-        //// as long a no stop character '.' was sent.
-        //
-        //for (int i = 0; i < size; ++i) {
-        //    char buf_i = buf[i];
-        //
-        //    if (buf_i == '.' || buf_2_pos == 64) {
-        //        return; // Break at the stop character
-        //    }
-        //
-        //    buf_2[buf_2_pos++] = buf_i;
-        //
-        //    // Comment: (buf_2_pos == 64) should not happen.
-        //    // If it does, it must be an error.
-        //    // assert(buf_2_pos == 64);
-        //
-        //    if (buf_i == '\n') {
-        //        // Fetch species identifier (first integer)
-        //        unsigned int id = atoi(buf_2);
-        //
-        //        // Fetch number of mismatches (second integer)
-        //        int pos = 0;
-        //        while (buf_2[pos] != ' ' && pos < 64)
-        //            ++pos;
-        //        unsigned int mismatches = atoi(buf_2 + pos + 1);
-        //
-        //        // Reset 2nd buffer
-        //        buf_2_pos = 0;
-        //
-        //        // Mark signatures with matches within the defined
-        //        // mismatch distance.
-        //        //
-        //        // TODO: This filter is not completely correct. Species with
-        //        // multiple matching sites with different mismatches might
-        //        // lead to the false reject of the signature.
-        //        if (mismatches > mm) {
-        //            if (species)
-        //                IntSet_destroy(species);
-        //            species = NULL;
-        //            match_within_mm_distance = true;
-        //        }
-        //
-        //        // Add the species ID as a match
-        //        if (!match_within_mm_distance) {
-        //            if (!species)
-        //                species = IntSet_create();
-        //            IntSet_add(species, id);
-        //        }
-        //    }
-        //}
+        DUPIndex_header *header = (DUPIndex_header*) buf_in;
+        switch (header->command) {
+        default:
+            std::cerr << "Unknown command. Exiting\n";
+            exit(1);
+            break;
+        case DUPINDEX_QUIT:
+            DUPIndex_quit *quit = (DUPIndex_quit*) buf_in;
+            if (quit->magic == magic_quit_number) {
+                std::cout << "Received a program quit command.\n";
+                exit(0);
+            }
+            break;
+        case DUPINDEX_ECHO:
+            // Send the package back...
+            DUPIndex_echo *echo_in = (DUPIndex_echo*) buf_in;
+            DUPIndex_echo *echo_out = (DUPIndex_echo*) buf_out;
+            echo_out->header.command = DUPINDEX_ECHO;
+            echo_out->header.size= sizeof
+            break;
+        }
     }
 
     //std::string buffer;

@@ -22,8 +22,8 @@
  * along with CaSSiS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef DUP_INDEX_H_
-#define DUP_INDEX_H_
+#ifndef DUP_INDEX_CLIENT_H_
+#define DUP_INDEX_CLIENT_H_
 
 #include <cassis/indexinterface.h>
 
@@ -118,4 +118,4 @@ private:
     DUPIndexInterface &operator=(const DUPIndexInterface&);
 };
 
-#endif /* DUP_INDEX_H_ */
+#endif /* DUP_INDEX_CLIENT_H_ */
