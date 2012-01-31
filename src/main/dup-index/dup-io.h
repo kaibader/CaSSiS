@@ -29,7 +29,17 @@
  * DUP-IO commands
  */
 enum DUP_IO_command {
-    DUP_IO_QUIT = 0, DUP_IO_ECHO
+    DUP_IO_ERROR = 0, DUP_IO_QUIT, DUP_IO_ECHO
 };
+
+int init_fd(int fd);
+
+DUP_IO_command wait_for_command(int fd);
+
+bool send_quit(int fd);
+
+bool send_echo(int fd, const char *message);
+
+char* recv_echo(int fd);
 
 #endif /* DUP_INDEX_IO_H_ */

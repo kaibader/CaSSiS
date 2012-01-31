@@ -26,10 +26,40 @@
 #include <cstdlib>
 #include <iostream>
 
+/*!
+ * File descriptors
+ */
+const int fd_server_recv = 3;
+const int fd_server_send = 4;
+const int fd_client_recv = 3;
+const int fd_client_send = 4;
+//const int fd_client_send_all = 5;
+
 /*
  * DUP test client...
  */
 int dup_test_client() {
+    // Initialize file descriptors
+    init_fd(fd_client_recv);
+    init_fd(fd_client_send);
+
+    while (1) {
+        std::cout << "Client: Send commands via keyboard: (e)cho, (q)uit\n";
+        char c = 0x00;
+        std::cin >> c;
+        if (c == 'q' || c == 'Q') {
+            send_quit(fd_client_send);
+            std::cout << "Client: Sent quit command.\n";
+            break;
+        }
+        if (c == 'e' || c == 'E') {
+            std::string message;
+            std::cin >> message;
+            send_echo(fd_client_send, message.c_str());
+            std::cout << "Client: Sent echo \"" << message << "\"\n";
+            break;
+        }
+    }
     return EXIT_SUCCESS;
 }
 
@@ -37,6 +67,36 @@ int dup_test_client() {
  * DUP test server...
  */
 int dup_test_server() {
+    // Initialize file descriptors
+    init_fd(fd_server_recv);
+    init_fd(fd_server_send);
+
+    char *message;
+
+    while (1) {
+        DUP_IO_command command = wait_for_command(fd_server_recv);
+        switch (command) {
+        case DUP_IO_ERROR:
+            std::cerr << "Server: An unknown error occurred!\n";
+            // return EXIT_FAILURE;
+            break;
+        case DUP_IO_ECHO:
+            std::cout << "Server: Received an echo.\n";
+            message = recv_echo(fd_server_recv);
+            if (message) {
+                std::cout << "Server: Received an echo: \"" << message
+                        << "\"\n";
+                free(message);
+            } else
+                std::cerr << "Server: There was an echo but no message.\n";
+            // TODO: RETURN ECHO!
+            break;
+        case DUP_IO_QUIT:
+            std::cout << "Server: Received a quit command. Exiting!\n";
+            return EXIT_SUCCESS;
+            break;
+        }
+    }
     return EXIT_SUCCESS;
 }
 
