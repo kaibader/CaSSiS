@@ -272,3 +272,258 @@ char *recv_seq(int fd, id_type *id) {
     seq[len] = 0;
     return seq;
 }
+
+bool send_comp_idx(int fd) {
+    // Create 'cumpute index' message header.
+    DUP_IO_header header;
+    header.command = DUP_IO_COMP_IDX;
+    header.magic = magic_header;
+    header.id = ++ID_counter;
+
+    // Send header.
+    if (fd_write(fd, (char*) &header, sizeof(DUP_IO_header))
+            != sizeof(DUP_IO_header))
+        return false;
+
+    return true;
+}
+
+bool send_init_sig(int fd, unsigned int length, bool RNA) {
+    if (length < 10)
+        return false;
+
+    // Create 'add sequence' message header.
+    DUP_IO_header header;
+    header.command = DUP_IO_INIT_SIG;
+    header.magic = magic_header;
+    header.id = ++ID_counter;
+
+    // Send header.
+    if (fd_write(fd, (char*) &header, sizeof(DUP_IO_header))
+            != sizeof(DUP_IO_header))
+        return false;
+
+    // Send length.
+    if (fd_write(fd, (char*) &length, sizeof(unsigned int))
+            != sizeof(unsigned int))
+        return false;
+
+    // Send type.
+    if (fd_write(fd, (char*) &RNA, sizeof(bool)) != sizeof(bool))
+        return false;
+
+    return true;
+}
+
+bool recv_init_sig(int fd, unsigned int *length, bool *RNA) {
+    // Read length.
+    if (fd_read_block(fd, (char*) length, sizeof(unsigned int))
+            != sizeof(unsigned int)) {
+        *length = 0;
+        return false;
+    }
+
+    // Read type.
+    if (fd_read_block(fd, (char*) RNA, sizeof(bool)) != sizeof(bool)) {
+        *length = 0;
+        return false;
+    }
+    return true;
+}
+
+bool send_qry_next_sig(int fd) {
+    // Create 'cumpute index' message header.
+    DUP_IO_header header;
+    header.command = DUP_IO_QRY_NEXT_SIG;
+    header.magic = magic_header;
+    header.id = ++ID_counter;
+
+    // Send header.
+    if (fd_write(fd, (char*) &header, sizeof(DUP_IO_header))
+            != sizeof(DUP_IO_header))
+        return false;
+
+    return true;
+}
+
+bool send_ans_next_sig(int fd, const char *sig) {
+    if (sig == NULL)
+        return false;
+
+    // Create 'add sequence' message header.
+    DUP_IO_header header;
+    header.command = DUP_IO_ANS_NEXT_SIG;
+    header.magic = magic_header;
+    header.id = ++ID_counter;
+
+    // Send header.
+    if (fd_write(fd, (char*) &header, sizeof(DUP_IO_header))
+            != sizeof(DUP_IO_header))
+        return false;
+
+    // Send signature length.
+    size_t len = strlen(sig);
+    if (fd_write(fd, (char*) &len, sizeof(size_t)) != sizeof(size_t))
+        return false;
+
+    // Send signature.
+    if (fd_write(fd, sig, len) != len)
+        return false;
+
+    return true;
+}
+
+char *recv_ans_next_sig(int fd) {
+    // Read signature length.
+    size_t len = 0;
+    if (fd_read_block(fd, (char*) &len, sizeof(size_t)) != sizeof(size_t))
+        return NULL;
+
+    // Read signature.
+    char *sig = (char*) malloc(len + 1);
+    if (sig == NULL)
+        return NULL;
+
+    if (fd_read_block(fd, sig, len) != len) {
+        free(sig);
+        return NULL;
+    }
+
+    sig[len] = 0;
+    return sig;
+}
+
+bool send_qry_match_sig(int fd, const char *sig, double mm, double mm_dist,
+        bool use_wmis) {
+    if (sig == NULL)
+        return false;
+
+    // Create 'add sequence' message header.
+    DUP_IO_header header;
+    header.command = DUP_IO_QRY_MATCH_SIG;
+    header.magic = magic_header;
+    header.id = ++ID_counter;
+
+    // Send header.
+    if (fd_write(fd, (char*) &header, sizeof(DUP_IO_header))
+            != sizeof(DUP_IO_header))
+        return false;
+
+    // Send signature length.
+    size_t len = strlen(sig);
+    if (fd_write(fd, (char*) &len, sizeof(size_t)) != sizeof(size_t))
+        return false;
+
+    // Send signature.
+    if (fd_write(fd, sig, len) != len)
+        return false;
+
+    // Send mismatches.
+    if (fd_write(fd, (char*) &mm, sizeof(double)) != sizeof(double))
+        return false;
+
+    // Send mismatch distance.
+    if (fd_write(fd, (char*) &mm_dist, sizeof(double)) != sizeof(double))
+        return false;
+
+    // Send use weighted mismatches flag.
+    if (fd_write(fd, (char*) &use_wmis, sizeof(bool)) != sizeof(bool))
+        return false;
+
+    return true;
+}
+
+char *recv_qry_match_sig(int fd, double *mm, double *mm_dist, bool *use_wmis) {
+    // Read signature length.
+    size_t len = 0;
+    if (fd_read_block(fd, (char*) &len, sizeof(size_t)) != sizeof(size_t))
+        return NULL;
+
+    // Read signature.
+    char *sig = (char*) malloc(len + 1);
+    if (sig == NULL)
+        return NULL;
+    if (fd_read_block(fd, sig, len) != len) {
+        free(sig);
+        return NULL;
+    }
+
+    // Read mismatches.
+    if (fd_read_block(fd, (char*) mm, sizeof(double)) != sizeof(double)) {
+        free(sig);
+        return NULL;
+    }
+    // Read mismatch distance.
+    if (fd_read_block(fd, (char*) mm_dist, sizeof(double)) != sizeof(double)) {
+        free(sig);
+        return NULL;
+    }
+    // Send use weighted mismatches flag.
+    if (fd_read_block(fd, (char*) use_wmis, sizeof(bool)) != sizeof(bool)) {
+        free(sig);
+        return NULL;
+    }
+
+    sig[len] = 0;
+    return sig;
+}
+
+bool send_ans_match_sig(int fd, const IntSet *matched_ids,
+        unsigned int og_matches) {
+    // Create 'matched ids' message header.
+    DUP_IO_header header;
+    header.command = DUP_IO_ANS_MATCH_SIG;
+    header.magic = magic_header;
+    header.id = ++ID_counter;
+
+    // Send header.
+    if (fd_write(fd, (char*) &header, sizeof(DUP_IO_header))
+            != sizeof(DUP_IO_header))
+        return false;
+
+    // Send number of outgroup matches.
+    if (fd_write(fd, (char*) &og_matches, sizeof(unsigned int))
+            != sizeof(unsigned int))
+        return false;
+
+    // Send number of IntSet entries.
+    unsigned int size = matched_ids->size();
+    if (fd_write(fd, (char*) &size, sizeof(unsigned int))
+            != sizeof(unsigned int))
+        return false;
+
+    // Send matched IDs...
+    for (unsigned int i = 0; i < size; ++i) {
+        id_type id = matched_ids->val(i);
+        if (fd_write(fd, (char*) &id, sizeof(id_type)) != sizeof(id_type))
+            return false;
+    }
+
+    return true;
+}
+
+bool recv_ans_match_sig(int fd, IntSet *&matched_ids,
+        unsigned int &og_matches) {
+    // Receive number of outgroup matches.
+    if (fd_read_block(fd, (char*) &og_matches, sizeof(unsigned int))
+            != sizeof(unsigned int))
+        return false;
+
+    // Receive number of IntSet entries.
+    unsigned int size = 0;
+    if (fd_read_block(fd, (char*) &size, sizeof(unsigned int))
+            != sizeof(unsigned int))
+        return false;
+
+    // Send matched IDs...
+    matched_ids->clear();
+    for (unsigned int i = 0; i < size; ++i) {
+        id_type id = ID_TYPE_UNDEF;
+        if (fd_read_block(fd, (char*) &id, sizeof(id_type)) != sizeof(id_type))
+            return false;
+        matched_ids->add(id);
+    }
+
+    return true;
+}
+

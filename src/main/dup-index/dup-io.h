@@ -37,8 +37,10 @@ enum DUP_IO_command {
     DUP_IO_SEQ,
     DUP_IO_COMP_IDX,
     DUP_IO_INIT_SIG,
-    DUP_IO_NEXT_SIG,
-    DUP_IO_MATCH_SIG
+    DUP_IO_QRY_NEXT_SIG,
+    DUP_IO_ANS_NEXT_SIG,
+    DUP_IO_QRY_MATCH_SIG,
+    DUP_IO_ANS_MATCH_SIG
 };
 
 int init_fd(int fd);
@@ -54,5 +56,26 @@ char* recv_echo(int fd);
 bool send_seq(int fd, id_type id, const char *seq);
 
 char *recv_seq(int fd, id_type *id);
+
+bool send_comp_idx(int fd);
+
+bool send_init_sig(int fd, unsigned int length, bool RNA);
+
+bool recv_init_sig(int fd, unsigned int *length, bool *RNA);
+
+bool send_qry_next_sig(int fd);
+
+bool send_ans_next_sig(int fd, const char *sig);
+
+char *recv_ans_next_sig(int fd);
+
+bool send_qry_match_sig(int fd, const char *signature, double mm,
+        double mm_dist, bool use_wmis);
+
+char *recv_qry_match_sig(int fd, double *mm, double *mm_dist, bool *use_wmis);
+
+bool send_ans_match_sig(int fd, const IntSet *matched_ids, unsigned int og_matches);
+
+bool recv_ans_match_sig(int fd, IntSet *&matched_ids, unsigned int &og_matches);
 
 #endif /* DUP_INDEX_IO_H_ */
