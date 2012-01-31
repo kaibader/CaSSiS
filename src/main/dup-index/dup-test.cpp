@@ -57,7 +57,6 @@ int dup_test_client() {
             std::cin >> message;
             send_echo(fd_client_send, message.c_str());
             std::cout << "Client: Sent echo \"" << message << "\"\n";
-            break;
         }
     }
     return EXIT_SUCCESS;
@@ -84,12 +83,10 @@ int dup_test_server() {
             std::cout << "Server: Received an echo.\n";
             message = recv_echo(fd_server_recv);
             if (message) {
-                std::cout << "Server: Received an echo: \"" << message
-                        << "\"\n";
+                std::cout << "Server: Echo message: \"" << message << "\"\n";
                 free(message);
             } else
-                std::cerr << "Server: There was an echo but no message.\n";
-            // TODO: RETURN ECHO!
+                std::cerr << "Server: No echo message.\n";
             break;
         case DUP_IO_QUIT:
             std::cout << "Server: Received a quit command. Exiting!\n";
