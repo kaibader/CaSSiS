@@ -134,8 +134,11 @@ DUP_IO_command wait_for_command(int fd) {
     if (header.command == DUP_IO_QUIT) {
         unsigned long magic = 0;
         bytes_read = fd_read_block(fd, (char*) &magic, sizeof(unsigned long));
-        if ((bytes_read != sizeof(unsigned long)) || (magic != magic_quit))
+        if ((bytes_read != sizeof(unsigned long)) || (magic != magic_quit)) {
+            fprintf(stderr, "Received an invalid 'quit' package "
+                    "(id %ld).\n", header.id);
             return DUP_IO_ERROR;
+        }
     }
 
     fprintf(stdout, "Received message with id %ld\n", header.id);
