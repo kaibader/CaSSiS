@@ -74,7 +74,8 @@ bool send_qry_match_sig(int fd, const char *signature, double mm,
 
 char *recv_qry_match_sig(int fd, double *mm, double *mm_dist, bool *use_wmis);
 
-bool send_ans_match_sig(int fd, const IntSet *matched_ids, unsigned int og_matches);
+bool send_ans_match_sig(int fd, const IntSet *matched_ids,
+        unsigned int og_matches);
 
 bool recv_ans_match_sig(int fd, IntSet *&matched_ids, unsigned int &og_matches);
 

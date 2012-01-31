@@ -8,6 +8,28 @@ include_directories(
     "${PROJECT_BINARY_DIR}"
 )
 
+# Program: dup-index-server
+
+set(dup-index-server_sources
+    "${CMAKE_SOURCE_DIR}/shared/fasta.cpp"
+    dup-io.cpp
+    dup-index-server.cpp
+)
+
+add_executable(dup-index-server ${dup-index-server_sources})
+
+if(ARB)
+    # Build with ARB file support.
+    add_definitions(-DARB)
+    target_link_libraries(dup-index-server CaSSiS minipt ARB)
+else(ARB)
+    target_link_libraries(dup-index-server CaSSiS minipt)
+endif(ARB)
+
+install(TARGETS dup-index-server DESTINATION bin)
+
+# Program: dup-test
+
 set(dup-test_sources
     "${CMAKE_SOURCE_DIR}/shared/fasta.cpp"
     dup-io.cpp
