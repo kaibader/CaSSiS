@@ -200,7 +200,7 @@ char* recv_echo(int fd) {
         return NULL;
 
     // Read message buffer.
-    char *buffer = (char*) malloc(len);
+    char *buffer = (char*) malloc(len + 1);
     if (buffer == NULL)
         return NULL;
     if (fd_read_block(fd, buffer, len) != len) {
@@ -208,5 +208,67 @@ char* recv_echo(int fd) {
         return NULL;
     }
 
+    buffer[len] = 0;
     return buffer;
+}
+
+bool send_seq(int fd, id_type id, const char *seq) {
+    if ((id == ID_TYPE_UNDEF) || (seq == NULL))
+        return false;
+
+    // Create 'add sequence' message header.
+    DUP_IO_header header;
+    header.command = DUP_IO_SEQ;
+    header.magic = magic_header;
+    header.id = ++ID_counter;
+
+    // Send header.
+    if (fd_write(fd, (char*) &header, sizeof(DUP_IO_header))
+            != sizeof(DUP_IO_header))
+        return false;
+
+    // Send ID.
+    if (fd_write(fd, (char*) &id, sizeof(id_type)) != sizeof(id_type))
+        return false;
+
+    // Send sequence length.
+    size_t len = strlen(seq);
+    if (fd_write(fd, (char*) &len, sizeof(size_t)) != sizeof(size_t))
+        return false;
+
+    // Send sequence.
+    if (fd_write(fd, seq, len) != len)
+        return false;
+
+    return true;
+}
+
+char *recv_seq(int fd, id_type *id) {
+    // Read ID.
+    if (fd_read_block(fd, (char*) id, sizeof(id_type)) != sizeof(id_type)) {
+        *id = ID_TYPE_UNDEF;
+        return NULL;
+    }
+
+    // Read sequence length.
+    size_t len = 0;
+    if (fd_read_block(fd, (char*) &len, sizeof(size_t)) != sizeof(size_t)) {
+        *id = ID_TYPE_UNDEF;
+        return NULL;
+    }
+
+    // Read sequence.
+    char *seq = (char*) malloc(len + 1);
+    if (seq == NULL) {
+        *id = ID_TYPE_UNDEF;
+        return NULL;
+    }
+    if (fd_read_block(fd, seq, len) != len) {
+        free(seq);
+        *id = ID_TYPE_UNDEF;
+        return NULL;
+    }
+
+    seq[len] = 0;
+    return seq;
 }

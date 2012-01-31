@@ -25,11 +25,20 @@
 #ifndef DUP_INDEX_IO_H_
 #define DUP_INDEX_IO_H_
 
+#include <cassis/types.h>
+
 /*
  * DUP-IO commands
  */
 enum DUP_IO_command {
-    DUP_IO_ERROR = 0, DUP_IO_QUIT, DUP_IO_ECHO
+    DUP_IO_ERROR = 0,
+    DUP_IO_QUIT,
+    DUP_IO_ECHO,
+    DUP_IO_SEQ,
+    DUP_IO_COMP_IDX,
+    DUP_IO_INIT_SIG,
+    DUP_IO_NEXT_SIG,
+    DUP_IO_MATCH_SIG
 };
 
 int init_fd(int fd);
@@ -41,5 +50,9 @@ bool send_quit(int fd);
 bool send_echo(int fd, const char *message);
 
 char* recv_echo(int fd);
+
+bool send_seq(int fd, id_type id, const char *seq);
+
+char *recv_seq(int fd, id_type *id);
 
 #endif /* DUP_INDEX_IO_H_ */

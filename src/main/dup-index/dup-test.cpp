@@ -44,19 +44,28 @@ int dup_test_client() {
     init_fd(fd_client_send);
 
     while (1) {
-        std::cout << "Client: Send commands via keyboard: (e)cho, (q)uit\n";
+        std::cout << "Client: Send commands via keyboard:"
+                "\n\t(e)cho TEXT"
+                "\n\t(s)seq ID SEQUENCE"
+                "\n\t(q)uit"
+                "\n";
         char c = 0x00;
         std::cin >> c;
         if (c == 'q' || c == 'Q') {
             send_quit(fd_client_send);
             std::cout << "Client: Sent quit command.\n";
             break;
-        }
-        if (c == 'e' || c == 'E') {
+        } else if (c == 'e' || c == 'E') {
             std::string message;
             std::cin >> message;
             send_echo(fd_client_send, message.c_str());
             std::cout << "Client: Sent echo \"" << message << "\"\n";
+        } else if (c == 's' || c == 'S') {
+            id_type id;
+            std::string seq;
+            std::cin >> id >> seq;
+            send_seq(fd_client_send, id, seq.c_str());
+            std::cout << "Client: Sent sequence " << id << ": " << seq << "\n";
         }
     }
     return EXIT_SUCCESS;
@@ -70,6 +79,7 @@ int dup_test_server() {
     init_fd(fd_server_recv);
     init_fd(fd_server_send);
 
+    id_type id;
     char *message;
 
     while (1) {
@@ -80,10 +90,19 @@ int dup_test_server() {
             // return EXIT_FAILURE;
             break;
         case DUP_IO_ECHO:
-            std::cout << "Server: Received an echo.\n";
+            std::cout << "Server: Receiving an echo.\n";
             message = recv_echo(fd_server_recv);
             if (message) {
                 std::cout << "Server: Echo message: \"" << message << "\"\n";
+                free(message);
+            } else
+                std::cerr << "Server: No echo message.\n";
+            break;
+        case DUP_IO_SEQ:
+            std::cout << "Server: Receiving a  sequence.\n";
+            message = recv_seq(fd_server_recv, &id);
+            if (message) {
+                std::cout << "Server: sequence " << id << ": " << message << "\n";
                 free(message);
             } else
                 std::cerr << "Server: No echo message.\n";
