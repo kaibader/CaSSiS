@@ -40,7 +40,7 @@ enum Command {
 };
 
 enum Index {
-    IndexUndef = 0, IndexMiniPt, IndexPtServer, IndexPtPan
+    IndexUndef = 0, IndexMiniPt, IndexPtServer, IndexDUP
 };
 
 enum Output {

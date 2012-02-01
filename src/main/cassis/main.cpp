@@ -33,6 +33,10 @@
 #include <arb/ptserver.h>
 #endif
 
+#ifdef DUP
+#include <dup-index-client.h>
+#endif
+
 #include <minipt/minipt.h>
 
 #include "csv.h"
@@ -130,6 +134,14 @@ IndexInterface *createIndexInterface(const Parameters &params,
         return NULL;
 #endif
         break;
+    case IndexDUP:
+#ifdef DUP
+        index = new DUPIndex();
+#else
+        std::cerr << "Sorry, but the DUP Index is not supported by "
+                "this build of CaSSiS!\n";
+        return NULL;
+#endif
     default:
         break;
     }

@@ -107,8 +107,8 @@ void Parameters::dump() const {
     case IndexMiniPt:
         std::cout << "MiniPt\n";
         break;
-    case IndexPtPan:
-        std::cout << "PtPan\n";
+    case IndexDUP:
+        std::cout << "DUP Remote Index\n";
         break;
     case IndexPtServer:
         std::cout << "PtServer\n";
@@ -241,8 +241,8 @@ bool Parameters::set(int argc, char **argv) {
                         setIndex(IndexMiniPt);
                     else if (!strcmp("arbpt", argv[i + 1]))
                         setIndex(IndexPtServer);
-                    else if (!strcmp("ptpan", argv[i + 1]))
-                        setIndex(IndexPtPan);
+                    else if (!strcmp("dup", argv[i + 1]))
+                        setIndex(IndexDUP);
                     else {
                         setIndex(IndexUndef);
                         std::cerr << "Parameter error: unknown index type.\n";
@@ -457,8 +457,8 @@ void Parameters::usage() const {
 #ifdef ARB
     "                        arbpt  = \"ARB PtServer\"\n"
 #endif
-#ifdef PTPAN
-    "                        ptpan  = \"PtPan Search Index\"\n"
+#ifdef DUP
+    "                        dup    = \"DUP Remote Search Index\"\n"
 #endif
     "  -len {<len>|<min>-<max>}\n"
     "                    Length of the evaluated oligonucleotides. Either a\n"

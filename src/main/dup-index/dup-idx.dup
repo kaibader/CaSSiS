@@ -1,0 +1,2 @@
+client@localhost:2222[DUP:0|0,1|DUP:1,2>/tmp/client_err.txt,4|server:3]$ /tmp/CaSSiS-0.4.1_alpha-linux-debug-amd64/bin/cassis 1pass -seq /home/baderk/Datenbanken/Testdaten/100.fasta -tree /home/baderk/Datenbanken/Testdaten/100.tree ;
+server@localhost:2222[1>/tmp/server_out.txt,2>/tmp/server_err.txt,4|client:3]$ /tmp/CaSSiS-0.4.1_alpha-linux-debug-amd64/bin/dup-index-server ;
