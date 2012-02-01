@@ -44,7 +44,7 @@ DUPIndex::DUPIndex() {
  * Destructor.
  */
 DUPIndex::~DUPIndex() {
-
+    send_quit(fd_client_send);
 }
 
 /*!
@@ -53,7 +53,7 @@ DUPIndex::~DUPIndex() {
  * \param directory Path, where (temporary) files can be stored.
  * \return True, if the path is valid, e.g. sufficient space etc...
  */
-bool DUPIndex::setTempDir(const char *directory) {
+bool DUPIndex::setTempDir(const char */*directory*/) {
     return false;
 }
 

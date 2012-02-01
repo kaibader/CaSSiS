@@ -89,6 +89,7 @@ int main(int argc, char **/*argv*/) {
         case DUP_IO_QUIT:
             std::cout << "Server: Received a quit command. Exiting!\n";
             free(set);
+            delete index;
             return EXIT_SUCCESS;
             break;
         case DUP_IO_ECHO:
