@@ -45,6 +45,8 @@ enum DUP_IO_command {
 
 int init_fd(int fd);
 
+int init_fd_list(int *fd_list, int min_fd, fd_set *set = NULL);
+
 DUP_IO_command wait_for_command(int fd);
 
 bool send_quit(int fd);

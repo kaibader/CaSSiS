@@ -26,7 +26,6 @@
 
 #include <cassis/config.h>
 #include <minipt/minipt.h>
-// #include <cassis/namemap.h>
 
 #ifdef ARB
 #include <arb/ptserver.h>
@@ -47,10 +46,7 @@ const int fd_server_send = 4;
  * \param argv Program arguments
  * \return Exit code (either EXIT_SUCCESS or EXIT_FAILURE)
  */
-int main(int argc, char **/*argv*/) {
-    // This name mapping is used for this server.
-    // NameMap name_map;
-
+int main(int argc, char **) {
     // Dump a usage message.
     if (argc > 1) {
         std::cout << "This is the CaSSiS Index Server.\n";
@@ -100,7 +96,7 @@ int main(int argc, char **/*argv*/) {
             break;
         case DUP_IO_SEQ:
             s = recv_seq(fd_server_recv, &id);
-            if (s)
+            if (s && (id != ID_TYPE_UNDEF))
                 index->addSequence(s, id);
             else
                 std::cerr << "Server: Erroneous sequence package received.\n";
@@ -122,7 +118,7 @@ int main(int argc, char **/*argv*/) {
             break;
         case DUP_IO_ANS_NEXT_SIG:
             std::cerr << "Server: Error! "
-                    "A DUP_IO_ANS_NEXT_SIG message was sent to me!\n";
+            "A DUP_IO_ANS_NEXT_SIG message was sent to me!\n";
             return EXIT_FAILURE;
             break;
         case DUP_IO_QRY_MATCH_SIG:
@@ -133,11 +129,11 @@ int main(int argc, char **/*argv*/) {
             free(s);
             if (!send_ans_match_sig(fd_server_send, set, og_matches))
                 std::cerr << "Server: Matched signatures could "
-                        "not be returned.\n";
+                "not be returned.\n";
             break;
         case DUP_IO_ANS_MATCH_SIG:
             std::cerr << "Server: Error! "
-                    "A DUP_IO_ANS_MATCH_SIG message was sent to me!\n";
+            "A DUP_IO_ANS_MATCH_SIG message was sent to me!\n";
             return EXIT_FAILURE;
             break;
         }

@@ -30,6 +30,7 @@
 #include <cerrno>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/resource.h>
 
 /*
  * Magic numbers...
@@ -55,16 +56,33 @@ int init_fd(int fd) {
     errno = 0;
     int flags = fcntl(fd, F_GETFD);
     if (flags == -1 && errno) {
-        if (errno != EBADF) {
-            perror("fcntl(F_GETFD)");
-            fprintf(stdout, "Error something!\n");
+        if (errno != EBADF)
             return -1;
-        }
     }
     if (flags & FD_CLOEXEC) {
         return 0;
     } else
         return 1;
+}
+
+int init_fd_list(int *fd_list, int min_fd, fd_set *set) {
+    struct rlimit rl;
+    getrlimit(RLIMIT_NOFILE, &rl);
+
+    // Initialize a new file descriptor array
+    free(fd_list);
+    fd_list = (int*) malloc(sizeof(int) * rl.rlim_cur);
+
+    // Fetch all open file descriptors, beginning with 'min_fd'.
+    int entries = 0;
+    for (unsigned int i = min_fd; i < rl.rlim_cur; ++i) {
+        if (init_fd(i) == 1) {
+            fd_list[entries++] = i;
+            if (set != NULL)
+                FD_SET(i, set);
+        }
+    }
+    return entries;
 }
 
 ssize_t fd_read(int fd, char *buf, size_t size) {
@@ -95,18 +113,6 @@ size_t fd_read_block(int fd, char* buf, size_t size) {
     }
     return buf_pos;
 }
-
-//int fd_read_block(int fd, char *buffer, size_t size, size_t *position) {
-//    ssize_t read_size = fd_read(fd, &buffer[*position], size - (*position));
-//    if (read_size == 0)
-//        return -2;
-//
-//    *position += read_size;
-//    if (size != *position)
-//        return 1;
-//    *position = 0;
-//    return 0;
-//}
 
 size_t fd_write(int fd, const char* buf, size_t size) {
     size_t buf_pos = 0;
