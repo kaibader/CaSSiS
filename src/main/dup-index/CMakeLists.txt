@@ -18,18 +18,26 @@ set(dup-index-server_sources
 #     dup-index-filter.cpp
 # )
 
+set(dup-index-dump_sources
+    dup-io.cpp
+    dup-index-dump.cpp
+)
+
 add_executable(dup-index-server ${dup-index-server_sources})
 # add_executable(dup-index-filter ${dup-index-filter_sources})
+add_executable(dup-index-dump ${dup-index-dump_sources})
 
 if(ARB)
     # Build with ARB file support.
     add_definitions(-DARB)
     target_link_libraries(dup-index-server CaSSiS minipt ARB)
-    # target_link_libraries(dup-index-filter CaSSiS minipt ARB)
 else(ARB)
     target_link_libraries(dup-index-server CaSSiS minipt)
-    # target_link_libraries(dup-index-filter CaSSiS minipt)
 endif(ARB)
+
+# target_link_libraries(dup-index-filter CaSSiS)
+target_link_libraries(dup-index-server CaSSiS)
 
 install(TARGETS dup-index-server DESTINATION bin)
 # install(TARGETS dup-index-filter DESTINATION bin)
+install(TARGETS dup-index-dump DESTINATION bin)
