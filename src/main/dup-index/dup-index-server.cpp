@@ -102,7 +102,14 @@ int main(int argc, char **) {
                 std::cerr << "Server: Erroneous sequence package received.\n";
             break;
         case DUP_IO_COMP_IDX:
-            index->computeIndex();
+            if (!index->computeIndex())
+                std::cerr << "Server: Building index failed.\n";
+            send_comp_idx_done(fd_server_send);
+            break;
+        case DUP_IO_COMP_IDX_DONE:
+            std::cerr << "Server: Error! "
+            "A DUP_IO_COMP_IDX_DONE message was sent to me!\n";
+            return EXIT_FAILURE;
             break;
         case DUP_IO_INIT_SIG:
             if (!recv_init_sig(fd_server_recv, &length, &RNA))

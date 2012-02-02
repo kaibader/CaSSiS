@@ -114,6 +114,7 @@ private:
      */
     DUPIndex(const DUPIndex&);
     DUPIndex &operator=(const DUPIndex&);
+    bool index_computed;
 };
 
 #endif /* DUP_INDEX_CLIENT_H_ */

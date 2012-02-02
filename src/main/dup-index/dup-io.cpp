@@ -105,10 +105,11 @@ size_t fd_read_block(int fd, char* buf, size_t size) {
                 return 0;
             fprintf(stderr, "Read failed on fd %d: %s\n", fd, strerror(errno));
             exit(1);
-        } else if (bytes_read == 0) {
-            // fprintf(stderr, "EOF\n");
-            return 0;
         }
+        //else if (bytes_read == 0) {
+        //fprintf(stderr, "EOF\n");
+        //return 0;
+        //}
         buf_pos += bytes_read;
     }
     return buf_pos;
@@ -146,14 +147,55 @@ DUP_IO_command wait_for_command(int fd) {
             return DUP_IO_ERROR;
         }
     }
-
-    fprintf(stdout, "Received message with id %ld\n", header.id);
+#if 1
+    fprintf(stdout, "Received message with id %ld, type: ", header.id);
+    switch (header.command) {
+    case DUP_IO_ERROR:
+        fprintf(stdout, "DUP_IO_ERROR\n");
+        break;
+    case DUP_IO_QUIT:
+        fprintf(stdout, "DUP_IO_QUIT\n");
+        break;
+    case DUP_IO_ECHO:
+        fprintf(stdout, "DUP_IO_ECHO\n");
+        break;
+    case DUP_IO_SEQ:
+        fprintf(stdout, "DUP_IO_SEQ\n");
+        break;
+    case DUP_IO_COMP_IDX:
+        fprintf(stdout, "DUP_IO_COMP_IDX\n");
+        break;
+    case DUP_IO_COMP_IDX_DONE:
+        fprintf(stdout, "DUP_IO_COMP_IDX_DONE\n");
+        break;
+    case DUP_IO_INIT_SIG:
+        fprintf(stdout, "DUP_IO_INIT_SIG\n");
+        break;
+    case DUP_IO_QRY_NEXT_SIG:
+        fprintf(stdout, "DUP_IO_QRY_NEXT_SIG\n");
+        break;
+    case DUP_IO_ANS_NEXT_SIG:
+        fprintf(stdout, "DUP_IO_ANS_NEXT_SIG\n");
+        break;
+    case DUP_IO_QRY_MATCH_SIG:
+        fprintf(stdout, "DUP_IO_QRY_MATCH_SIG\n");
+        break;
+    case DUP_IO_ANS_MATCH_SIG:
+        fprintf(stdout, "DUP_IO_ANS_MATCH_SIG\n");
+        break;
+    default:
+        fprintf(stdout, "UNKNOWN\n");
+        break;
+    }
+#endif
 
     // Return package type.
     return header.command;
 }
 
 bool send_quit(int fd) {
+    fprintf(stdout, "Sending a 'quit' package.\n");
+
     // Create 'quit' message header.
     DUP_IO_header header;
     header.command = DUP_IO_QUIT;
@@ -174,6 +216,8 @@ bool send_quit(int fd) {
 }
 
 bool send_echo(int fd, const char *message) {
+    fprintf(stdout, "Sending an 'echo' package.\n");
+
     if (message == NULL)
         return false;
 
@@ -203,6 +247,8 @@ bool send_echo(int fd, const char *message) {
 }
 
 char* recv_echo(int fd) {
+    fprintf(stdout, "Receiving an 'echo' package.\n");
+
     // Read message length.
     size_t len = 0;
     if (fd_read_block(fd, (char*) &len, sizeof(size_t)) != sizeof(size_t))
@@ -224,6 +270,8 @@ char* recv_echo(int fd) {
 bool send_seq(int fd, id_type id, const char *seq) {
     if ((id == ID_TYPE_UNDEF) || (seq == NULL))
         return false;
+
+    fprintf(stdout, "Sending a 'sequence' package.\n");
 
     // Create 'add sequence' message header.
     DUP_IO_header header;
@@ -253,6 +301,8 @@ bool send_seq(int fd, id_type id, const char *seq) {
 }
 
 char *recv_seq(int fd, id_type *id) {
+    fprintf(stdout, "Receiving a 'sequence' package.\n");
+
     // Read ID.
     if (fd_read_block(fd, (char*) id, sizeof(id_type)) != sizeof(id_type)) {
         *id = ID_TYPE_UNDEF;
@@ -283,6 +333,8 @@ char *recv_seq(int fd, id_type *id) {
 }
 
 bool send_comp_idx(int fd) {
+    fprintf(stdout, "Sending a 'comp idx' package.\n");
+
     // Create 'cumpute index' message header.
     DUP_IO_header header;
     header.command = DUP_IO_COMP_IDX;
@@ -297,9 +349,28 @@ bool send_comp_idx(int fd) {
     return true;
 }
 
+bool send_comp_idx_done(int fd) {
+    fprintf(stdout, "Sending a 'comp idx done' package.\n");
+
+    // Create 'cumpute index done' message header.
+    DUP_IO_header header;
+    header.command = DUP_IO_COMP_IDX_DONE;
+    header.magic = magic_header;
+    header.id = ++ID_counter;
+
+    // Send header.
+    if (fd_write(fd, (char*) &header, sizeof(DUP_IO_header))
+            != sizeof(DUP_IO_header))
+        return false;
+
+    return true;
+}
+
 bool send_init_sig(int fd, unsigned int length, bool RNA) {
     if (length < 10)
         return false;
+
+    fprintf(stdout, "Sending an 'init sig' package.\n");
 
     // Create 'add sequence' message header.
     DUP_IO_header header;
@@ -325,6 +396,8 @@ bool send_init_sig(int fd, unsigned int length, bool RNA) {
 }
 
 bool recv_init_sig(int fd, unsigned int *length, bool *RNA) {
+    fprintf(stdout, "Receiving an 'init sig' package.\n");
+
     // Read length.
     if (fd_read_block(fd, (char*) length, sizeof(unsigned int))
             != sizeof(unsigned int)) {
@@ -341,6 +414,8 @@ bool recv_init_sig(int fd, unsigned int *length, bool *RNA) {
 }
 
 bool send_qry_next_sig(int fd) {
+    fprintf(stdout, "Sending a 'query next sig' package.\n");
+
     // Create 'cumpute index' message header.
     DUP_IO_header header;
     header.command = DUP_IO_QRY_NEXT_SIG;
@@ -358,6 +433,8 @@ bool send_qry_next_sig(int fd) {
 bool send_ans_next_sig(int fd, const char *sig) {
     if (sig == NULL)
         return false;
+
+    fprintf(stdout, "Sending an 'answer next sig' package.\n");
 
     // Create 'add sequence' message header.
     DUP_IO_header header;
@@ -383,6 +460,8 @@ bool send_ans_next_sig(int fd, const char *sig) {
 }
 
 char *recv_ans_next_sig(int fd) {
+    fprintf(stdout, "Receiving an 'answer next sig' package.\n");
+
     // Read signature length.
     size_t len = 0;
     if (fd_read_block(fd, (char*) &len, sizeof(size_t)) != sizeof(size_t))
@@ -406,6 +485,8 @@ bool send_qry_match_sig(int fd, const char *sig, double mm, double mm_dist,
         bool use_wmis) {
     if (sig == NULL)
         return false;
+
+    fprintf(stdout, "Sending a 'match sig' package.\n");
 
     // Create 'add sequence' message header.
     DUP_IO_header header;
@@ -443,6 +524,8 @@ bool send_qry_match_sig(int fd, const char *sig, double mm, double mm_dist,
 }
 
 char *recv_qry_match_sig(int fd, double *mm, double *mm_dist, bool *use_wmis) {
+    fprintf(stdout, "Receiving a 'match sig' package.\n");
+
     // Read signature length.
     size_t len = 0;
     if (fd_read_block(fd, (char*) &len, sizeof(size_t)) != sizeof(size_t))
@@ -479,6 +562,8 @@ char *recv_qry_match_sig(int fd, double *mm, double *mm_dist, bool *use_wmis) {
 
 bool send_ans_match_sig(int fd, const IntSet *matched_ids,
         unsigned int og_matches) {
+    fprintf(stdout, "Sending an 'answer match sig' package.\n");
+
     // Create 'matched ids' message header.
     DUP_IO_header header;
     header.command = DUP_IO_ANS_MATCH_SIG;
@@ -513,6 +598,8 @@ bool send_ans_match_sig(int fd, const IntSet *matched_ids,
 
 bool recv_ans_match_sig(int fd, IntSet *&matched_ids,
         unsigned int &og_matches) {
+    fprintf(stdout, "Receiving an 'answer match sig' package.\n");
+
     // Receive number of outgroup matches.
     if (fd_read_block(fd, (char*) &og_matches, sizeof(unsigned int))
             != sizeof(unsigned int))

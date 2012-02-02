@@ -36,6 +36,7 @@ enum DUP_IO_command {
     DUP_IO_ECHO,
     DUP_IO_SEQ,
     DUP_IO_COMP_IDX,
+    DUP_IO_COMP_IDX_DONE,
     DUP_IO_INIT_SIG,
     DUP_IO_QRY_NEXT_SIG,
     DUP_IO_ANS_NEXT_SIG,
@@ -60,6 +61,8 @@ bool send_seq(int fd, id_type id, const char *seq);
 char *recv_seq(int fd, id_type *id);
 
 bool send_comp_idx(int fd);
+
+bool send_comp_idx_done(int fd);
 
 bool send_init_sig(int fd, unsigned int length, bool RNA);
 

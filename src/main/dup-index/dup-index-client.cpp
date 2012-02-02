@@ -34,7 +34,8 @@ const int fd_client_send = 4;
 /*!
  * Constructor.
  */
-DUPIndex::DUPIndex() {
+DUPIndex::DUPIndex() :
+                index_computed(false) {
     // Initialize file descriptors
     init_fd(fd_client_recv);
     init_fd(fd_client_send);
@@ -72,7 +73,12 @@ bool DUPIndex::addSequence(const char *sequence, const id_type id) {
  * \return True, if the index was successfully computed.
  */
 bool DUPIndex::computeIndex() {
-    return send_comp_idx(fd_client_send);
+    send_comp_idx(fd_client_send);
+    DUP_IO_command cmd = DUP_IO_ERROR;
+    while (cmd != DUP_IO_COMP_IDX_DONE)
+        cmd = wait_for_command(fd_client_recv);
+    index_computed = true;
+    return true;
 }
 
 /*!
@@ -82,7 +88,7 @@ bool DUPIndex::computeIndex() {
  * (--> i.e. if the index can process matches.)
  */
 bool DUPIndex::isIndexComputed() {
-    return false;
+    return index_computed;
 }
 
 /*!
@@ -104,6 +110,9 @@ bool DUPIndex::initFetchSignature(unsigned int length, bool RNA) {
 const char *DUPIndex::fetchNextSignature() {
     if (!send_qry_next_sig(fd_client_send))
         return NULL;
+    DUP_IO_command cmd = DUP_IO_ERROR;
+    while (cmd != DUP_IO_ANS_NEXT_SIG)
+        cmd = wait_for_command(fd_client_recv);
     return recv_ans_next_sig(fd_client_recv);
 }
 
@@ -123,5 +132,8 @@ bool DUPIndex::matchSignature(IntSet *&matched_ids, const char *signature,
         double mm, double mm_dist, unsigned int &og_matches, bool use_wmis) {
     if (!send_qry_match_sig(fd_client_send, signature, mm, mm_dist, use_wmis))
         return false;
+    DUP_IO_command cmd = DUP_IO_ERROR;
+    while (cmd != DUP_IO_ANS_MATCH_SIG)
+        cmd = wait_for_command(fd_client_recv);
     return recv_ans_match_sig(fd_client_recv, matched_ids, og_matches);
 }
