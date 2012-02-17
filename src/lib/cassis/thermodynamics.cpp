@@ -274,11 +274,11 @@ void Thermodynamics::internal_thermodynamics() {
     m_delta_h = 0;
     m_delta_s = 0;
 
-    // TODO: Predefined(!) environment settings
-    // Concentration in mM (millimol)
-    double c_salt = 1000;
-    double c_mg = 0;
-    double c_primer = 0.00001; // == 10 nM
+    // TODO: Predefined environment settings!
+    // All concentrations in mmol/l (millimol/liter)
+    double c_salt = 1000.0; // == 1 mol/l
+    double c_mg = 0.0;
+    double c_oligo = 0.00001; // == 10 nmol/l
 
     // Effect on entropy by salt correction. (Ahsen et al. 1999)
     // Increase of stability due to presence of Mg (--> effect on entropy).
@@ -317,7 +317,7 @@ void Thermodynamics::internal_thermodynamics() {
     }
 
     // Compute the melting temperature.
-    m_tm = ((1000 * m_delta_h) / (m_delta_s + (1.987 * log(c_primer / 2000))))
+    m_tm = ((1000 * m_delta_h) / (m_delta_s + (1.987 * log(c_oligo / 4000))))
                     - 273.15;
 }
 
