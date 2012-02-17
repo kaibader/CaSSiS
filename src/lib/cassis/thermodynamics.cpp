@@ -317,8 +317,10 @@ void Thermodynamics::internal_thermodynamics() {
     }
 
     // Compute the melting temperature.
-    m_tm = ((1000 * m_delta_h) / (m_delta_s + (1.987 * log(c_oligo / 4000))))
-                    - 273.15;
+    // log(c_oligo / (1000 * 4)) --> self complementary oligo.
+    // log(c_oligo / (1000 * 2)) --> _NOT_ self complementary oligo.
+    m_tm = ((1000 * m_delta_h)
+            / (m_delta_s + (1.987 * log(c_oligo / (1000 * 2))))) - 273.15;
 }
 
 /*!
