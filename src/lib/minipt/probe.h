@@ -26,8 +26,8 @@ namespace minipt {
 #define PT_MAX_MATCHES     1024*1024
 // #define PT_MAX_IDENTS      10000
 #define PT_POS_TREE_HEIGHT 80
-#define PT_POS_SECURITY    10
-#define MIN_PROBE_LENGTH   3
+#define PT_POS_SECURITY    9
+#define MIN_PROBE_LENGTH   9
 
 enum PT_MATCH_TYPE {
     PT_MATCH_TYPE_INTEGER = 0,

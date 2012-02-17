@@ -26,3 +26,12 @@ set(bgrtmerge_sources
 add_executable(bgrtmerge ${bgrtmerge_sources})
 target_link_libraries(bgrtmerge CaSSiS)
 install(TARGETS bgrtmerge DESTINATION bin)
+
+### Tool: thermodynamics ###
+
+set(thermodynamics_sources
+    thermodynamics.cpp
+)
+add_executable(thermodynamics ${thermodynamics_sources})
+target_link_libraries(thermodynamics CaSSiS)
+install(TARGETS thermodynamics DESTINATION bin)
