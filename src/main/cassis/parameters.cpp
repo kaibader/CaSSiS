@@ -33,7 +33,7 @@
 Parameters::Parameters() :
 m_command(CommandUndef), m_bgrt_file(), m_verbose(false), m_index(
         IndexMiniPt), m_output(OutputClassicCSV), m_seq_files(), m_check_r_c(
-                false), m_allowed_mm(0), m_mm_dist(1), m_min_len(18), m_max_len(
+                false), m_allowed_mm(0.0), m_mm_dist(1.0), m_min_len(18), m_max_len(
                         18), m_use_gc(false), m_min_gc(0.0), m_max_gc(100.0), m_use_tm(
                                 false), m_min_tm(-273.0), m_max_tm(273.0), m_use_wm(false), m_num_threads(
                                         0), m_treefile(), m_treename(), m_og_limit(0), m_all_signatures(
@@ -52,8 +52,8 @@ void Parameters::reset() {
     m_seq_files.clear();
     m_bgrt_file.clear();
     m_check_r_c = false;
-    m_allowed_mm = 0;
-    m_mm_dist = 1;
+    m_allowed_mm = 0.0;
+    m_mm_dist = 1.0;
     m_min_len = 18;
     m_max_len = 18;
     m_use_gc = false;
@@ -449,7 +449,8 @@ void Parameters::usage() const {
     "                    (Not recommended, may take forever... Default: off)\n"
     "  -bgrt <filename>  BGRT file path and name.\n"
     "  -dist <number>    Minimal mismatch distance between a signature candidate\n"
-    "                    and non-targets. (Default: 0.0 mismatches)\n"
+    "                    and non-targets. Must be higher than \"-mis <number>\".\n"
+    "                    (Default: 1.0 mismatches)\n"
     "  -gc <min>-<max>   Only allow signatures within a defined G+C content range.\n"
     "                    (Default: 0 -- 100 percent)\n"
     "  -idx <name>       Defines the used search index:\n"
@@ -464,7 +465,7 @@ void Parameters::usage() const {
     "                    Length of the evaluated oligonucleotides. Either a\n"
     "                    fixed length or a range. (Default: 18 bases)\n"
     "  -mis <number>     Number of allowed mismatches within the target group.\n"
-    "                    (Default: 1.0 mismatches)\n"
+    "                    (Default: 0.0 mismatches)\n"
     "  -og <limit>       Number of outgroup hits up to which group signatures are\n"
     "                    computed. (Default: 0)\n"
     "  -out <format>     Defines the output format.\n"
