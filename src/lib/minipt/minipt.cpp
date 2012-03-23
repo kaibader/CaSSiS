@@ -341,7 +341,7 @@ bool MiniPT::matchSignature(IntSet *&matched_ids, const char *signature,
     if (mm < 0)
         mm = 0;
     if (mm_dist < mm)
-        mm_dist = mm + 1;
+        mm_dist = mm + 1.0;
 
     // mismatches = mm_dist + 0.5 (for wmis) - 1 (because a distance of 1 is default)
     unsigned int mismatches = (unsigned int) (mm_dist - 0.5);

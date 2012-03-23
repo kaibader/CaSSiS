@@ -317,6 +317,14 @@ int commandCreate1Pass(const Parameters &params) {
     dumpStats("Create: Loading CaSSiS tree.");
 #endif
 
+    // Check, if the allowed target mismatches are below the mismatch distance.
+    if (params.allowed_mm() >= params.mm_dist()) {
+        std::cerr << "Error: Mismatch distance " << params.mm_dist()
+                        << "is lower or equal to the allowed target mismatches"
+                        << params.allowed_mm() << ". Exiting.\n";
+        return EXIT_FAILURE;
+    }
+
     // Our name <--> ID mapping, fetched from the CaSSiSTree.
     NameMap mapping;
 

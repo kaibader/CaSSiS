@@ -646,6 +646,10 @@ bool Parameters::setCheck_r_c(bool c) {
 
 bool Parameters::setAllowed_mm(double a) {
     this->m_allowed_mm = a;
+    // This is a 'dirty' fix to keep the distance higher than the
+    // allowed target mismatches.
+    if(this->m_allowed_mm > this->m_mm_dist)
+        this->m_mm_dist = this->m_allowed_mm + 1.0;
     return true;
 }
 
