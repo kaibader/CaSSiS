@@ -113,12 +113,17 @@ int probe_compress_sequence(char *seq, int seqsize) {
     if (compress_table == NULL) {
         compress_table = (unsigned char *) malloc(256 * sizeof(char));
         memset(compress_table, PT_N, 256);
-        compress_table['A'] = compress_table['a'] = PT_A;
-        compress_table['C'] = compress_table['c'] = PT_C;
-        compress_table['G'] = compress_table['g'] = PT_G;
-        compress_table['T'] = compress_table['t'] = PT_T;
-        compress_table['U'] = compress_table['u'] = PT_T;
-        compress_table['.'] = PT_QU;
+        compress_table[(unsigned char) 'A'] =
+                compress_table[(unsigned char) 'a'] = PT_A;
+        compress_table[(unsigned char) 'C'] =
+                compress_table[(unsigned char) 'c'] = PT_C;
+        compress_table[(unsigned char) 'G'] =
+                compress_table[(unsigned char) 'g'] = PT_G;
+        compress_table[(unsigned char) 'T'] =
+                compress_table[(unsigned char) 't'] = PT_T;
+        compress_table[(unsigned char) 'U'] =
+                compress_table[(unsigned char) 'u'] = PT_T;
+        compress_table[(unsigned char) '.'] = PT_QU;
         compress_table[0] = PT_B_UNDEF;
     }
 

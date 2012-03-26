@@ -30,8 +30,8 @@
 
 // Forward declarations...
 class Tree;
-struct CaSSiSTree;
-struct CaSSiSTreeNode;
+class CaSSiSTree;
+class CaSSiSTreeNode;
 class NameMap;
 
 class Node: public QGraphicsItem {

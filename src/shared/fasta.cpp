@@ -77,7 +77,7 @@ private:
     FileImpl& operator=(FileImpl); // Hide copy assignment operator
     size_t doubleSeqBufSize();
     void createFilterMask();
-    void whiteListFilter(char *sequence, const char *mask);
+    void whiteListFilter(char *sequence, const unsigned char *mask);
     void cleanUp(char *string, const char *rm);
     FILE *m_fd;
     Type m_type;
@@ -85,7 +85,7 @@ private:
     size_t m_read_buf_size;
     char *m_seq_buf;
     size_t m_seq_buf_size;
-    char *m_filter_mask;
+    unsigned char *m_filter_mask;
 };
 
 /*!
@@ -393,7 +393,7 @@ void FileImpl::createFilterMask() {
     static const char *whitelist[] = { "ACGURYSWKMBDHVN", "ACGTRYSWKMBDHVN",
             "ACDEFGHIKLMNPQRSTVWY" };
 
-    char *array = (char *) calloc(256, sizeof(char));
+    unsigned char *array = (unsigned char *) calloc(256, sizeof(char));
     if (!array)
         return;
 
@@ -418,14 +418,14 @@ void FileImpl::createFilterMask() {
     }
 
     // Special cases:
-    array['-'] = '-'; // Alignment gap.
-    array['.'] = '.'; // Unofficial gap character.
+    array[(unsigned char) '-'] = '-'; // Alignment gap.
+    array[(unsigned char) '.'] = '.'; // Unofficial gap character.
     if (m_type == DNA) {
-        array['U'] = 'T'; // Convert Uracil to Thymine.
-        array['u'] = 'T';
+        array[(unsigned char) 'U'] = 'T'; // Convert Uracil to Thymine.
+        array[(unsigned char) 'u'] = 'T';
     } else if (m_type == RNA) {
-        array['T'] = 'U'; // Convert Thymine to Uracil.
-        array['t'] = 'U';
+        array[(unsigned char) 'T'] = 'U'; // Convert Thymine to Uracil.
+        array[(unsigned char) 't'] = 'U';
     }
 
     m_filter_mask = array;
@@ -438,7 +438,7 @@ void FileImpl::createFilterMask() {
  * @param sequence Sequence to be filtered
  * @param whitelist Allowed characters
  */
-void FileImpl::whiteListFilter(char *sequence, const char *mask) {
+void FileImpl::whiteListFilter(char *sequence, const unsigned char *mask) {
     if (!sequence || !mask)
         return;
 

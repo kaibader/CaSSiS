@@ -210,7 +210,7 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
     setlocale(LC_NUMERIC, "C");
 
     // Create a PhyloTreeNode stack structure and push a first node onto it.
-    std::stack<struct CaSSiSTreeNode*> node_stack;
+    std::stack<CaSSiSTreeNode*> node_stack;
     node1 = new CaSSiSTreeNode(og_limit);
     node_stack.push(node1);
     tree->num_nodes++;

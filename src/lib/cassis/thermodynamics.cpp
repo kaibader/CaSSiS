@@ -61,16 +61,16 @@ m_test_gc(false), m_test_tm(false), m_test_tm_basic(false), m_min_gc(0), m_max_g
     // Initialize translation table (bases --> array indices)
     m_translation_table = (unsigned char *) malloc(256 * sizeof(char));
     memset(m_translation_table, 0xFF, 256);
-    m_translation_table['A'] = 0x00;
-    m_translation_table['a'] = 0x00;
-    m_translation_table['C'] = 0x01;
-    m_translation_table['c'] = 0x01;
-    m_translation_table['G'] = 0x02;
-    m_translation_table['g'] = 0x02;
-    m_translation_table['T'] = 0x03;
-    m_translation_table['t'] = 0x03;
-    m_translation_table['U'] = 0x03;
-    m_translation_table['u'] = 0x03;
+    m_translation_table[(unsigned char) 'A'] = 0x00;
+    m_translation_table[(unsigned char) 'a'] = 0x00;
+    m_translation_table[(unsigned char) 'C'] = 0x01;
+    m_translation_table[(unsigned char) 'c'] = 0x01;
+    m_translation_table[(unsigned char) 'G'] = 0x02;
+    m_translation_table[(unsigned char) 'g'] = 0x02;
+    m_translation_table[(unsigned char) 'T'] = 0x03;
+    m_translation_table[(unsigned char) 't'] = 0x03;
+    m_translation_table[(unsigned char) 'U'] = 0x03;
+    m_translation_table[(unsigned char) 'u'] = 0x03;
 
     // Enthalpy values (--> delta_h; in kcal/mol)
     m_array_h[0][0] = -7.9; // AA
