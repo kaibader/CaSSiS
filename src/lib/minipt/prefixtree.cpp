@@ -541,7 +541,7 @@ long PTD_write_node_to_disk(FILE * out, PTM2 *ptmain, POS_TREE * node,
         int level;
 #ifdef ARB_64
         if (max_diff > 0xffffffff) { // long node
-            printf("Warning: max_diff > 0xffffffff is not tested.\n");
+            // Warning: max_diff > 0xffffffff is not tested.
             flags2 |= 0x40;
             level = 0xffffffff;
             ptstruct.stat.long_node++;
@@ -582,7 +582,7 @@ long PTD_write_node_to_disk(FILE * out, PTM2 *ptmain, POS_TREE * node,
                 assert(diff >= 0);
 #ifdef ARB_64
                 if (max_diff > 0xffffffff) { // long long / int  (bit[6] in flags2 is set; bit[7] is unset)
-                    printf("Warning: max_diff > 0xffffffff is not tested.\n");
+                    // Warning: max_diff > 0xffffffff is not tested.
                     if (diff>level) { // long long (64 bit)  (bit[i] in flags2 is set)
                         PTD_put_longlong(out, diff);
                         size += 8;
