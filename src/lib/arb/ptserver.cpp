@@ -146,10 +146,10 @@ ARBPTServer::ARBPTServer() :
 
     // Init bonding values...
     for (int i = 0; i < 16; ++i)
-        _priv->pdc->bond[i].val = bond[i];
+        _priv->locs->bond[i].val = bond[i];
     _priv->pdc->dt = 0.5;
     _priv->pdc->dte = 0.5;
-    _priv->pdc->split = 0.5;
+    _priv->locs->split = 0.5;
 
     // Dirty hack to get the aisc-commands to do what we want...
     _priv->locs->pdc = _priv->pdc;
