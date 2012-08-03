@@ -319,9 +319,9 @@ int commandCreate1Pass(const Parameters &params) {
 
     // Check, if the allowed target mismatches are below the mismatch distance.
     if (params.allowed_mm() >= params.mm_dist()) {
-        std::cerr << "Error: Mismatch distance " << params.mm_dist()
-                        << "is lower or equal to the allowed target mismatches"
-                        << params.allowed_mm() << ". Exiting.\n";
+        std::cerr << "Error: Mismatch distance (" << params.mm_dist()
+                        << ") has to be higher than the allowed mismatches between targets ("
+                        << params.allowed_mm() << "). Exiting.\n";
         return EXIT_FAILURE;
     }
 
@@ -735,7 +735,7 @@ int main(int argc, char **argv) {
     // The CaSSiS copyright message...
     std::cout << "CaSSiS -- Comprehensive and Sensitive Signature Search\n"
             "Version " << CASSIS_VERSION_MAJOR << "." << CASSIS_VERSION_MINOR
-            << "." << CASSIS_VERSION_PATCH<< CASSIS_VERSION_SUFFIX << " ("
+            << "." << CASSIS_VERSION_PATCH << CASSIS_VERSION_SUFFIX << " ("
             << CASSIS_BUILD_DATE << "), released by Kai Christian Bader.\n\n";
 
 #ifdef DUMP_STATS
@@ -758,7 +758,7 @@ int main(int argc, char **argv) {
 #endif
 
     // Dump verbose information, if defined.
-    if(params.verbose())
+    if (params.verbose())
         params.dump();
 
 #ifdef PTHREADS

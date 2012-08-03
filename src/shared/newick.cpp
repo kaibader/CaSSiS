@@ -46,9 +46,9 @@ void DumpCaSSiSTreeNode(const CaSSiSTreeNode *node, NameMap &map) {
 
         printf(")");
 
-        if (node->this_id != ID_TYPE_UNDEF)
+        if (node->this_id != ID_TYPE_UNDEF )
             printf("\'%s\'\n", map.name(node->this_id).c_str());
-    } else if (node->this_id != ID_TYPE_UNDEF) {
+    } else if (node->this_id != ID_TYPE_UNDEF ) {
         printf("\'%s\'\n", map.name(node->this_id).c_str());
     }
 }
@@ -162,8 +162,7 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
     // Create a new CaSSiS tree.
     CaSSiSTree* tree = new CaSSiSTree();
     if (!tree) {
-        fprintf(
-                stderr,
+        fprintf(stderr,
                 "Error: Unable to allocate memory for the phylogenetic tree.\n");
         return NULL;
     }
@@ -232,6 +231,11 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
         while (*it) {
             // There always has to be at least one node on the stack...
             assert(node_stack.size());
+            if (node_stack.size() == 0) {
+                fprintf(stderr,
+                        "Error: Apparently not a valid binary Newick tree?\n");
+                return NULL;
+            }
 
             if (!comment) {
                 switch (*it) {
@@ -277,6 +281,11 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
 
                     // Closing bracket -> min. one element within bracket.
                     assert(node_stack.size() >= 2);
+                    if (node_stack.size() <= 1) {
+                        fprintf(stderr,
+                                "Error: Apparently not a valid binary Newick tree?\n");
+                        return NULL;
+                    }
 
                     // Fetch/pop two nodes from stack
                     node1 = node_stack.top();
@@ -364,6 +373,10 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
 
     // One node remains as root node when the structure was finally evaluated...
     assert(node_stack.size() == 1);
+    if (node_stack.size() != 1) {
+        fprintf(stderr, "Error: Apparently not a valid binary Newick tree?\n");
+        return NULL;
+    }
 
     // Set root node of phylogenetic tree and return it.
     CaSSiSTreeNode *root_node = node_stack.top();
