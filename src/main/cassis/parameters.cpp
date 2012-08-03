@@ -464,6 +464,7 @@ void Parameters::usage() const {
     "  -len {<len>|<min>-<max>}\n"
     "                    Length of the evaluated oligonucleotides. Either a\n"
     "                    fixed length or a range. (Default: 18 bases)\n"
+    "                    Lengths must be between 10 and 25 bases.\n"
     "  -mis <number>     Number of allowed mismatches within the target group.\n"
     "                    (Default: 0.0 mismatches)\n"
     "  -og <limit>       Number of outgroup hits up to which group signatures are\n"
@@ -496,8 +497,8 @@ void Parameters::usage() const {
     "                    (an additional tree name is needed here).\n"
 #else
     "  -tree <filename>  Signature candidates will be computed for every defined\n"
-    "                    (i.e. named) node within a binary tree. Accepts a Newick\n"
-    "                    tree file as source.\n"
+    "                    (i.e. named) node within a binary tree. Accepts a binary\n"
+    "                    Newick tree file as source.\n"
 #endif
     "  -v                Verbose output\n"
     "  -wm               Enable \"weighted mismatch\" values. (Default: off)\n"
@@ -648,7 +649,7 @@ bool Parameters::setAllowed_mm(double a) {
     this->m_allowed_mm = a;
     // This is a 'dirty' fix to keep the distance higher than the
     // allowed target mismatches.
-    if(this->m_allowed_mm > this->m_mm_dist)
+    if (this->m_allowed_mm > this->m_mm_dist)
         this->m_mm_dist = this->m_allowed_mm + 1.0;
     return true;
 }
@@ -659,11 +660,15 @@ bool Parameters::setMm_dist(double m) {
 }
 
 bool Parameters::setMin_len(unsigned int m) {
+    if (m < 10)
+        return false;
     this->m_min_len = m;
     return true;
 }
 
 bool Parameters::setMax_len(unsigned int m) {
+    if (m > 25)
+        return false;
     this->m_max_len = m;
     return true;
 }

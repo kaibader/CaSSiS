@@ -25,7 +25,7 @@ namespace minipt {
 #define PT_SERVER_VERSION 2                         // version of pt server database (no versioning till 2009/05/13)
 #define PT_MAX_MATCHES     1024*1024
 // #define PT_MAX_IDENTS      10000
-#define PT_POS_TREE_HEIGHT 20
+#define PT_POS_TREE_HEIGHT 25
 #define PT_POS_SECURITY    9
 #define MIN_PROBE_LENGTH   9
 
