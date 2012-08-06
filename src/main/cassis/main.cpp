@@ -639,6 +639,17 @@ int commandInfo(const Parameters &params, BgrTree *bgr_tree = NULL) {
 }
 
 /*!
+ * Processes a file with groups defined by comma separated lists of
+ * identifiers. Each line represents one group.
+ */
+bool processListFile(const Parameters &params, BgrTree *bgr_tree) {
+    if (!bgr_tree)
+        return false;
+
+    return true;
+}
+
+/*!
  * This function computes signatures based on a (phylogenetic) tree and a BGRT
  *
  * \param params Program parameters
@@ -668,56 +679,66 @@ int commandProcess(const Parameters &params) {
     dumpStats("Process: BGRT loaded.");
 #endif
 
-    // Fetch the phylogenetic tree" structure from the ARB database
-    std::cout << "Creating the phylogenetic tree structure:" << std::endl;
-    CaSSiSTree *tree = createCaSSiSTree(params);
-    if (tree == NULL)
-        return EXIT_FAILURE;
+    // Check, if a list file or a complete phylogenetic tree is used as
+    // our source.
+    if (params.use_list()) {
+        // Process the list with comma separated identifier.
+        // Each line represents one group that should be processed.
+        processListFile(params, bgr_tree);
+    } else {
+        // Fetch the phylogenetic tree structure from the ARB database
+        std::cout << "Creating the phylogenetic tree structure:" << std::endl;
+        CaSSiSTree *tree = createCaSSiSTree(params);
+        if (tree == NULL)
+            return EXIT_FAILURE;
 
-    // Let the tree use the BGRT mapping.
-    if (!tree->enforceExtMapping(*name_map)) {
-        std::cerr << "Warning: There is a mismatch in the ID <--> name\n"
-                "mapping between the BGRT and the tree!\n";
-    }
+        // Let the tree use the BGRT mapping.
+        if (!tree->enforceExtMapping(*name_map)) {
+            std::cerr << "Warning: There is a mismatch in the ID <--> name\n"
+                    "mapping between the BGRT and the tree!\n";
+        }
 
-    // Optimize the phylogenetic tree.
-    std::cout << std::endl << "Optimizing the phylogenetic tree "
-            "(reducing degenerated branches)..." << std::endl;
-    unsigned int old_depth = tree->tree_depth;
+        // Optimize the phylogenetic tree.
+        std::cout << std::endl << "Optimizing the phylogenetic tree "
+                "(reducing degenerated branches)..." << std::endl;
+        unsigned int old_depth = tree->tree_depth;
 
-    reduceCaSSiSTreeDepth(tree);
+        reduceCaSSiSTreeDepth(tree);
 
-    std::cout << "\t- Old depth: " << old_depth << std::endl
-            << "\t- New depth: " << tree->tree_depth << std::endl;
+        std::cout << "\t- Old depth: " << old_depth << std::endl
+                << "\t- New depth: " << tree->tree_depth << std::endl;
 
 #ifdef DUMP_STATS
-    dumpStats("Process: Beginning BGRT traversal...");
+        dumpStats("Process: Beginning BGRT traversal...");
 #endif
 
-    // Traverse the phylogenetic tree...
-    findTreeSpecificSignatures(bgr_tree, tree, params.og_limit());
+        // Traverse the phylogenetic tree...
+        findTreeSpecificSignatures(bgr_tree, tree, params.og_limit());
 
 #ifdef DUMP_STATS
-    dumpStats("Process: BGRT traversal finished.");
+        dumpStats("Process: BGRT traversal finished.");
 #endif
 
-    // Fetch the computed results and write the results
-    // of our evaluation into two different CSV files.
-    if (params.output() == OutputClassicCSV)
-        dump2ClassicCSV(tree);
-    else if (params.output() == OutputDetailedCSV)
-        dump2DetailedCSV(tree);
-    else if (params.output() == OutputTextfiles) {
-        // Write parameter information into every file, if available.
-        std::stringstream comment;
-        comment << "\nBGRT file:          " << params.bgrt_file()
-                        << "\nBGRT comment:       " << bgr_tree->comment;
+        // Fetch the computed results and write the results
+        // of our evaluation into two different CSV files.
+        if (params.output() == OutputClassicCSV)
+            dump2ClassicCSV(tree);
+        else if (params.output() == OutputDetailedCSV)
+            dump2DetailedCSV(tree);
+        else if (params.output() == OutputTextfiles) {
+            // Write parameter information into every file, if available.
+            std::stringstream comment;
+            comment << "\nBGRT file:          " << params.bgrt_file()
+                            << "\nBGRT comment:       " << bgr_tree->comment;
 
-        dump2Textfiles(tree, comment.str().c_str());
+            dump2Textfiles(tree, comment.str().c_str());
+        }
+
+        // We do not need the tree anymore...
+        delete tree;
     }
 
     // Do some clean-up...
-    delete tree;
     BgrTree_destroy(bgr_tree);
     delete name_map;
 
