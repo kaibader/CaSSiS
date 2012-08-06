@@ -479,6 +479,7 @@ void Parameters::usage() const {
     "  -list <filename>  Instead of a phylogenetic tree, a list with comma separated\n"
     "                    identifiers can be used to define groups the should be\n"
     "                    queried. Each line in the list defines one group.\n"
+    "                    The output format is set to 'sigfile'.\n"
     "                    (Comment: Only available in 'cassis process'.)\n"
     "  -mis <number>     Number of allowed mismatches within the target group.\n"
     "                    (Default: 0.0 mismatches)\n"

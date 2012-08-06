@@ -646,6 +646,17 @@ bool processListFile(const Parameters &params, BgrTree *bgr_tree) {
     if (!bgr_tree)
         return false;
 
+    //std::ofstream file;
+    //file.open(filename.c_str());
+    //
+    //// Write a header (info about the current leaf/group)
+    //if (node->isLeaf())
+    //file << "Organism:             " << name << "\n";
+    //else
+    //file << "Group name:           " << name << "\n"
+    //<< "Group size:           " << node->group->size()
+    //<< "\n";
+
     return true;
 }
 

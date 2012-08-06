@@ -27,6 +27,17 @@
 #include <cassis/tree.h>
 
 /*!
+ * Dump the results from a CaSSiSTreeNode onto an output stream.
+ *
+ * \param ostream Output stream.
+ * \param node CaSSiSTreeNode with the processed results.
+ * \param og_matches Max. number of allowed outgroup matches.
+ * \return true, if successful. Otherwise false.
+ */
+bool dump2stream(std::ostream &stream, CaSSiSTreeNode *node,
+        unsigned int og_matches);
+
+/*!
  * Dump the results from a CaSSiSTree into multiple signature files.
  *
  * \param tree CaSSiSTree with the processed results.
