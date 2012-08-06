@@ -1,3 +1,28 @@
+CaSSiS 0.5.0 (released 6.August 2012; stable release)
+------------------------------------------------------
+The following items were fixed and/or added:
+
+* Added '-list' parameter to allow processing without phylogenetic trees.
+* Updated ARB compatibility.
+* Disabled warnings when processing huge sequence datasets.
+* Fixed mismatch parameter settings.
+* Set MiniPT tree depth (i.e. signature length limit) to 25.
+* Fixed a bug in the melting temperature formula.
+* Added a test tool for thermodynamic parameters.
+* Minor changes in the graphviz visualization tool.
+* Added (untested) DUP support.
+* Added stubs for the index server.
+* Major refactoring.
+* Added another form of detailed output: Signature files.
+* Minor changes in cmake build chain.
+* Unofficial pThread support.
+* Various fixes for the (untested) pThreads version.
+* Added a second output format: Detailed CSV
+* Updated various copyright headers and comments.
+* Updated (better) error messages instead of mere assertions.
+* Various bugfixes that address the formatting of the input file.
+
+
 CaSSiS 0.4.0 (released 14.January 2012; stable release)
 ------------------------------------------------------
 The following items were fixed and/or added:
