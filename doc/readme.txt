@@ -3,7 +3,7 @@ CaSSiS README
 ----------------------------------------------------------------------------
 
 To report a bug or give feedback, send an email to: mail@kaibader.de
-(Last edited: 2012-01-16)
+(Last edited: 2012-08-06)
 
 
 ----------------------------------------------------------------------------
@@ -45,7 +45,7 @@ Please make sure to build the source code in an empty directory, i.e. create
 a new directory and then run cmake.
 
 Sample session:
-$  tar xvfj CaSSiS-0.4.0-src.tar.bz2
+$  tar xvfj CaSSiS-0.5.0-src.tar.bz2
                              (e.g. extracts to /path/to/cassis)
 $  mkdir /path/to/build
 $  cd /path/to/build
@@ -57,22 +57,27 @@ $  make
 THE FILES SHIPPED WITH CASSIS BINARY PACKAGES:
 ----------------------------------------------------------------------------
 
-There are two versions of archives, one for 32 bit Linux architectures and one
-for 64 bit architectures. CaSSiS was built with Ubuntu 11.10 (Natty Narwhal).
+Currently, only the 64 bit linux architecture is supported with a binary
+release. CaSSiS was built with Ubuntu 12.04 LTS (Precise Pangolin). You can
+build a 32 bit version with the available source code package.
 
 The CaSSiS binary tar archive contains the following files:
 
 cassis              The CaSSiS command line tool.
 cassis-gui          A graphical user interface for CaSSiS. (buggy)
+bgrt2graphviz       A small tool to visualize small(!) BGRT structures
+bgrtmerge           A test tool to merge BGRT files
+thermodynamics      A tool to test the thermodynamic functionalities
 libCaSSiS.so        (symbolic link)
 libCaSSiS.so.0      (symbolic link)
-libCaSSiS.so.0.4.0  The CaSSiS Library v0.4.0
+libCaSSiS.so.0.5.0  The CaSSiS Library v0.5.0
 libminipt.so
 
 arb_license.txt       The ARB license (for libARBDB.so and libminipt.so)
 gpl.txt               The GNU General Public License v3
 lgpl.txt              The GNU Lesser General Public License v3
 readme.txt            Help file.
+changelog.txt
 
 
 ----------------------------------------------------------------------------
@@ -171,6 +176,10 @@ hierarchical cluster. The second and third column show the number of organisms
 within the group/node (for leafs/organisms: 1) and the number of acutally hit
 organisms by the signatures for this node. The appropriate signatures follow
 subsequently.
+
+Two additional output formats exist: a more detailed CSV table output can be
+selected; and for each defined group and each sequence (i.e. leaf), a
+separate result signature file can be generated.
 
 
 ----------------------------------------------------------------------------
