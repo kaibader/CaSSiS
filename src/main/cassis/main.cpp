@@ -49,6 +49,7 @@
 
 #include <sstream>
 #include <iostream>
+#include <fstream>
 #include <algorithm>
 #include <cstdlib>
 #include <cstring>
@@ -167,7 +168,7 @@ IndexInterface *createIndexInterface(const Parameters &params,
             // Looks like an ARB database file. Open it...
             // if (!addARBSequencesToIndex((*it).c_str(), ptserver)) {
             std::cerr << "An error occurred while trying to add"
-                    "the ARB database " << *it << " to the search index.\n";
+            "the ARB database " << *it << " to the search index.\n";
             delete index;
             return NULL;
             // }
@@ -223,7 +224,7 @@ IndexInterface *createIndexInterface(const Parameters &params,
                     ++counter;
                     if (counter % 1000 == 0)
                         std::cout << "Sequences added to index... " << counter
-                        << "\n";
+                                << "\n";
 #endif
                 }
             }
@@ -320,8 +321,8 @@ int commandCreate1Pass(const Parameters &params) {
     // Check, if the allowed target mismatches are below the mismatch distance.
     if (params.allowed_mm() >= params.mm_dist()) {
         std::cerr << "Error: Mismatch distance (" << params.mm_dist()
-                        << ") has to be higher than the allowed mismatches between targets ("
-                        << params.allowed_mm() << "). Exiting.\n";
+                << ") has to be higher than the allowed mismatches between targets ("
+                << params.allowed_mm() << "). Exiting.\n";
         return EXIT_FAILURE;
     }
 
@@ -494,10 +495,10 @@ int commandCreate1Pass(const Parameters &params) {
     // Output statistical information about the bipartite graph.
     if (params.verbose())
         std::cout << "Bipartite graph statistics (e=evaluated,a=added):"
-        << "\n\t# Edges (e):      " << stats_edges_raw
-        << "\n\t# Edges (a):      " << stats_edges
-        << "\n\t# Signatures (e): " << stats_signatures_raw
-        << "\n\t# Signatures (a): " << stats_signatures << std::endl;
+                << "\n\t# Edges (e):      " << stats_edges_raw
+                << "\n\t# Edges (a):      " << stats_edges
+                << "\n\t# Signatures (e): " << stats_signatures_raw
+                << "\n\t# Signatures (a): " << stats_signatures << std::endl;
 
     // Delete matches, if defined.
     delete matches;
@@ -615,11 +616,11 @@ int commandInfo(const Parameters &params, BgrTree *bgr_tree = NULL) {
 
     if (bgr_tree->min_gc > 0 || bgr_tree->max_gc < 100)
         std::cout << "\t- G+C range: " << bgr_tree->min_gc << "-"
-        << bgr_tree->max_gc << " %" << std::endl;
+                << bgr_tree->max_gc << " %" << std::endl;
 
     if (bgr_tree->min_temp > -270 || bgr_tree->max_temp < 270)
         std::cout << "\t- Melting temp. range: " << bgr_tree->min_temp << "-"
-        << bgr_tree->max_temp << " °C" << std::endl;
+                << bgr_tree->max_temp << " °C" << std::endl;
 
     if (bgr_tree->comment)
         std::cout << "\t- Comment: " << bgr_tree->comment << std::endl;
@@ -642,21 +643,59 @@ int commandInfo(const Parameters &params, BgrTree *bgr_tree = NULL) {
  * Processes a file with groups defined by comma separated lists of
  * identifiers. Each line represents one group.
  */
-bool processListFile(const Parameters &params, BgrTree *bgr_tree) {
+bool processListFile(const Parameters &params, BgrTree *bgr_tree,
+        const NameMap *map) {
     if (!bgr_tree)
         return false;
 
-    //std::ofstream file;
-    //file.open(filename.c_str());
-    //
-    //// Write a header (info about the current leaf/group)
-    //if (node->isLeaf())
-    //file << "Organism:             " << name << "\n";
-    //else
-    //file << "Group name:           " << name << "\n"
-    //<< "Group size:           " << node->group->size()
-    //<< "\n";
+    // Open the list file.
+    std::ifstream list;
+    list.open(params.list_filename().c_str());
+    if (list.bad()) {
+        std::cerr << "Error: unable to open the group list file.\n";
+        return false;
+    }
 
+    // Process each line in the file...
+    std::string line;
+    while (std::getline(list, line)) {
+        // Identifiers will be stored in here...
+        IntSet set;
+
+        // Split the line into comma separated identifiers.
+        std::stringstream ss(line);
+        std::string id_str;
+        while (std::getline(ss, id_str, ',')) {
+            id_type id = map->id(id_str);
+            if (id == ID_TYPE_UNDEF ) {
+                std::cerr << "Error: unable to map id \"" << id_str
+                        << "\" onto the BGRT.\n";
+            } else
+                set.add(id);
+        }
+
+        //findGroupSpecificSignatures(struct BgrTree *bgr_tree, IntSet *ids,
+        //unsigned int *&num_matches, StrRefSet *&signatures,
+        //unsigned int max_outgroup_hits);
+
+        //std::ofstream file;
+        //file.open(filename.c_str());
+        //
+        //// Write a header (info about the current leaf/group)
+        //if (node->isLeaf())
+        //file << "Organism:             " << name << "\n";
+        //else
+        //file << "Group name:           " << name << "\n"
+        //<< "Group size:           " << node->group->size()
+        //<< "\n";
+    }
+    if (list.bad()) {
+        std::cerr << "Error: an error occurred while reading the list file.\n";
+        list.close();
+        return false;
+    }
+
+    list.close();
     return true;
 }
 
@@ -695,7 +734,7 @@ int commandProcess(const Parameters &params) {
     if (params.use_list()) {
         // Process the list with comma separated identifier.
         // Each line represents one group that should be processed.
-        processListFile(params, bgr_tree);
+        processListFile(params, bgr_tree, name_map);
     } else {
         // Fetch the phylogenetic tree structure from the ARB database
         std::cout << "Creating the phylogenetic tree structure:" << std::endl;
@@ -740,7 +779,7 @@ int commandProcess(const Parameters &params) {
             // Write parameter information into every file, if available.
             std::stringstream comment;
             comment << "\nBGRT file:          " << params.bgrt_file()
-                            << "\nBGRT comment:       " << bgr_tree->comment;
+                    << "\nBGRT comment:       " << bgr_tree->comment;
 
             dump2Textfiles(tree, comment.str().c_str());
         }
@@ -786,7 +825,7 @@ int main(int argc, char **argv) {
 #else
     std::cout << "\n";
     if (!params.set(argc, argv))
-        return EXIT_FAILURE;
+    return EXIT_FAILURE;
 #endif
 
     // Dump verbose information, if defined.
@@ -796,7 +835,7 @@ int main(int argc, char **argv) {
 #ifdef PTHREADS
     // TODO: This is a 'dirty' hack to set the number of worker threads...
     if (params.num_threads() > 0)
-        setNumProcessors(params.num_threads());
+    setNumProcessors(params.num_threads());
     std::cout << "pThread support is enabled.\n";
 #endif
 
@@ -806,7 +845,7 @@ int main(int argc, char **argv) {
 
 #ifdef ARB
     std::cout << "Compiled with ARB database file "
-            "and ARB PT-Server support.\n";
+    "and ARB PT-Server support.\n";
 #endif
 
 #ifdef PtPan
