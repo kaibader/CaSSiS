@@ -696,7 +696,13 @@ bool processListFile(const Parameters &params, BgrTree *bgr_tree,
         sigfile.open(outfile.str().c_str());
         if (sigfile.good()) {
             // Write a header (info about the current group)
-            sigfile << "Group size:           " << node->group->size() << "\n";
+            sigfile << "Group size:           " << node->group->size()
+                            << "\nGroup IDs:            "
+                            << map->name(node->group->val(0));
+            for (unsigned int i = 1; i < node->group->size(); ++i)
+                sigfile << "," << map->name(node->group->val(i));
+            sigfile << "\n";
+
             dump2stream(sigfile, node, params.og_limit());
         }
         sigfile.close();
