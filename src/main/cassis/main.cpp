@@ -695,7 +695,7 @@ bool processListFile(const Parameters &params, BgrTree *bgr_tree,
         if (sigfile.good()) {
             // Write a header (info about the current group)
             sigfile << "Group size:           " << node->group->size() << "\n";
-            // dump2stream(sigfile, )
+            dump2stream(sigfile, node, params.og_limit());
         }
         sigfile.close();
         delete node;
