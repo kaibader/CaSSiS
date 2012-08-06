@@ -103,6 +103,7 @@ public:
     double min_tm() const;
     double max_tm() const;
     bool use_wm() const;
+    bool use_list() const;
     const std::string list_filename() const;
     const std::string tree_filename() const;
     const std::string tree_name() const;

@@ -597,6 +597,10 @@ bool Parameters::use_wm() const {
     return this->m_use_wm;
 }
 
+bool Parameters::use_list() const {
+    return (this->m_listfile.length() > 0);
+}
+
 const std::string Parameters::list_filename() const {
     return this->m_listfile;
 }
