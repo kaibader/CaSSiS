@@ -665,6 +665,7 @@ bool processListFile(const Parameters &params, BgrTree *bgr_tree,
         // Create a fake phylogenetic tree node.
         // Identifiers will be stored in here..
         CaSSiSTreeNode *node = new CaSSiSTreeNode(params.og_limit());
+        node->group= new IntSet;
 
         // Split the line into comma separated identifiers.
         std::stringstream ss(line);
