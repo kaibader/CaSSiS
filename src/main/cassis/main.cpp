@@ -656,11 +656,16 @@ bool processListFile(const Parameters &params, BgrTree *bgr_tree,
         return false;
     }
 
+    // This counter is used to create the output filename...
+    unsigned int line_counter = 1;
+
     // Process each line in the file...
     std::string line;
     while (std::getline(list, line)) {
-        // Identifiers will be stored in here...
-        IntSet *id_set = new IntSet();
+        // Create a fake phylogenetic tree node.
+        // Identifiers will be stored in here..
+        CaSSiSTreeNode *node = new CaSSiSTreeNode(params.og_limit());
+
         // Split the line into comma separated identifiers.
         std::stringstream ss(line);
         std::string id_str;
@@ -671,31 +676,29 @@ bool processListFile(const Parameters &params, BgrTree *bgr_tree,
                 std::cerr << "Error: unable to map id \"" << id_str
                         << "\" onto the BGRT.\n";
             } else
-                id_set->add(id);
+                node->group->add(id);
         }
 
         // Fetch specific signatures for the defined group.
         unsigned int *num_matches = 0;
-        StrRefSet *signatures = NULL;
-        findGroupSpecificSignatures(bgr_tree, id_set, num_matches, signatures,
+        //StrRefSet *signatures = NULL;
+        findNodeSpecificSignatures(bgr_tree, node, num_matches,
                 params.og_limit());
 
-        // findGroupSpecificSignatures(bgr_tree, id_set,
-        //unsigned int *&num_matches, StrRefSet *&signatures,
-        //unsigned int max_outgroup_hits);
+        // Create the filename of the output file.
+        std::stringstream outfile;
+        outfile << "group_" << line_counter++ << ".sig";
 
-        //std::ofstream file;
-        //file.open(filename.c_str());
-        //
-        //// Write a header (info about the current leaf/group)
-        //if (node->isLeaf())
-        //file << "Organism:             " << name << "\n";
-        //else
-        //file << "Group name:           " << name << "\n"
-        //<< "Group size:           " << node->group->size()
-        //<< "\n";
-
-        delete id_set;
+        // An open the file.
+        std::ofstream sigfile;
+        sigfile.open(outfile.str().c_str());
+        if (sigfile.good()) {
+            // Write a header (info about the current group)
+            sigfile << "Group size:           " << node->group->size() << "\n";
+            // dump2stream(sigfile, )
+        }
+        sigfile.close();
+        delete node;
     }
     if (list.bad()) {
         std::cerr << "Error: an error occurred while reading the list file.\n";

@@ -40,6 +40,13 @@ bool findGroupSpecificSignatures(struct BgrTree *bgr_tree, IntSet *ids,
         unsigned int *&num_matches, StrRefSet *&signatures,
         unsigned int max_outgroup_hits);
 
+/*!
+ * Computes group specific signatures based on a given node.
+ * Caution: This is a HACK!
+ */
+bool findNodeSpecificSignatures(struct BgrTree *bgr_tree, CaSSiSTreeNode *node,
+        unsigned int *&num_matches, unsigned int max_outgroup_hits);
+
 void setNumProcessors(unsigned int n);
 
 #endif /* BGRT_SEARCH_H_ */

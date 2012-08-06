@@ -88,14 +88,15 @@ void traverse_BgrTree_recursion(unsigned int starting_solution,
         bgr_node->ingroup_array = (unsigned int *) calloc(cassistree_depth,
                 sizeof(unsigned int));
         assert(phy_node_depth == 0);
-    }assert(phy_node_depth <= cassistree_depth);
+    }
+    assert(phy_node_depth <= cassistree_depth);
 
     // Create a reference to the ingroup array (may speed up r/w).
     unsigned int *node_ingroup_array = bgr_node->ingroup_array;
 
     // Update (increase) the node ingroup array...
     for (unsigned int i = 0; i < phy_node_depth; ++i)
-        if (node_ingroup_array[i] == ID_TYPE_UNDEF)
+        if (node_ingroup_array[i] == ID_TYPE_UNDEF )
             ++cutoff_array[i];
 
     // Only evaluate previous runs if we aren't at the root...
@@ -110,7 +111,7 @@ void traverse_BgrTree_recursion(unsigned int starting_solution,
                 "(= %u ingroup hits) at %p\n", cut_depth, phy_node_depth,
                 cut_depth, bgr_node->ingroup_array[cut_depth], bgr_node);
 #endif
-        if (bgr_node->ingroup_array[cut_depth] == ID_TYPE_UNDEF) {
+        if (bgr_node->ingroup_array[cut_depth] == ID_TYPE_UNDEF ) {
             // There has been a cut-off in the phylogenetic root node, if this
             // here happens. This can only mean a cut-off because of too many
             // outgroup hits. So it doesn't make sense to continue the
@@ -118,7 +119,7 @@ void traverse_BgrTree_recursion(unsigned int starting_solution,
 
             // Update (decrease) the node ingroup array...
             for (unsigned int i = 0; i < phy_node_depth; ++i)
-                if (node_ingroup_array[i] == ID_TYPE_UNDEF)
+                if (node_ingroup_array[i] == ID_TYPE_UNDEF )
                     --cutoff_array[i];
 
 #if DEBUG_PRINTFS
@@ -166,7 +167,7 @@ void traverse_BgrTree_recursion(unsigned int starting_solution,
 
             // Update (decrease) the node ingroup array...
             for (unsigned int i = 0; i < phy_node_depth; ++i)
-                if (node_ingroup_array[i] == ID_TYPE_UNDEF)
+                if (node_ingroup_array[i] == ID_TYPE_UNDEF )
                     --cutoff_array[i];
 
             return;
@@ -226,7 +227,7 @@ void traverse_BgrTree_recursion(unsigned int starting_solution,
 
         // Update (decrease) the node ingroup array...
         for (unsigned int i = 0; i < phy_node_depth; ++i)
-            if (node_ingroup_array[i] == ID_TYPE_UNDEF)
+            if (node_ingroup_array[i] == ID_TYPE_UNDEF )
                 --cutoff_array[i];
 #endif
         return;
@@ -290,7 +291,7 @@ void traverse_BgrTree_recursion(unsigned int starting_solution,
 #ifdef USE_CUTTABLES
     // Update (decrease) the node ingroup array...
     for (unsigned int i = 0; i < phy_node_depth; ++i)
-        if (node_ingroup_array[i] == ID_TYPE_UNDEF)
+        if (node_ingroup_array[i] == ID_TYPE_UNDEF )
             --cutoff_array[i];
 #endif
 }
@@ -526,5 +527,24 @@ bool findGroupSpecificSignatures(struct BgrTree *bgr_tree, IntSet *ids,
     delete node;
     delete tree;
 
+    return true;
+}
+
+/*!
+ * Computes group specific signatures based on a given node.
+ * Caution: This is a HACK!
+ */
+bool findNodeSpecificSignatures(struct BgrTree *bgr_tree, CaSSiSTreeNode *node,
+        unsigned int *&num_matches, unsigned int max_outgroup_hits) {
+    if (!bgr_tree || !node)
+        return false;
+
+    // Create a fake phylogenetic tree node...
+    CaSSiSTree *tree = new CaSSiSTree();
+
+    // Evaluation...
+    traverse_BgrTree(bgr_tree, node, tree, max_outgroup_hits);
+
+    delete tree;
     return true;
 }
