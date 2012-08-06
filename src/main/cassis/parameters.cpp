@@ -36,7 +36,7 @@ m_command(CommandUndef), m_bgrt_file(), m_verbose(false), m_index(
                 false), m_allowed_mm(0.0), m_mm_dist(1.0), m_min_len(18), m_max_len(
                         18), m_use_gc(false), m_min_gc(0.0), m_max_gc(100.0), m_use_tm(
                                 false), m_min_tm(-273.0), m_max_tm(273.0), m_use_wm(false), m_num_threads(
-                                        0), m_treefile(), m_treename(), m_og_limit(0), m_all_signatures(
+                                        0), m_listfile(), m_treefile(), m_treename(), m_og_limit(0), m_all_signatures(
                                                 false) {
 }
 
@@ -63,7 +63,9 @@ void Parameters::reset() {
     m_min_tm = -273.0;
     m_max_tm = 273.0;
     m_use_wm = false;
+    m_listfile.clear();
     m_treefile.clear();
+    m_treename.clear();
     m_og_limit = 0;
     m_num_threads = 0;
     m_all_signatures = false;
@@ -154,7 +156,8 @@ void Parameters::dump() const {
             << "\t-Temp. range   = " << m_min_tm << " -- " << m_max_tm << "\n"
             << "\t-Check w.m.    = " << (m_use_wm ? "yes" : "no") << "\n"
             << "\t-All signat.   = " << (m_all_signatures ? "yes" : "no")
-            << "\n" << "\t-Treefile      = \"" << m_treefile << "\"\n"
+            << "\n" << "\t-Listfile      = \"" << m_listfile << "\"\n" << "\n"
+            << "\t-Treefile      = \"" << m_treefile << "\"\n"
             << "\t-Treename      = \"" << m_treename << "\"\n"
 #ifdef PTHREADS
             << "\t-No. threads   = " << m_num_threads << "\n"
@@ -357,6 +360,14 @@ bool Parameters::set(int argc, char **argv) {
                         return false;
                     }
                     ++i;
+                } else if (!strcmp("list", arg)
+                        && remainingParams(argc, i, 1)) {
+                    if (!setListFilename(argv[i + 1])) {
+                        std::cerr << "Parameter error: error while parsing "
+                                "list filename.\n";
+                        return false;
+                    }
+                    ++i;
                 } else if (!strcmp("tree", arg)
                         && remainingParams(argc, i, 1)) {
                     char *t_name = strdup(argv[i + 1]);
@@ -434,7 +445,7 @@ void Parameters::usage() const {
     "  Optional:  -all -dist -gc -idx -len -mis -rc -temp -wm\n"
     "\n"
     "cassis process\n"
-    "  Mandatory: -bgrt -tree\n"
+    "  Mandatory: -bgrt -tree|-list\n"
 #ifdef PTHREADS
     "  Optional:  -og -out -par\n"
 #else
@@ -465,6 +476,10 @@ void Parameters::usage() const {
     "                    Length of the evaluated oligonucleotides. Either a\n"
     "                    fixed length or a range. (Default: 18 bases)\n"
     "                    Lengths must be between 10 and 25 bases.\n"
+    "  -list <filename>  Instead of a phylogenetic tree, a list with comma separated\n"
+    "                    identifiers can be used to define groups the should be\n"
+    "                    queried. Each line in the list defines one group.\n"
+    "                    (Comment: Only available in 'cassis process'.)\n"
     "  -mis <number>     Number of allowed mismatches within the target group.\n"
     "                    (Default: 0.0 mismatches)\n"
     "  -og <limit>       Number of outgroup hits up to which group signatures are\n"
@@ -580,6 +595,10 @@ double Parameters::max_tm() const {
 
 bool Parameters::use_wm() const {
     return this->m_use_wm;
+}
+
+const std::string Parameters::list_filename() const {
+    return this->m_listfile;
 }
 
 const std::string Parameters::tree_filename() const {
@@ -705,6 +724,11 @@ bool Parameters::setMax_tm(double m) {
 
 bool Parameters::setUse_wm(bool u) {
     this->m_use_wm = u;
+    return true;
+}
+
+bool Parameters::setListFilename(const std::string &s) {
+    this->m_listfile = s;
     return true;
 }
 

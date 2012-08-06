@@ -103,6 +103,7 @@ public:
     double min_tm() const;
     double max_tm() const;
     bool use_wm() const;
+    const std::string list_filename() const;
     const std::string tree_filename() const;
     const std::string tree_name() const;
     unsigned int og_limit() const;
@@ -131,6 +132,7 @@ protected:
     bool setMin_tm(double m);
     bool setMax_tm(double m);
     bool setUse_wm(bool u);
+    bool setListFilename(const std::string &s);
     bool setTreeFilename(const std::string &s);
     bool setTreeName(const std::string &t);
     bool setOg_limit(unsigned int o);
@@ -161,6 +163,7 @@ private:
     double m_max_tm;
     bool m_use_wm;
     unsigned int m_num_threads;
+    std::string m_listfile;
     std::string m_treefile;
     std::string m_treename;
     unsigned int m_og_limit;
