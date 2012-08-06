@@ -86,15 +86,16 @@ CaSSiS usage: cassis {1pass|create|process|info} [options]
 
 cassis 1pass
   Mandatory: -seq [... -seq] -tree
-  Optional:  -all -dist -gc -idx -len -mis -og -rc -temp -wm
+  Optional:  -all -dist -gc -idx -len -mis -og -out -rc -temp -wm
+  Comment:   '1pass' uses the faster CaSSiS-LCA algorithm.
 
 cassis create
   Mandatory: -bgrt -seq [... -seq]
   Optional:  -all -dist -gc -idx -len -mis -rc -temp -wm
 
 cassis process
-  Mandatory: -bgrt -tree
-  Optional:  -og
+  Mandatory: -bgrt -tree|-list
+  Optional:  -og -out
 
 cassis info
   Mandatory: -bgrt
@@ -104,7 +105,8 @@ Options (alphabetical):
                     (Not recommended, may take forever... Default: off)
   -bgrt <filename>  BGRT file path and name.
   -dist <number>    Minimal mismatch distance between a signature candidate
-                    and non-targets. (Default: 0.0 mismatches)
+                    and non-targets. Must be higher than "-mis <number>".
+                    (Default: 1.0 mismatches)
   -gc <min>-<max>   Only allow signatures within a defined G+C content range.
                     (Default: 0 -- 100 percent)
   -idx <name>       Defines the used search index:
@@ -112,10 +114,20 @@ Options (alphabetical):
   -len {<len>|<min>-<max>}
                     Length of the evaluated oligonucleotides. Either a
                     fixed length or a range. (Default: 18 bases)
+                    Lengths must be between 10 and 25 bases.
+  -list <filename>  Instead of a phylogenetic tree, a list with comma separated
+                    identifiers can be used to define groups the should be
+                    queried. Each line in the list defines one group.
+                    The output format is set to 'sigfile'.
+                    (Comment: Only available in 'cassis process'.)
   -mis <number>     Number of allowed mismatches within the target group.
-                    (Default: 1.0 mismatches)
+                    (Default: 0.0 mismatches)
   -og <limit>       Number of outgroup hits up to which group signatures are
                     computed. (Default: 0)
+  -out <format>     Defines the output format.
+                        classic  = "Classic CSV format" (Default)
+                        detailed = "Detailed CSV format"
+                        sigfile  = "Signature file for each group/leaf"
   -rc               Drop signatures, if their reverse complement matches
                     sequences not matched by the signature itself.
                     (Default: off)
@@ -124,8 +136,8 @@ Options (alphabetical):
   -temp <min>-<max> Only allow signatures with a melting temperature within
                     the defined range. (Default: -273 -- 273 degree Celsius)
   -tree <filename>  Signature candidates will be computed for every defined
-                    (i.e. named) node within a binary tree. Accepts a Newick
-                    tree file as source.
+                    (i.e. named) node within a binary tree. Accepts a binary
+                    Newick tree file as source.
   -v                Verbose output
   -wm               Enable "weighted mismatch" values. (Default: off)
 
