@@ -30,8 +30,8 @@ endif(ARB)
 # All tools share a version number with the CaSSiS library.
 set(CASSIS_VERSION_MAJOR  0)
 set(CASSIS_VERSION_MINOR  5)
-set(CASSIS_VERSION_PATCH  0)
-set(CASSIS_VERSION_SUFFIX "")
+set(CASSIS_VERSION_PATCH  1)
+set(CASSIS_VERSION_SUFFIX "_alpha")
 message(STATUS "Setting CaSSiS version number to: "
     "${CASSIS_VERSION_MAJOR}.${CASSIS_VERSION_MINOR}.${CASSIS_VERSION_PATCH}${CASSIS_VERSION_SUFFIX}")
 

@@ -26,6 +26,7 @@
 
 #include <cstdio>
 #include <sys/time.h>
+#include <unistd.h>
 
 /*!
  * Dump statistical information:
