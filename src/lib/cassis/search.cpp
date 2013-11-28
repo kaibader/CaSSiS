@@ -96,7 +96,7 @@ void traverse_BgrTree_recursion(unsigned int starting_solution,
 
     // Update (increase) the node ingroup array...
     for (unsigned int i = 0; i < phy_node_depth; ++i)
-        if (node_ingroup_array[i] == ID_TYPE_UNDEF )
+        if (node_ingroup_array[i] == ID_TYPE_UNDEF)
             ++cutoff_array[i];
 
     // Only evaluate previous runs if we aren't at the root...
@@ -111,7 +111,7 @@ void traverse_BgrTree_recursion(unsigned int starting_solution,
                 "(= %u ingroup hits) at %p\n", cut_depth, phy_node_depth,
                 cut_depth, bgr_node->ingroup_array[cut_depth], bgr_node);
 #endif
-        if (bgr_node->ingroup_array[cut_depth] == ID_TYPE_UNDEF ) {
+        if (bgr_node->ingroup_array[cut_depth] == ID_TYPE_UNDEF) {
             // There has been a cut-off in the phylogenetic root node, if this
             // here happens. This can only mean a cut-off because of too many
             // outgroup hits. So it doesn't make sense to continue the
@@ -119,7 +119,7 @@ void traverse_BgrTree_recursion(unsigned int starting_solution,
 
             // Update (decrease) the node ingroup array...
             for (unsigned int i = 0; i < phy_node_depth; ++i)
-                if (node_ingroup_array[i] == ID_TYPE_UNDEF )
+                if (node_ingroup_array[i] == ID_TYPE_UNDEF)
                     --cutoff_array[i];
 
 #if DEBUG_PRINTFS
@@ -167,7 +167,7 @@ void traverse_BgrTree_recursion(unsigned int starting_solution,
 
             // Update (decrease) the node ingroup array...
             for (unsigned int i = 0; i < phy_node_depth; ++i)
-                if (node_ingroup_array[i] == ID_TYPE_UNDEF )
+                if (node_ingroup_array[i] == ID_TYPE_UNDEF)
                     --cutoff_array[i];
 
             return;
@@ -227,7 +227,7 @@ void traverse_BgrTree_recursion(unsigned int starting_solution,
 
         // Update (decrease) the node ingroup array...
         for (unsigned int i = 0; i < phy_node_depth; ++i)
-            if (node_ingroup_array[i] == ID_TYPE_UNDEF )
+            if (node_ingroup_array[i] == ID_TYPE_UNDEF)
                 --cutoff_array[i];
 #endif
         return;
@@ -291,7 +291,7 @@ void traverse_BgrTree_recursion(unsigned int starting_solution,
 #ifdef USE_CUTTABLES
     // Update (decrease) the node ingroup array...
     for (unsigned int i = 0; i < phy_node_depth; ++i)
-        if (node_ingroup_array[i] == ID_TYPE_UNDEF )
+        if (node_ingroup_array[i] == ID_TYPE_UNDEF)
             --cutoff_array[i];
 #endif
 }
@@ -420,7 +420,7 @@ void traverse_BgrTree(struct BgrTree *bgr_tree,
         work.pos = starting_solution;
 
         for (unsigned int i = 0; i < static_num_processors; i++)
-            pool_run(traverse_BgrTree_pthread, &work);
+        pool_run(traverse_BgrTree_pthread, &work);
 
         pool_barrier();
         pthread_mutex_destroy(&(work.mutex));
@@ -430,7 +430,7 @@ void traverse_BgrTree(struct BgrTree *bgr_tree,
 #if 0 // DEBUG STUFF...
     unsigned int assert_sum = 0;
     for (int i = 0; i <= cassis_tree->tree_depth; ++i)
-        assert_sum += cutoff_array[i];
+    assert_sum += cutoff_array[i];
     assert(assert_sum == 0);
 #endif
     free(cutoff_array);
@@ -479,7 +479,7 @@ bool findTreeSpecificSignatures(struct BgrTree *bgr_tree,
 #ifdef PTHREADS
     // Initialize pThread pool.
     if (static_num_processors == 0)
-        static_num_processors = num_processors();
+    static_num_processors = num_processors();
 
     pool_init(static_num_processors);
 #endif
@@ -535,7 +535,7 @@ bool findGroupSpecificSignatures(struct BgrTree *bgr_tree, IntSet *ids,
  * Caution: This is a HACK!
  */
 bool findNodeSpecificSignatures(struct BgrTree *bgr_tree, CaSSiSTreeNode *node,
-        unsigned int *&num_matches, unsigned int max_outgroup_hits) {
+        unsigned int *&/*num_matches*/, unsigned int max_outgroup_hits) {
     if (!bgr_tree || !node)
         return false;
 
