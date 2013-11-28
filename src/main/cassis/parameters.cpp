@@ -31,13 +31,13 @@
 #include <iostream>
 
 Parameters::Parameters() :
-m_command(CommandUndef), m_bgrt_file(), m_verbose(false), m_index(
-        IndexMiniPt), m_output(OutputClassicCSV), m_seq_files(), m_check_r_c(
+        m_command(CommandUndef), m_bgrt_file(), m_verbose(false), m_index(
+                IndexMiniPt), m_output(OutputClassicCSV), m_seq_files(), m_check_r_c(
                 false), m_allowed_mm(0.0), m_mm_dist(1.0), m_min_len(18), m_max_len(
-                        18), m_use_gc(false), m_min_gc(0.0), m_max_gc(100.0), m_use_tm(
-                                false), m_min_tm(-273.0), m_max_tm(273.0), m_use_wm(false), m_num_threads(
-                                        0), m_listfile(), m_treefile(), m_treename(), m_og_limit(0), m_all_signatures(
-                                                false) {
+                18), m_use_gc(false), m_min_gc(0.0), m_max_gc(100.0), m_use_tm(
+                false), m_min_tm(-273.0), m_max_tm(273.0), m_use_wm(false), m_num_threads(
+                0), m_listfile(), m_treefile(), m_treename(), m_og_limit(0), m_all_signatures(
+                false) {
 }
 
 Parameters::~Parameters() {
@@ -108,12 +108,6 @@ void Parameters::dump() const {
         break;
     case IndexMiniPt:
         std::cout << "MiniPt\n";
-        break;
-    case IndexDUP:
-        std::cout << "DUP Remote Index\n";
-        break;
-    case IndexPtServer:
-        std::cout << "PtServer\n";
         break;
     default:
         std::cout << "???\n";
@@ -242,10 +236,6 @@ bool Parameters::set(int argc, char **argv) {
                 } else if (!strcmp("idx", arg) && remainingParams(argc, i, 1)) {
                     if (!strcmp("minipt", argv[i + 1]))
                         setIndex(IndexMiniPt);
-                    else if (!strcmp("arbpt", argv[i + 1]))
-                        setIndex(IndexPtServer);
-                    else if (!strcmp("dup", argv[i + 1]))
-                        setIndex(IndexDUP);
                     else {
                         setIndex(IndexUndef);
                         std::cerr << "Parameter error: unknown index type.\n";
@@ -411,8 +401,8 @@ bool Parameters::set(int argc, char **argv) {
                 } else {
                     // This indicates an error...
                     std::cerr
-                    << "Parameter error: unknown/misplaced/incomplete option: "
-                    << arg << "\n";
+                            << "Parameter error: unknown/misplaced/incomplete option: "
+                            << arg << "\n";
                     return false;
                 }
             } else {
@@ -433,94 +423,75 @@ bool Parameters::set(int argc, char **argv) {
  */
 void Parameters::usage() const {
     std::cout
-    << "CaSSiS usage: cassis {1pass|create|process|info} [options]\n"
-    "\n"
-    "cassis 1pass\n"
-    "  Mandatory: -seq [... -seq] -tree\n"
-    "  Optional:  -all -dist -gc -idx -len -mis -og -out -rc -temp -wm\n"
-    "  Comment:   '1pass' uses the faster CaSSiS-LCA algorithm.\n"
-    "\n"
-    "cassis create\n"
-    "  Mandatory: -bgrt -seq [... -seq]\n"
-    "  Optional:  -all -dist -gc -idx -len -mis -rc -temp -wm\n"
-    "\n"
-    "cassis process\n"
-    "  Mandatory: -bgrt -tree|-list\n"
+            << "CaSSiS usage: cassis {1pass|create|process|info} [options]\n"
+                    "\n"
+                    "cassis 1pass\n"
+                    "  Mandatory: -seq [... -seq] -tree\n"
+                    "  Optional:  -all -dist -gc -idx -len -mis -og -out -rc -temp -wm\n"
+                    "  Comment:   '1pass' uses the faster CaSSiS-LCA algorithm.\n"
+                    "\n"
+                    "cassis create\n"
+                    "  Mandatory: -bgrt -seq [... -seq]\n"
+                    "  Optional:  -all -dist -gc -idx -len -mis -rc -temp -wm\n"
+                    "\n"
+                    "cassis process\n"
+                    "  Mandatory: -bgrt -tree|-list\n"
 #ifdef PTHREADS
-    "  Optional:  -og -out -par\n"
+            "  Optional:  -og -out -par\n"
 #else
-    "  Optional:  -og -out\n"
+            "  Optional:  -og -out\n"
 #endif
-    "\n"
-    "cassis info\n"
-    "  Mandatory: -bgrt\n"
-    "\n"
-    "Options (alphabetical):\n"
-    "  -all              Evaluate all 4^len possible signatures.\n"
-    "                    (Not recommended, may take forever... Default: off)\n"
-    "  -bgrt <filename>  BGRT file path and name.\n"
-    "  -dist <number>    Minimal mismatch distance between a signature candidate\n"
-    "                    and non-targets. Must be higher than \"-mis <number>\".\n"
-    "                    (Default: 1.0 mismatches)\n"
-    "  -gc <min>-<max>   Only allow signatures within a defined G+C content range.\n"
-    "                    (Default: 0 -- 100 percent)\n"
-    "  -idx <name>       Defines the used search index:\n"
-    "                        minipt = \"MiniPt Search Index\" (Default)\n"
-#ifdef ARB
-    "                        arbpt  = \"ARB PtServer\"\n"
-#endif
-#ifdef DUP
-    "                        dup    = \"DUP Remote Search Index\"\n"
-#endif
-    "  -len {<len>|<min>-<max>}\n"
-    "                    Length of the evaluated oligonucleotides. Either a\n"
-    "                    fixed length or a range. (Default: 18 bases)\n"
-    "                    Lengths must be between 10 and 25 bases.\n"
-    "  -list <filename>  Instead of a phylogenetic tree, a list with comma separated\n"
-    "                    identifiers can be used to define groups the should be\n"
-    "                    queried. Each line in the list defines one group.\n"
-    "                    The output format is set to 'sigfile'.\n"
-    "                    (Comment: Only available in 'cassis process'.)\n"
-    "  -mis <number>     Number of allowed mismatches within the target group.\n"
-    "                    (Default: 0.0 mismatches)\n"
-    "  -og <limit>       Number of outgroup hits up to which group signatures are\n"
-    "                    computed. (Default: 0)\n"
-    "  -out <format>     Defines the output format.\n"
-    "                        classic  = \"Classic CSV format\" (Default)\n"
-    "                        detailed = \"Detailed CSV format\"\n"
-    "                        sigfile  = \"Signature file for each group/leaf\"\n"
+            "\n"
+            "cassis info\n"
+            "  Mandatory: -bgrt\n"
+            "\n"
+            "Options (alphabetical):\n"
+            "  -all              Evaluate all 4^len possible signatures.\n"
+            "                    (Not recommended, may take forever... Default: off)\n"
+            "  -bgrt <filename>  BGRT file path and name.\n"
+            "  -dist <number>    Minimal mismatch distance between a signature candidate\n"
+            "                    and non-targets. Must be higher than \"-mis <number>\".\n"
+            "                    (Default: 1.0 mismatches)\n"
+            "  -gc <min>-<max>   Only allow signatures within a defined G+C content range.\n"
+            "                    (Default: 0 -- 100 percent)\n"
+            "  -idx <name>       Defines the used search index:\n"
+            "                        minipt = \"MiniPt Search Index\" (Default)\n"
+            "  -len {<len>|<min>-<max>}\n"
+            "                    Length of the evaluated oligonucleotides. Either a\n"
+            "                    fixed length or a range. (Default: 18 bases)\n"
+            "                    Lengths must be between 10 and 25 bases.\n"
+            "  -list <filename>  Instead of a phylogenetic tree, a list with comma separated\n"
+            "                    identifiers can be used to define groups the should be\n"
+            "                    queried. Each line in the list defines one group.\n"
+            "                    The output format is set to 'sigfile'.\n"
+            "                    (Comment: Only available in 'cassis process'.)\n"
+            "  -mis <number>     Number of allowed mismatches within the target group.\n"
+            "                    (Default: 0.0 mismatches)\n"
+            "  -og <limit>       Number of outgroup hits up to which group signatures are\n"
+            "                    computed. (Default: 0)\n"
+            "  -out <format>     Defines the output format.\n"
+            "                        classic  = \"Classic CSV format\" (Default)\n"
+            "                        detailed = \"Detailed CSV format\"\n"
+            "                        sigfile  = \"Signature file for each group/leaf\"\n"
 #ifdef PTHREADS
-    "  -par <number>     Number of worker threads (pThreads). Has no influence\n"
-    "                    on CaSSiS if pThreads-support is disabled.\n"
+            "  -par <number>     Number of worker threads (pThreads). Has no influence\n"
+            "                    on CaSSiS if pThreads-support is disabled.\n"
 #endif
-    "  -rc               Drop signatures, if their reverse complement matches\n"
-    "                    sequences not matched by the signature itself.\n"
-    "                    (Default: off)\n"
-#ifdef ARB
-    "  -seq <filename>   Sequence data source. This can be an ARB database or a\n"
-    "                    MultiFasta file. Multiple sequence sources can be defined.\n"
-#else
-    "  -seq <filename>   MultiFasta file as sequence data source Multiple sequence\n"
-    "                    sources can be defined.\n"
-#endif
-    "  -temp <min>-<max> Only allow signatures with a melting temperature within\n"
-    "                    the defined range. (Default: -273 -- 273 degree Celsius)\n"
-#ifdef ARB
-    "  -tree <filename|filename.arb:treename>\n"
-    "                    Signature candidates will be computed for every defined\n"
-    "                    (i.e. named) node within a binary tree. The source can\n"
-    "                    either be a Newick tree file or an ARB database\n"
-    "                    (an additional tree name is needed here).\n"
-#else
-    "  -tree <filename>  Signature candidates will be computed for every defined\n"
-    "                    (i.e. named) node within a binary tree. Accepts a binary\n"
-    "                    Newick tree file as source.\n"
-#endif
-    "  -v                Verbose output\n"
-    "  -wm               Enable \"weighted mismatch\" values. (Default: off)\n"
-    "\n"
-    "Caution: Combining the \"-gc\" and \"-temp\" filters can cause unwanted side\n"
-    "         effects because they influence each other.\n";
+            "  -rc               Drop signatures, if their reverse complement matches\n"
+            "                    sequences not matched by the signature itself.\n"
+            "                    (Default: off)\n"
+            "  -seq <filename>   MultiFasta file as sequence data source Multiple sequence\n"
+            "                    sources can be defined.\n"
+            "  -temp <min>-<max> Only allow signatures with a melting temperature within\n"
+            "                    the defined range. (Default: -273 -- 273 degree Celsius)\n"
+            "  -tree <filename>  Signature candidates will be computed for every defined\n"
+            "                    (i.e. named) node within a binary tree. Accepts a binary\n"
+            "                    Newick tree file as source.\n"
+            "  -v                Verbose output\n"
+            "  -wm               Enable \"weighted mismatch\" values. (Default: off)\n"
+            "\n"
+            "Caution: Combining the \"-gc\" and \"-temp\" filters can cause unwanted side\n"
+            "         effects because they influence each other.\n";
 }
 
 /*!

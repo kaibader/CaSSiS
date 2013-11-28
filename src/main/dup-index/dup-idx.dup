@@ -1,6 +1,0 @@
-client@localhost:2222[1>/tmp/client_out.txt,2>/tmp/client_err.txt,4|fo_server:0]$ /home/kai/workspace/CaSSiS/debug/main/cassis/cassis 1pass -seq /home/kai/Datenbanken/100.fasta -tree /home/kai/Datenbanken/100.tree -idx dup ;
-server@localhost:2222[1>/tmp/server_out.txt,2>/tmp/server_err.txt,4|fo_client:0]$ /home/kai/workspace/CaSSiS/debug/main/dup-index/dup-index-server ;
-dump@localhost:2222[1>/tmp/dup_dump.txt]$ /home/kai/workspace/CaSSiS/debug/main/dup-index/dup-index-dump ;
-fo_server@localhost:2222[3|server:3,4|fia_dump:3]$ fanout ;
-fo_client@localhost:2222[3|client:3,4|fia_dump:4]$ fanout ;
-fia_dump@localhost:2222[1|dump:0]$ faninany ;

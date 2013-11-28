@@ -15,17 +15,6 @@ if(NOT CMAKE_BUILD_TYPE)
     FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
 
-# The ARB database and search index library.
-# Disabled by default. Always disabled in Windows builds.
-# Caution: Should only be enabled if an ARBHOME variable is defined as well.
-set(ARB "off" CACHE BOOL "Build with ARB support")
-if(WIN32)
-    set(ARB "off")
-endif(WIN32)
-if(ARB)
-    add_subdirectory(lib/arb)
-endif(ARB)
-
 # The version number. Will be stored in "config.h".
 # All tools share a version number with the CaSSiS library.
 set(CASSIS_VERSION_MAJOR  0)
@@ -70,7 +59,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     #    -Wunreachable-code -Wunused -Wunused-function -Wunused-label
     #    -Wunused-parameter -Wunused-value -Wunused-variable -Wvariadic-macros
     #    -Wvolatile-register-var -Wwrite-strings)
-    #    # -Wpadded -Wconversion
     message(STATUS "Enabled pedantic gcc warnings")
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
@@ -93,16 +81,6 @@ add_subdirectory(main/cassis-gui)
 
 # Various tools (useful for debugging and testing).
 add_subdirectory(main/tools)
-
-# Build with DUP multi-pipeline support.
-# Disabled by default. Always disabled in Windows builds.
-set(DUP "off" CACHE BOOL "Build with DUP search index support")
-if(WIN32)
-    set(DUP "off")
-endif(WIN32)
-if(DUP)
-    add_subdirectory(main/dup-index)
-endif(DUP)
 
 # Add a 'create package' functionality.
 include(package.cmake)

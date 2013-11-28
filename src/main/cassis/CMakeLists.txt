@@ -28,24 +28,9 @@ include_directories(
     "${PROJECT_BINARY_DIR}"
 )
 
-# Add the DUP search index, if requested.
-if(DUP)
-    list(APPEND cassis_sources
-        "${CMAKE_SOURCE_DIR}/main/dup-index/dup-io.cpp"
-        "${CMAKE_SOURCE_DIR}/main/dup-index/dup-index-client.cpp")
-    include_directories("${CMAKE_SOURCE_DIR}/main/dup-index")
-    add_definitions(-DDUP)
-endif(DUP)
-
 # Build the CaSSiS binary.
 add_executable(cassis ${cassis_sources})
-if(ARB)
-    # Build CaSSiS with ARB file support. 
-    add_definitions(-DARB)
-    target_link_libraries(cassis CaSSiS minipt ARB)
-else(ARB)
-    target_link_libraries(cassis CaSSiS minipt)
-endif(ARB)
+target_link_libraries(cassis CaSSiS minipt)
 
 # Install the CaSSiS binary.
 install(TARGETS cassis DESTINATION bin)

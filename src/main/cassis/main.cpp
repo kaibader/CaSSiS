@@ -28,15 +28,6 @@
 #include <cassis/thermodynamics.h>
 #include <cassis/tree.h>
 
-#ifdef ARB
-#include <arb/tree.h>
-#include <arb/ptserver.h>
-#endif
-
-#ifdef DUP
-#include <dup-index-client.h>
-#endif
-
 #include <minipt/minipt.h>
 
 #include "csv.h"
@@ -126,23 +117,6 @@ IndexInterface *createIndexInterface(const Parameters &params,
     case IndexMiniPt:
         index = new MiniPT();
         break;
-    case IndexPtServer:
-#ifdef ARB
-        index = new ARBPTServer();
-#else
-        std::cerr << "Sorry, but ARB is not supported by "
-                "this build of CaSSiS!\n";
-        return NULL;
-#endif
-        break;
-    case IndexDUP:
-#ifdef DUP
-        index = new DUPIndex();
-#else
-        std::cerr << "Sorry, but the DUP Index is not supported by "
-                "this build of CaSSiS!\n";
-        return NULL;
-#endif
     default:
         break;
     }
@@ -163,74 +137,58 @@ IndexInterface *createIndexInterface(const Parameters &params,
         std::string lowercase = *it;
         std::transform(lowercase.begin(), lowercase.end(), lowercase.begin(),
                 tolower);
-        if (lowercase.find(".arb") != std::string::npos) {
-#ifdef ARB
-            // Looks like an ARB database file. Open it...
-            // if (!addARBSequencesToIndex((*it).c_str(), ptserver)) {
+
+        // Open a MultiFASTA file...
+        FASTA::File *fastafile = new FASTA::File((*it).c_str(), FASTA::RNA);
+        if (!fastafile->isOpen()) {
             std::cerr << "An error occurred while trying to add"
-                    "the ARB database " << *it << " to the search index.\n";
+                    "the FASTA file " << *it << " to the search index.\n";
             delete index;
             return NULL;
-            // }
-#else
-            std::cerr << "Sorry, but this CaSSiS version was built "
-                    "without ARB support.\n";
-            delete index;
-            return NULL;
-#endif
-        } else {
-            // Open a MultiFASTA file...
-            FASTA::File *fastafile = new FASTA::File((*it).c_str(), FASTA::RNA);
-            if (!fastafile->isOpen()) {
-                std::cerr << "An error occurred while trying to add"
-                        "the FASTA file " << *it << " to the search index.\n";
-                delete index;
-                return NULL;
-            }
-            std::cout << "Fetching sequences from the MultiFASTA file: " << *it
-                    << "\n";
+        }
+        std::cout << "Fetching sequences from the MultiFASTA file: " << *it
+                << "\n";
 
-            // Fetch the sequences (one by one) and add them to the index.
-            while (!fastafile->atEOF()) {
-                FASTA::Sequence *sequence = fastafile->getSequence();
-                if (sequence) {
-                    // Add sequence to the index.
-                    char *name_str = sequence->getName();
-                    char *seq_str = sequence->getSequence();
-                    unsigned int id = mapping.append(name_str);
+        // Fetch the sequences (one by one) and add them to the index.
+        while (!fastafile->atEOF()) {
+            FASTA::Sequence *sequence = fastafile->getSequence();
+            if (sequence) {
+                // Add sequence to the index.
+                char *name_str = sequence->getName();
+                char *seq_str = sequence->getSequence();
+                unsigned int id = mapping.append(name_str);
 
-                    //// FIXME: If 'check mapping is enabled use something like this...
-                    //unsigned int id = name_map.id(name_str);
-                    //if (id == ID_TYPE_UNDEF) {
-                    //    std::cout << "Warning: the sequence name \"" << name_str
-                    //            << "is NOT in the phylogenetic tree!\n";
-                    //}
+                //// FIXME: If 'check mapping is enabled use something like this...
+                //unsigned int id = name_map.id(name_str);
+                //if (id == ID_TYPE_UNDEF) {
+                //    std::cout << "Warning: the sequence name \"" << name_str
+                //            << "is NOT in the phylogenetic tree!\n";
+                //}
 
-                    if (!index->addSequence(seq_str, id)) {
-                        std::cerr << "An error occurred while adding the "
-                                "sequence: " << name_str << "\n";
-                        delete index;
-                        return NULL;
-                    }
+                if (!index->addSequence(seq_str, id)) {
+                    std::cerr << "An error occurred while adding the "
+                            "sequence: " << name_str << "\n";
+                    delete index;
+                    return NULL;
+                }
 
-                    free(name_str);
-                    free(seq_str);
+                free(name_str);
+                free(seq_str);
 
-                    // Free the not anymore needed sequence...
-                    delete sequence;
+                // Free the not anymore needed sequence...
+                delete sequence;
 
 #ifndef NDEBUG
-                    // Output a status message if necessary...
-                    ++counter;
-                    if (counter % 1000 == 0)
-                        std::cout << "Sequences added to index... " << counter
-                        << "\n";
+                // Output a status message if necessary...
+                ++counter;
+                if (counter % 1000 == 0)
+                    std::cout << "Sequences added to index... " << counter
+                            << "\n";
 #endif
-                }
             }
-            fastafile->close();
-            delete fastafile;
         }
+        fastafile->close();
+        delete fastafile;
     }
 
 #ifdef DUMP_STATS
@@ -255,7 +213,6 @@ IndexInterface *createIndexInterface(const Parameters &params,
  * Creates a CaSSiSTree structure based on the defined parameters.
  * \param params System parameters
  * \return Pointer to CaSSiSTree if successful, otherwise NULL.
- * FIXME: ARB tree support is missing!
  */
 CaSSiSTree *createCaSSiSTree(const Parameters &params) {
 #ifdef DUMP_STATS
@@ -266,25 +223,12 @@ CaSSiSTree *createCaSSiSTree(const Parameters &params) {
     CaSSiSTree *tree = NULL;
 
     // Create a lower case version of the filename.
-    // Needed for ARB database file detection.
     std::string lowercase = params.tree_filename();
     std::transform(lowercase.begin(), lowercase.end(), lowercase.begin(),
             tolower);
-    if (lowercase.find(".arb") != std::string::npos) {
-#ifdef ARB
-        // Try to open an ARB database file...
-        tree = fetchTreeFromARB(params.tree_filename().c_str(),
-                params.tree_name().c_str(), params.og_limit());
-#else
-        std::cerr << "Sorry, but this CaSSiS version was built "
-                "without ARB support.\n";
-        return NULL;
-#endif
-    } else {
-        // Try to open a Newick tree file.
-        tree = Newick2CaSSiSTree(params.tree_filename().c_str(),
-                params.og_limit());
-    }
+
+    // Try to open a Newick tree file.
+    tree = Newick2CaSSiSTree(params.tree_filename().c_str(), params.og_limit());
 
     if (tree == NULL) {
         std::cerr << "File error while creating the CaSSiS tree structure."
@@ -321,8 +265,8 @@ int commandCreate1Pass(const Parameters &params) {
     // Check, if the allowed target mismatches are below the mismatch distance.
     if (params.allowed_mm() >= params.mm_dist()) {
         std::cerr << "Error: Mismatch distance (" << params.mm_dist()
-                        << ") has to be higher than the allowed mismatches between targets ("
-                        << params.allowed_mm() << "). Exiting.\n";
+                << ") has to be higher than the allowed mismatches between targets ("
+                << params.allowed_mm() << "). Exiting.\n";
         return EXIT_FAILURE;
     }
 
@@ -495,10 +439,10 @@ int commandCreate1Pass(const Parameters &params) {
     // Output statistical information about the bipartite graph.
     if (params.verbose())
         std::cout << "Bipartite graph statistics (e=evaluated,a=added):"
-        << "\n\t# Edges (e):      " << stats_edges_raw
-        << "\n\t# Edges (a):      " << stats_edges
-        << "\n\t# Signatures (e): " << stats_signatures_raw
-        << "\n\t# Signatures (a): " << stats_signatures << std::endl;
+                << "\n\t# Edges (e):      " << stats_edges_raw
+                << "\n\t# Edges (a):      " << stats_edges
+                << "\n\t# Signatures (e): " << stats_signatures_raw
+                << "\n\t# Signatures (a): " << stats_signatures << std::endl;
 
     // Delete matches, if defined.
     delete matches;
@@ -616,11 +560,11 @@ int commandInfo(const Parameters &params, BgrTree *bgr_tree = NULL) {
 
     if (bgr_tree->min_gc > 0 || bgr_tree->max_gc < 100)
         std::cout << "\t- G+C range: " << bgr_tree->min_gc << "-"
-        << bgr_tree->max_gc << " %" << std::endl;
+                << bgr_tree->max_gc << " %" << std::endl;
 
     if (bgr_tree->min_temp > -270 || bgr_tree->max_temp < 270)
         std::cout << "\t- Melting temp. range: " << bgr_tree->min_temp << "-"
-        << bgr_tree->max_temp << " °C" << std::endl;
+                << bgr_tree->max_temp << " °C" << std::endl;
 
     if (bgr_tree->comment)
         std::cout << "\t- Comment: " << bgr_tree->comment << std::endl;
@@ -674,7 +618,7 @@ bool processListFile(const Parameters &params, BgrTree *bgr_tree,
         while (std::getline(ss, id_str, ',')) {
             // Map the string ids into their numerical counterparts.
             id_type id = map->id(id_str);
-            if (id == ID_TYPE_UNDEF ) {
+            if (id == ID_TYPE_UNDEF) {
                 std::cerr << "Error: unable to map id \"" << id_str
                         << "\" onto the BGRT.\n";
             } else
@@ -697,8 +641,8 @@ bool processListFile(const Parameters &params, BgrTree *bgr_tree,
         if (sigfile.good()) {
             // Write a header (info about the current group)
             sigfile << "Group size:           " << node->group->size()
-                            << "\nGroup IDs:            "
-                            << map->name(node->group->val(0));
+                    << "\nGroup IDs:            "
+                    << map->name(node->group->val(0));
             for (unsigned int i = 1; i < node->group->size(); ++i)
                 sigfile << "," << map->name(node->group->val(i));
             sigfile << "\n";
@@ -755,7 +699,7 @@ int commandProcess(const Parameters &params) {
         // Each line represents one group that should be processed.
         processListFile(params, bgr_tree, name_map);
     } else {
-        // Fetch the phylogenetic tree structure from the ARB database
+        // Fetch the phylogenetic tree structure
         std::cout << "Creating the phylogenetic tree structure:" << std::endl;
         CaSSiSTree *tree = createCaSSiSTree(params);
         if (tree == NULL)
@@ -798,7 +742,7 @@ int commandProcess(const Parameters &params) {
             // Write parameter information into every file, if available.
             std::stringstream comment;
             comment << "\nBGRT file:          " << params.bgrt_file()
-                            << "\nBGRT comment:       " << bgr_tree->comment;
+                    << "\nBGRT comment:       " << bgr_tree->comment;
 
             dump2Textfiles(tree, comment.str().c_str());
         }
@@ -844,7 +788,7 @@ int main(int argc, char **argv) {
 #else
     std::cout << "\n";
     if (!params.set(argc, argv))
-        return EXIT_FAILURE;
+    return EXIT_FAILURE;
 #endif
 
     // Dump verbose information, if defined.
@@ -854,21 +798,12 @@ int main(int argc, char **argv) {
 #ifdef PTHREADS
     // TODO: This is a 'dirty' hack to set the number of worker threads...
     if (params.num_threads() > 0)
-        setNumProcessors(params.num_threads());
+    setNumProcessors(params.num_threads());
     std::cout << "pThread support is enabled.\n";
 #endif
 
 #ifdef DUMP_STATS
     std::cout << "Statistical information output is enabled.\n";
-#endif
-
-#ifdef ARB
-    std::cout << "Compiled with ARB database file "
-            "and ARB PT-Server support.\n";
-#endif
-
-#ifdef PtPan
-    std::cout << "Compiled with PtPan search index support.\n";
 #endif
 
     std::cout << "\n";
