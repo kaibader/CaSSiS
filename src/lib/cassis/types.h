@@ -148,7 +148,7 @@ private:
  * \param initial_size Size, that should initially be allocated.
  */
 template<typename T> OSet<T>::OSet(unsigned int initial_size) :
-                m_size(0), m_vsize(0), m_val(0) {
+        m_size(0), m_vsize(0), m_val(0) {
     if (initial_size > 0) {
         this->m_val = (T*) calloc(initial_size, sizeof(T));
         this->m_vsize = initial_size;
@@ -348,7 +348,7 @@ public:
  * \param initial_size Size, that should initially be allocated.
  */
 template<typename T> USet<T>::USet(unsigned int initial_size) :
-                OSet<T>::OSet(initial_size) {
+        OSet<T>::OSet(initial_size) {
 }
 
 /*!
@@ -403,7 +403,7 @@ public:
  * \param initial_size Size, that should initially be allocated.
  */
 template<typename T> URefSet<T>::URefSet(unsigned int initial_size) :
-                USet<T>::USet(initial_size) {
+        USet<T>::USet(initial_size) {
 }
 
 /*!
