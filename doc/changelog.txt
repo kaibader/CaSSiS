@@ -3,6 +3,8 @@ CaSSiS 0.5.1 (released June 12th, 2014; maintenance release)
 The following items were fixed and/or added:
 
 * Fixed minor dependency problems in the source code.
+* Added more detailed warnings in some places.
+* Simplified installation package structure.
 
 
 CaSSiS 0.5.0 (released August 6th, 2012; stable release)

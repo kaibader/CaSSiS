@@ -1,9 +1,9 @@
 include(InstallRequiredSystemLibraries)
 
 # Add documentation.
-install(FILES "${PROJECT_SOURCE_DIR}/../doc/readme.txt" DESTINATION share/doc/cassis)
-install(FILES "${PROJECT_SOURCE_DIR}/../doc/changelog.txt" DESTINATION share/doc/cassis)
-install(FILES "${PROJECT_SOURCE_DIR}/../doc/lgpl.txt" DESTINATION share/doc/cassis)
+install(FILES "${PROJECT_SOURCE_DIR}/../doc/readme.txt" DESTINATION doc)
+install(FILES "${PROJECT_SOURCE_DIR}/../doc/changelog.txt" DESTINATION doc)
+install(FILES "${PROJECT_SOURCE_DIR}/../doc/lgpl.txt" DESTINATION doc)
 
 # Generated packages...
 # set(CPACK_GENERATOR "STGZ;TGZ;TBZ2;DEB")

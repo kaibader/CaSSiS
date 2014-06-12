@@ -46,6 +46,6 @@ set_target_properties(
 
 # Install libCaSSiS.
 file(GLOB header "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
-install(FILES ${header} DESTINATION include/cassis)
-install(FILES "${PROJECT_BINARY_DIR}/config.h" DESTINATION include/cassis)
-install(TARGETS CaSSiS DESTINATION lib)
+install(FILES ${header} DESTINATION include)
+install(FILES "${PROJECT_BINARY_DIR}/config.h" DESTINATION include)
+install(TARGETS CaSSiS DESTINATION bin)

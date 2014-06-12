@@ -46,4 +46,4 @@ else(WIN32)
 endif(WIN32)
 
 # Install.
-install(TARGETS minipt DESTINATION lib)
+install(TARGETS minipt DESTINATION bin)
