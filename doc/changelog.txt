@@ -1,4 +1,11 @@
-CaSSiS 0.5.0 (released 6.August 2012; stable release)
+CaSSiS 0.5.1 (released June 12th, 2014; maintenance release)
+------------------------------------------------------
+The following items were fixed and/or added:
+
+* Fixed minor dependency problems in the source code.
+
+
+CaSSiS 0.5.0 (released August 6th, 2012; stable release)
 ------------------------------------------------------
 The following items were fixed and/or added:
 
@@ -23,7 +30,7 @@ The following items were fixed and/or added:
 * Various bugfixes that address the formatting of the input file.
 
 
-CaSSiS 0.4.0 (released 14.January 2012; stable release)
+CaSSiS 0.4.0 (released January 14th, 2012; stable release)
 ------------------------------------------------------
 The following items were fixed and/or added:
 
@@ -56,7 +63,7 @@ The following items were fixed and/or added:
 * Major refactoring of the CaSSiS library.
 
 
-CaSSiS 0.3.3 (internally released 24.October 2011; maintenance release)
+CaSSiS 0.3.3 (internally released October 24th, 2011; maintenance release)
 -----------------------------------------------------------------------
 The following items were fixed and/or added:
 
@@ -90,7 +97,7 @@ The following items were fixed and/or added:
 * Removed redundant code.
 
 
-CaSSiS 0.3.2 (released 12.August 2011; stable release)
+CaSSiS 0.3.2 (released August 12th, 2011; stable release)
 ------------------------------------------------------
 The following items were fixed and/or added:
 
@@ -119,14 +126,14 @@ The following items were fixed and/or added:
 * Switched to templates for internal types.
 
 
-CaSSiS 0.3.1 (released 27.June 2011; maintenance release)
+CaSSiS 0.3.1 (released June 27th, 2011; maintenance release)
 ---------------------------------------------------------
 The following items were fixed and/or added:
 
 * Fixed minor dependency problems in the shell scripts.
 
 
-CaSSiS 0.3.0 (internally released 9.June 2011; stable release)
+CaSSiS 0.3.0 (internally released June 9th, 2011; stable release)
 --------------------------------------------------------------
 The following items were fixed and/or added:
 
@@ -164,7 +171,7 @@ The following items were fixed and/or added:
   stored/loaded.
 
 
-CaSSiS 0.2.0 (released 7.March 2011; stable release)
+CaSSiS 0.2.0 (released March 7th, 2011; stable release)
 ----------------------------------------------------
 The following items were fixed and/or added:
 
@@ -190,7 +197,7 @@ The following items were fixed and/or added:
 * Memory leak fix.
 
 
-CaSSiS 0.1.1 (released 22.October 2010; maintenance release)
+CaSSiS 0.1.1 (released October 22nd, 2010; maintenance release)
 ------------------------------------------------------------
 The following items were fixed and/or added:
 
@@ -199,7 +206,7 @@ The following items were fixed and/or added:
 * Minor improvement in the BGRT traversal.
 
 
-CaSSiS 0.1.0 (released 10.September 2010; stable release)
+CaSSiS 0.1.0 (released September 10th, 2010; stable release)
 ---------------------------------------------------------
 
 * Warning: The 0.1.0 release of CaSSiS contains a flaw that leads to the loss

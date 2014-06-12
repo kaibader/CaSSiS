@@ -3,7 +3,7 @@ CaSSiS README
 ----------------------------------------------------------------------------
 
 To report a bug or give feedback, send an email to: mail@kaibader.de
-(Last edited: 2012-08-06)
+(Last edited: 2014-06-12)
 
 
 ----------------------------------------------------------------------------
@@ -45,7 +45,7 @@ Please make sure to build the source code in an empty directory, i.e. create
 a new directory and then run cmake.
 
 Sample session:
-$  tar xvfj CaSSiS-0.5.0-src.tar.bz2
+$  tar xvfj CaSSiS-0.5.1-src.tar.bz2
                              (e.g. extracts to /path/to/cassis)
 $  mkdir /path/to/build
 $  cd /path/to/build
@@ -70,7 +70,7 @@ bgrtmerge           A test tool to merge BGRT files
 thermodynamics      A tool to test the thermodynamic functionalities
 libCaSSiS.so        (symbolic link)
 libCaSSiS.so.0      (symbolic link)
-libCaSSiS.so.0.5.0  The CaSSiS Library v0.5.0
+libCaSSiS.so.0.5.1  The CaSSiS Library v0.5.1
 libminipt.so
 
 arb_license.txt       The ARB license (for libARBDB.so and libminipt.so)
