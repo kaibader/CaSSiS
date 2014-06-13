@@ -4,8 +4,8 @@ SET(CMAKE_INSTALL_RPATH ".")
 
 # Prevent in-source builds. Always build in a separate folder.
 if(CMAKE_SOURCE_DIR STREQUAL "${CMAKE_BINARY_DIR}")
-    message(SEND_ERROR "In-source builds are NOT recommended. "
-    "Please use a separate build directory if possible.")
+    message(FATAL_ERROR "In-source builds are NOT allowed. Please use a "
+    "separate build directory and run CMAKE </path/to/src> from there.")
 endif(CMAKE_SOURCE_DIR STREQUAL "${CMAKE_BINARY_DIR}")
 
 # The build type (debug, release, ...) has to be defined.
