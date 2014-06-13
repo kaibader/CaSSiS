@@ -1,5 +1,7 @@
 Copyrights for the ARB source code of 'MiniPT' and '3rd-party/arb'.
 
+MiniPT is derived from the ARB PT-Server Search Index.
+
 ARB copyright and license information
 
     COPYRIGHTS

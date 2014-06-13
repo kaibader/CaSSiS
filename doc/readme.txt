@@ -27,6 +27,7 @@ along with CaSSiS.  If not, see <http://www.gnu.org/licenses/>.
 
 * MiniPT and 3rd-party/arb
 
+MiniPT is derived from the ARB PT-Server Search Index.
 The ARB software and documentation are not in the public domain. External
 programs distributed together with ARB are copyrighted by and are the property
 of their respective authors unless otherwise stated. All other copyrights are
