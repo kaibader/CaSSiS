@@ -35,3 +35,13 @@ set(thermodynamics_sources
 add_executable(thermodynamics ${thermodynamics_sources})
 target_link_libraries(thermodynamics CaSSiS)
 install(TARGETS thermodynamics DESTINATION bin)
+
+### Tool: treetest ###
+
+set(treetest_sources
+    "${CMAKE_SOURCE_DIR}/shared/newick.cpp"
+    treetest.cpp
+)
+add_executable(treetest ${treetest_sources})
+target_link_libraries(treetest CaSSiS)
+install(TARGETS treetest DESTINATION bin)

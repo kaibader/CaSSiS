@@ -19,8 +19,8 @@ endif(NOT CMAKE_BUILD_TYPE)
 # All tools share a version number with the CaSSiS library.
 set(CASSIS_VERSION_MAJOR  0)
 set(CASSIS_VERSION_MINOR  5)
-set(CASSIS_VERSION_PATCH  1)
-set(CASSIS_VERSION_SUFFIX "")
+set(CASSIS_VERSION_PATCH  2)
+set(CASSIS_VERSION_SUFFIX "_beta")
 message(STATUS "Setting CaSSiS version number to: "
     "${CASSIS_VERSION_MAJOR}.${CASSIS_VERSION_MINOR}.${CASSIS_VERSION_PATCH}${CASSIS_VERSION_SUFFIX}")
 
