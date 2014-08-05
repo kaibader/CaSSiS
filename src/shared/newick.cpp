@@ -72,7 +72,7 @@ void DumpCaSSiSTree(const CaSSiSTree *tree, NameMap &map) {
 void Newick2CaSSiSTree_postprocess(const NameMap &map, CaSSiSTree *tree,
         CaSSiSTreeNode *node, unsigned int &node_array_pos, unsigned int depth =
                 0) {
-    if (!node)
+    if (!node || (node->this_id == ID_TYPE_UNDEF))
         return; // No check for 'tree'. It is assumed that there is one...
 
     // Set the node depth. Update the max. tree depth if necessary.
@@ -374,7 +374,8 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
     // One node remains as root node when the structure was finally evaluated...
     assert(node_stack.size() == 1);
     if (node_stack.size() != 1) {
-        fprintf(stderr, "Error: Apparently not a valid rooted binary Newick tree?\n");
+        fprintf(stderr,
+                "Error: Apparently not a valid rooted binary Newick tree?\n");
         return NULL;
     }
 
