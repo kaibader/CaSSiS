@@ -233,7 +233,7 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
             assert(node_stack.size());
             if (node_stack.size() == 0) {
                 fprintf(stderr,
-                        "Error: Apparently not a valid binary Newick tree?\n");
+                        "Error: Apparently not a valid rooted binary Newick tree?\n");
                 return NULL;
             }
 
@@ -283,7 +283,7 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
                     assert(node_stack.size() >= 2);
                     if (node_stack.size() <= 1) {
                         fprintf(stderr,
-                                "Error: Apparently not a valid binary Newick tree?\n");
+                                "Error: Apparently not a valid rooted binary Newick tree?\n");
                         return NULL;
                     }
 
@@ -374,7 +374,7 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
     // One node remains as root node when the structure was finally evaluated...
     assert(node_stack.size() == 1);
     if (node_stack.size() != 1) {
-        fprintf(stderr, "Error: Apparently not a valid binary Newick tree?\n");
+        fprintf(stderr, "Error: Apparently not a valid rooted binary Newick tree?\n");
         return NULL;
     }
 
