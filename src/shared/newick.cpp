@@ -380,7 +380,11 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
     }
 
     // Set root node of phylogenetic tree and return it.
+    // Throw a warning if root node undefined.
     CaSSiSTreeNode *root_node = node_stack.top();
+    if (root_node->this_id == ID_TYPE_UNDEF)
+        fprintf(stderr,
+                "Warning: Looks like we have an empty or invalid tree?\n");
     tree->setRootNode(root_node);
 
     // Clean-up buffer string
