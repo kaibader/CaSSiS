@@ -215,11 +215,8 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
     tree->num_nodes++;
 
     while (true) {
-        // Read a line of the file
-        char *ret = fgets(read_buffer, NEWICK_READ_BUFFER_SIZE - 1, fd);
-
-        // Abort reading if we are at the end of the file.
-        if ((ret == NULL) || feof(fd) || ferror(fd))
+        // Read a line of the file. Break if we've reached its end.
+        if (fgets(read_buffer, NEWICK_READ_BUFFER_SIZE - 1, fd) == NULL)
             break;
 
         // Just to be safe...
@@ -369,6 +366,13 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
 
             it++; // Next character.
         }
+    }
+
+    // Handle an error, if one occurred...
+    if (ferror(fd)) {
+        fprintf(stderr,
+                "Error: Something went wrong while reading the tree file.\n");
+        return NULL;
     }
 
     // One node remains as root node when the structure was finally evaluated...
