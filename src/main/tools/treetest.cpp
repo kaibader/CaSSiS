@@ -41,9 +41,7 @@ int main(int argc, char **argv) {
     CaSSiSTree *ctree = Newick2CaSSiSTree(argv[1], 0);
 
     if (ctree) {
-        NameMap mapping;
-        ctree->fetchMapping(mapping);
-        DumpCaSSiSTree(ctree, mapping);
+        DumpCaSSiSTree(ctree);
         return EXIT_SUCCESS;
     }
     return EXIT_FAILURE;

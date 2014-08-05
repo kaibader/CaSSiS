@@ -32,7 +32,7 @@
  *
  * \param tree Phylogenetic tree
  */
-void DumpCaSSiSTree(const CaSSiSTree *tree, NameMap &map);
+void DumpCaSSiSTree(const CaSSiSTree *tree);
 
 /*!
  * Create/read a CaSSiS tree from a Newick tree file.

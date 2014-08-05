@@ -34,22 +34,36 @@
  */
 const unsigned int NEWICK_READ_BUFFER_SIZE = 1024 * 64;
 
-void DumpCaSSiSTreeNode(const CaSSiSTreeNode *node, NameMap &map) {
+void DumpCaSSiSTreeNode(const CaSSiSTreeNode *node,
+        const NameMap &group_mapping, const NameMap &leaf_mapping) {
     if (!node)
         return;
 
     if (node->left && node->right) {
+        // We have an inner node.
         printf("(");
-        DumpCaSSiSTreeNode(node->left, map);
+        DumpCaSSiSTreeNode(node->left, group_mapping, leaf_mapping);
         printf(",");
-        DumpCaSSiSTreeNode(node->right, map);
+        DumpCaSSiSTreeNode(node->right, group_mapping, leaf_mapping);
 
         printf(")");
 
-        if (node->this_id != ID_TYPE_UNDEF)
-            printf("\'%s\'\n", map.name(node->this_id).c_str());
+        if (node->this_id != ID_TYPE_UNDEF) {
+            if (node->length != 0.0) {
+                printf("\'%s\':%f\n", group_mapping.name(node->this_id).c_str(),
+                        node->length);
+            } else {
+                printf("\'%s\'\n", group_mapping.name(node->this_id).c_str());
+            }
+        }
     } else if (node->this_id != ID_TYPE_UNDEF) {
-        printf("\'%s\'\n", map.name(node->this_id).c_str());
+        // We have a leaf node.
+        if (node->length != 0.0) {
+            printf("\'%s\':%f\n", leaf_mapping.name(node->this_id).c_str(),
+                    node->length);
+        } else {
+            printf("\'%s\'\n", leaf_mapping.name(node->this_id).c_str());
+        }
     }
 }
 
@@ -58,10 +72,11 @@ void DumpCaSSiSTreeNode(const CaSSiSTreeNode *node, NameMap &map) {
  *
  * \param tree Phylogenetic tree
  */
-void DumpCaSSiSTree(const CaSSiSTree *tree, NameMap &map) {
+void DumpCaSSiSTree(const CaSSiSTree *tree) {
     if (!tree)
         return;
-    DumpCaSSiSTreeNode(tree->tree_root, map);
+    DumpCaSSiSTreeNode(tree->tree_root, tree->group_mapping,
+            tree->leaf_mapping);
     printf(";\n");
 }
 
@@ -72,7 +87,7 @@ void DumpCaSSiSTree(const CaSSiSTree *tree, NameMap &map) {
 void Newick2CaSSiSTree_postprocess(const NameMap &map, CaSSiSTree *tree,
         CaSSiSTreeNode *node, unsigned int &node_array_pos, unsigned int depth =
                 0) {
-    if (!node || (node->this_id == ID_TYPE_UNDEF))
+    if (!node)
         return; // No check for 'tree'. It is assumed that there is one...
 
     // Set the node depth. Update the max. tree depth if necessary.
@@ -386,9 +401,6 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
     // Set root node of phylogenetic tree and return it.
     // Throw a warning if root node undefined.
     CaSSiSTreeNode *root_node = node_stack.top();
-    if (root_node->this_id == ID_TYPE_UNDEF)
-        fprintf(stderr,
-                "Warning: Looks like we have an empty or invalid tree?\n");
     tree->setRootNode(root_node);
 
     // Clean-up buffer string
