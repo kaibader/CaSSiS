@@ -46,9 +46,9 @@ void DumpCaSSiSTreeNode(const CaSSiSTreeNode *node, NameMap &map) {
 
         printf(")");
 
-        if (node->this_id != ID_TYPE_UNDEF )
+        if (node->this_id != ID_TYPE_UNDEF)
             printf("\'%s\'\n", map.name(node->this_id).c_str());
-    } else if (node->this_id != ID_TYPE_UNDEF ) {
+    } else if (node->this_id != ID_TYPE_UNDEF) {
         printf("\'%s\'\n", map.name(node->this_id).c_str());
     }
 }
