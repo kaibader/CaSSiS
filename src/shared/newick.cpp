@@ -41,28 +41,28 @@ void DumpCaSSiSTreeNode(const CaSSiSTreeNode *node,
 
     if (node->left && node->right) {
         // We have an inner node.
-        printf("(");
+        printf("(\n");
         DumpCaSSiSTreeNode(node->left, group_mapping, leaf_mapping);
         printf(",");
         DumpCaSSiSTreeNode(node->right, group_mapping, leaf_mapping);
 
-        printf(")");
+        printf("\n)");
 
         if (node->this_id != ID_TYPE_UNDEF) {
             if (node->length != 0.0) {
-                printf("\'%s\':%f\n", group_mapping.name(node->this_id).c_str(),
+                printf("\'%s\':%f", group_mapping.name(node->this_id).c_str(),
                         node->length);
             } else {
-                printf("\'%s\'\n", group_mapping.name(node->this_id).c_str());
+                printf("\'%s\'", group_mapping.name(node->this_id).c_str());
             }
         }
     } else if (node->this_id != ID_TYPE_UNDEF) {
         // We have a leaf node.
         if (node->length != 0.0) {
-            printf("\'%s\':%f\n", leaf_mapping.name(node->this_id).c_str(),
+            printf("\'%s\':%f", leaf_mapping.name(node->this_id).c_str(),
                     node->length);
         } else {
-            printf("\'%s\'\n", leaf_mapping.name(node->this_id).c_str());
+            printf("\'%s\'", leaf_mapping.name(node->this_id).c_str());
         }
     }
 }
