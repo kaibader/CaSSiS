@@ -145,6 +145,11 @@ void Newick2CaSSiSTree_postprocess(const NameMap &map, CaSSiSTree *tree,
         // mapping. The mapping starts with ID '0' and is also used as index
         // position in the representative array.
         assert(node->this_id != ID_TYPE_UNDEF);
+        if (node->this_id == ID_TYPE_UNDEF) {
+            fprintf(stderr,
+                    "Error: Phylogenetic tree contains unlabeled leave nodes.\n");
+            return;
+        }
 
         // Take the temporary ID and replace it with a new leaf-ID.
         node->this_id = node->leftmost_id = node->rightmost_id =
@@ -229,6 +234,9 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
     node_stack.push(node1);
     tree->num_nodes++;
 
+    // Initialize a comma counter.
+    int comma_count = 0;
+
     while (true) {
         // Read a line of the file. Break if we've reached its end.
         if (fgets(read_buffer, NEWICK_READ_BUFFER_SIZE - 1, fd) == NULL)
@@ -245,7 +253,7 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
             assert(node_stack.size());
             if (node_stack.size() == 0) {
                 fprintf(stderr,
-                        "Error: Apparently not a valid rooted binary Newick tree?\n");
+                        "Error: Apparently not a valid rooted binary Newick tree? [1]\n");
                 return NULL;
             }
 
@@ -258,6 +266,63 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
                     // Break here, if we are within a text area
                     if (exclamation)
                         break;
+
+                    // Increase comma counter. Auto-add brackets if we have
+                    // more than two inner nodes (i.e. a non-binary tree).
+                    ++comma_count;
+                    while (comma_count > 1) {
+                        // Closing bracket -> min. one element within bracket.
+                        assert(node_stack.size() >= 2);
+                        if (node_stack.size() <= 1) {
+                            fprintf(stderr,
+                                    "Error: Apparently not a valid rooted binary Newick tree? [2]\n");
+                            return NULL;
+                        }
+
+                        // Fetch/pop two nodes from stack
+                        node1 = node_stack.top();
+                        node_stack.pop();
+                        node2 = node_stack.top();
+                        node_stack.pop();
+
+                        // Create a third node as a parent for the other two.
+                        // No distance, no name string.
+                        node3 = new CaSSiSTreeNode(og_limit);
+                        node3->length = 0.0;
+
+                        node3->left = node2;
+                        node2->parent = node3;
+
+                        node3->right = node1;
+                        node1->parent = node3;
+
+                        tree->num_nodes++;
+
+                        // Fetch length, if available and clean-up buffer string
+                        len_str = NULL;
+                        if ((len_str = strchr(id_buffer, ':')) != NULL) {
+                            *len_str = 0;
+                            ++len_str;
+                        }
+
+                        // Add node id...
+                        if (*id_buffer)
+                            node1->this_id = tmp_map.append(id_buffer);
+
+                        // Add branch length, if available...
+                        if (len_str)
+                            node1->length = atof(len_str);
+
+                        // Reset buffer...
+                        id_buffer_size = 0;
+                        id_buffer[0] = 0;
+
+                        // Push the parent node onto the stack
+                        node_stack.push(node3);
+
+                        // Decrease the comma count.
+                        --comma_count;
+                    }
 
                     // Fetch last node on stack
                     node1 = node_stack.top();
@@ -295,7 +360,7 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
                     assert(node_stack.size() >= 2);
                     if (node_stack.size() <= 1) {
                         fprintf(stderr,
-                                "Error: Apparently not a valid rooted binary Newick tree?\n");
+                                "Error: Apparently not a valid rooted binary Newick tree? [3]\n");
                         return NULL;
                     }
 
@@ -337,6 +402,10 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
 
                     // Push the parent node onto the stack
                     node_stack.push(node3);
+
+                    // Reset comma counter.
+                    comma_count = 0;
+
                     break;
                     // case ' ':
                 case '\'':
@@ -366,8 +435,11 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
                 case '\t':
                 case '\r':
                 case '\n':
-                case '(':
                     // Ignore these characters...
+                    break;
+                case '(':
+                    // Reset comma counter.
+                    comma_count = 0;
                     break;
                 default:
                     if (id_buffer_size == NEWICK_READ_BUFFER_SIZE)
@@ -386,7 +458,7 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
     // Handle an error, if one occurred...
     if (ferror(fd)) {
         fprintf(stderr,
-                "Error: Something went wrong while reading the tree file.\n");
+                "Error: Something went wrong while reading the tree file. [4]\n");
         return NULL;
     }
 
@@ -394,7 +466,7 @@ CaSSiSTree *Newick2CaSSiSTree(const char *filename, unsigned int og_limit) {
     assert(node_stack.size() == 1);
     if (node_stack.size() != 1) {
         fprintf(stderr,
-                "Error: Apparently not a valid rooted binary Newick tree?\n");
+                "Error: Apparently not a valid rooted binary Newick tree? [5]\n");
         return NULL;
     }
 
