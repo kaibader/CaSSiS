@@ -1,3 +1,12 @@
+CaSSiS 0.5.2 (released April 10th, 2015; maintenance release)
+------------------------------------------------------
+The following items were fixed and/or added:
+
+* Fixed some issues when handling Newick trees.
+* Added a Newick tree debugging tool (for testing purposes only).
+* Added CaSSiS logos to the repository. (CC-BY-SA 3.0)
+
+
 CaSSiS 0.5.1 (released June 12th, 2014; maintenance release)
 ------------------------------------------------------
 The following items were fixed and/or added:
