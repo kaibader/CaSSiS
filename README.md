@@ -3,7 +3,8 @@ CaSSiS
 
 CaSSiS is a fast and scalable software for computing comprehensive collections of sequence- and sequence-group-specific oligonucleotide signatures from large sets of hierarchically clustered nucleic acid sequence data. CaSSiS determines sequence-specific signatures and perfect group-covering signatures for every node within a cluster (i.e. target groups). For groups lacking a perfect common signature, it is able to find the signatures with maximal group coverage (sensitivity) within a user-defined range of non-target hits (specificity). An upper limit of tolerated mismatches within the target group, as well as the minimum number of mismatches with non-target sequences, can be predefined.
 
-Please cite the corresponding Bioinformatics publication if you find this project useful: [Comprehensive and relaxed search for oligonucleotide signatures in hierarchically clustered sequence datasets](http://dx.doi.org/10.1093/bioinformatics/btr161)
+Please cite the corresponding Bioinformatics publication if you find this project useful:
+[Comprehensive and relaxed search for oligonucleotide signatures in hierarchically clustered sequence datasets](http://dx.doi.org/10.1093/bioinformatics/btr161)
 
 The former CaSSiS [project page](http://cassis.in.tum.de/) page at the TU München was shut down in the mean time. I've therefore created this 'mirror' of the source CaSSiS source code.
 
@@ -16,7 +17,7 @@ Caution: Running 'make' in the source directory is prevented!
 Source code build steps:
 
 ```
-$ tar xvfj CaSSiS-0.5.1-src.tar.bz2
+$ tar xvfj CaSSiS-0.5.2-src.tar.bz2
 $ mkdir /path/to/build
 $ cd /path/to/build
 $ cmake /path/to/cassis-src
